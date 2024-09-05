@@ -440,3 +440,4 @@ gradle-app.setting
 
 # project
 pgdata
+*.docx

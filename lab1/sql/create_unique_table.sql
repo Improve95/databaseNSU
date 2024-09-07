@@ -32,7 +32,23 @@ begin
 end
 $$ language plpgsql;
 
-drop table if exists doctor;
+create or replace function check_doctor_exist()
+    returns trigger as $$
+declare
+    staffIsExist boolean;
+begin
+    select exists(select * from staff where id = NEW.id) into staffIsExist;
+
+    if not staffIsExist then
+        raise exception 'this staff does not exist';
+    end if;
+
+    return NEW;
+end
+$$ language plpgsql;
+
+
+drop table if exists doctor cascade ;
 create table doctor (
     id uuid primary key references person("id") ,
     department_id uuid not null references department("id") on delete cascade
@@ -41,8 +57,10 @@ truncate table doctor cascade;
 
 create trigger doctor_limit_trigger before insert on doctor
     for each ROW execute function check_doctor_limit();
+create trigger doctor_exist before insert on doctor
+    for each ROW execute function check_doctor_exist();
 
-drop table if exists patient;
+drop table if exists patient cascade ;
 create table patient (
     id uuid primary key references person("id"),
     coming_time timestamp not null ,

@@ -50,7 +50,7 @@ $$ language plpgsql;
 
 drop table if exists doctor cascade ;
 create table doctor (
-    id uuid primary key references person("id") ,
+    id uuid primary key references staff("id") ,
     department_id uuid not null references department("id") on delete cascade
 );
 truncate table doctor cascade;

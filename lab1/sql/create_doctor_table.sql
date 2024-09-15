@@ -19,7 +19,7 @@ drop table if exists doctor cascade ;
 create table doctor (
     id uuid primary key default gen_random_uuid() ,
     department_id uuid not null references department("id") on delete cascade,
-    staff_id uuid references staff("id")
+    staff_id uuid references staff("id") on delete cascade
 );
 truncate table doctor cascade;
 

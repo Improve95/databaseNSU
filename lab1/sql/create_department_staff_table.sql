@@ -8,7 +8,7 @@ truncate table specialization cascade ;
 drop table if exists department cascade;
 create table department (
     id uuid primary key default gen_random_uuid(),
-    specialization_id uuid references specialization("id") ,
+    specialization_id uuid references specialization("id") on delete cascade,
     name varchar(50) not null ,
     number int not null ,
     capacity int not null
@@ -27,7 +27,7 @@ drop table if exists staff cascade ;
 create table staff (
     id uuid primary key default gen_random_uuid() ,
     salary int check ( salary > 0 ) ,
-    person_id uuid references person("id")
+    person_id uuid references person("id") on delete cascade
 );
 truncate table staff cascade ;
 

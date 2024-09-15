@@ -1,3 +1,6 @@
+drop schema if exists public;
+create schema public;
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 drop table if exists person cascade;

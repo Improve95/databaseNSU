@@ -1,3 +1,10 @@
+drop table if exists staff cascade ;
+create table staff (
+    id uuid primary key references person("id") ,
+    salary int check ( salary > 0 )
+);
+truncate table staff cascade ;
+
 create or replace function check_staff_exist()
     returns trigger as $$
 declare
@@ -21,6 +28,15 @@ create table staff_change (
 );
 truncate table staff_change;
 
+drop table if exists department cascade;
+create table department (
+    id uuid primary key default gen_random_uuid(),
+    name varchar(50) not null ,
+    number int not null ,
+    capacity int not null
+);
+truncate department cascade;
+
 create trigger staff_exist before insert on staff_change
     for each ROW execute function check_staff_exist();
 
@@ -28,7 +44,6 @@ drop table if exists duty_schedule;
 create table duty_schedule (
     int uuid primary key ,
     doctor_id uuid not null references doctor("id") on delete cascade ,
-    department_id uuid not null references department("id") on delete cascade ,
     start_time timestamp not null ,
     end_time timestamp not null
 );

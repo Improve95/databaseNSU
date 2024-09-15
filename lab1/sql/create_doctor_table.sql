@@ -1,19 +1,17 @@
-drop table if exists staff;
-create table staff (
-    id uuid primary key references person("id") ,
-    position int not null ,
-    salary int check ( salary > 0 )
+drop table if exists specialization cascade ;
+create table specialization (
+    id uuid primary key default gen_random_uuid() ,
+    name varchar(100)
 );
-truncate table staff;
+truncate table specialization cascade ;
 
-drop table if exists department cascade;
-create table department (
-    id uuid primary key default gen_random_uuid(),
-    name varchar(50) not null ,
-    number int not null ,
-    capacity int not null
+drop table if exists doctor_specialization cascade ;
+create table doctor_specialization (
+    doctor_id uuid references doctor("id") on delete cascade ,
+    department_id uuid references specialization("id") on delete cascade ,
+    primary key (doctor_id, department_id)
 );
-truncate department cascade;
+truncate table doctor_specialization cascade ;
 
 create or replace function check_doctor_limit()
     returns trigger as $$
@@ -47,7 +45,6 @@ begin
 end
 $$ language plpgsql;
 
-
 drop table if exists doctor cascade ;
 create table doctor (
     id uuid primary key references staff("id") ,
@@ -59,12 +56,3 @@ create trigger doctor_limit_trigger before insert on doctor
     for each ROW execute function check_doctor_limit();
 create trigger doctor_exist before insert on doctor
     for each ROW execute function check_doctor_exist();
-
-drop table if exists patient cascade ;
-create table patient (
-    id uuid primary key references person("id"),
-    coming_time timestamp not null ,
-    release_time time ,
-    status int not null
-);
-truncate table patient cascade;

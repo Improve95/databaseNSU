@@ -1,4 +1,4 @@
-drop schema if exists public;
+drop schema if exists public cascade ;
 create schema public;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

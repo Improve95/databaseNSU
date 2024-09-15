@@ -1,24 +1,10 @@
 drop table if exists staff cascade ;
 create table staff (
-    id uuid primary key references person("id") ,
-    salary int check ( salary > 0 )
+    id uuid primary key default gen_random_uuid() ,
+    salary int check ( salary > 0 ) ,
+    person_id uuid references person("id")
 );
 truncate table staff cascade ;
-
-create or replace function check_staff_exist()
-    returns trigger as $$
-declare
-    staffIsExist boolean;
-begin
-    select exists(select * from staff where id = NEW.id) into staffIsExist;
-
-    if not staffIsExist then
-        raise exception 'this staff does not exist';
-    end if;
-
-    return NEW;
-end
-$$ language plpgsql;
 
 drop table if exists staff_change;
 create table staff_change (
@@ -36,16 +22,3 @@ create table department (
     capacity int not null
 );
 truncate department cascade;
-
-create trigger staff_exist before insert on staff_change
-    for each ROW execute function check_staff_exist();
-
-drop table if exists duty_schedule;
-create table duty_schedule (
-    int uuid primary key ,
-    doctor_id uuid not null references doctor("id") on delete cascade ,
-    start_time timestamp not null ,
-    end_time timestamp not null
-);
-truncate table duty_schedule cascade;
-

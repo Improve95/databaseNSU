@@ -29,30 +29,13 @@ begin
     return NEW;
 end
 $$ language plpgsql;
-
-create or replace function check_doctor_exist()
-    returns trigger as $$
-declare
-    staffIsExist boolean;
-begin
-    select exists(select * from staff where id = NEW.id) into staffIsExist;
-
-    if not staffIsExist then
-        raise exception 'this staff does not exist';
-    end if;
-
-    return NEW;
-end
-$$ language plpgsql;
-
 drop table if exists doctor cascade ;
 create table doctor (
-    id uuid primary key references staff("id") ,
-    department_id uuid not null references department("id") on delete cascade
+    id uuid primary key default gen_random_uuid() ,
+    department_id uuid not null references department("id") on delete cascade,
+    staff_id uuid references staff("id") ,
 );
 truncate table doctor cascade;
 
 create trigger doctor_limit_trigger before insert on doctor
     for each ROW execute function check_doctor_limit();
-create trigger doctor_exist before insert on doctor
-    for each ROW execute function check_doctor_exist();

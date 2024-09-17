@@ -15,17 +15,28 @@ create table department (
 );
 truncate department cascade;
 
-drop table if exists department_specialization cascade ;
-create table department_specialization (
-    department_id int references department("id") on delete cascade ,
-    specialization_id int references specialization("id") on delete cascade ,
-    primary key (specialization_id, department_id)
-);
-truncate table department_specialization cascade ;
+-- drop table if exists department_specialization cascade ;
+-- create table department_specialization (
+--     department_id int references department("id") on delete cascade ,
+--     specialization_id int references specialization("id") on delete cascade ,
+--     primary key (specialization_id, department_id)
+-- );
+-- truncate table department_specialization cascade ;
+
+
+create type position_type as enum ( 'doctor', 'cleaner' );
 
 drop table if exists staff cascade ;
 create table staff (
     id int primary key references person("id") on delete cascade ,
-    salary int check ( salary > 0 )
+    salary int check ( salary > 0 ) ,
+    position position_type not null
 );
 truncate table staff cascade ;
+
+-- alter table staff
+--     drop constraint staff_person_id_fkey ,
+--     add constraint staff_person_id_fkey foreign key (id) references person("id");
+
+-- alter table staff
+--     add column position position_type not null ;

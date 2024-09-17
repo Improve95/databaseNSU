@@ -17,8 +17,8 @@ $$ language plpgsql;
 
 drop table if exists doctor cascade ;
 create table doctor (
-    id uuid primary key references staff("id") on delete cascade ,
-    department_id uuid not null references department("id") on delete cascade
+    id int primary key references staff("id") on delete cascade ,
+    department_id int not null references department("id") on delete cascade
 );
 truncate table doctor cascade;
 
@@ -27,8 +27,8 @@ create trigger doctor_limit_trigger before insert on doctor
 
 drop table if exists doctor_specialization cascade ;
 create table doctor_specialization (
-    doctor_id uuid references doctor("id") on delete cascade ,
-    specialization_id uuid references specialization("id") on delete cascade ,
+    doctor_id int references doctor("id") on delete cascade ,
+    specialization_id int references specialization("id") on delete cascade ,
     primary key (doctor_id, specialization_id)
 );
 truncate table doctor_specialization cascade ;

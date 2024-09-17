@@ -25,8 +25,7 @@ truncate table department_specialization cascade ;
 
 drop table if exists staff cascade ;
 create table staff (
-    id uuid primary key default gen_random_uuid() ,
-    salary int check ( salary > 0 ) ,
-    person_id uuid references person("id") on delete cascade
+    id uuid primary key references person("id") on delete cascade ,
+    salary int check ( salary > 0 )
 );
 truncate table staff cascade ;

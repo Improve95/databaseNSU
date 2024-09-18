@@ -96,7 +96,6 @@ _deps
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-.idea
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
@@ -121,6 +120,7 @@ _deps
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
+build
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
@@ -145,6 +145,7 @@ cmake-build-*/
 *.iws
 
 # IntelliJ
+.idea
 out/
 
 # mpeltonen/sbt-idea plugin
@@ -413,6 +414,9 @@ buildNumber.properties
 
 ### Gradle ###
 .gradle
+gradle
+gradlew
+gradlew.bat
 **/build/
 !src/**/build/
 
@@ -438,6 +442,9 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all,java,c,c++,gradle,maven,intellij,clion,composer,visualstudiocode
 
-# project
+#Macos
+.DS_Store
+
+#Project
 pgdata
 *.docx

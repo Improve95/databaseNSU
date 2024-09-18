@@ -19,10 +19,11 @@ public class JdbcTemplateInstance {
         Properties properties = Property.getInstance();
 
         dataSource = new DriverManagerDataSource();
-        dataSource.setUrl(properties.getProperty("jdbc:postgresql://localhost:5430/dbCourse"));
-        dataSource.setUsername(properties.getProperty("postgres"));
-        dataSource.setPassword(properties.getProperty("postgres"));
+        dataSource.setUrl(properties.getProperty("database.connection.url"));
+        dataSource.setUsername(properties.getProperty("database.connection.username"));
+        dataSource.setPassword(properties.getProperty("database.connection.password"));
 
-        return new JdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate;
     }
 }

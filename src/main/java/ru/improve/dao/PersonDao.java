@@ -9,7 +9,7 @@ public class PersonDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public void addPeople(Person person) {
+    public void addPerson(Person person) {
         jdbcTemplate.update("insert into person (name, second_name, phone) values (?, ?, ?)",
                 person.getName(), person.getSecondName(), person.getPhone());
     }

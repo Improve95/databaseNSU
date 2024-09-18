@@ -16,4 +16,10 @@ public class Person {
     private String secondName;
 
     private String phone;
+
+    public Person(String name, String secondName, String phone) {
+        this.name = name;
+        this.secondName = secondName;
+        this.phone = phone;
+    }
 }

@@ -1,4 +1,4 @@
-drop type staff_changes;
+drop type if exists staff_changes;
 create type staff_changes as enum ( 'salary', 'position', 'department' ) ;
 
 drop table if exists staff_change;

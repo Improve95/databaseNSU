@@ -34,9 +34,9 @@ create table staff (
 );
 truncate table staff cascade ;
 
--- alter table staff
+-- alter table staff.txt
 --     drop constraint staff_person_id_fkey ,
 --     add constraint staff_person_id_fkey foreign key (id) references person("id");
 
--- alter table staff
+-- alter table staff.txt
 --     add column position position_type not null ;

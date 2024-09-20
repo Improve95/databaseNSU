@@ -13,14 +13,8 @@ truncate table person cascade;
 drop table if exists passport cascade;
 create table passport (
     person_id int primary key references person("id") on delete cascade ,
-    series int not null ,
-    number int not null
+    series int not null check ( series >= 0 and series <= 9999 ),
+    number int not null check ( number >= 0 and number <= 999999 ),
+    constraint unique (series, number)
 );
 truncate passport cascade;
-
-drop table if exists polis cascade;
-create table polis (
-    person_id int primary key references person("id") on delete cascade ,
-    number int unique not null
-);
-truncate polis cascade;

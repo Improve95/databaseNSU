@@ -1,12 +1,21 @@
+create type patient_status_type as enum ('healthy', 'out_treatment', 'treatment_in_another_place');
+
 drop table if exists patient cascade ;
 create table patient (
     id int primary key references person("id") on delete cascade ,
     coming_time timestamp not null ,
     release_time time ,
-    doctor_id int references doctor("id") on delete cascade ,
-    status int
+    doctor_id int references doctor("id") on delete set null ,
+    status patient_status_type not null
 );
 truncate table patient cascade;
+
+drop table if exists polis cascade;
+create table polis (
+    patient_id int primary key references patient("id") on delete cascade ,
+    number int8 unique not null check ( number > 0 and number < 9999999999999999 )
+);
+truncate polis cascade;
 
 drop table if exists disease cascade ;
 create table disease (

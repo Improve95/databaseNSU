@@ -12,7 +12,7 @@ import java.util.List;
 public class CsvParser {
 
     public List<String[]> parse(InputStream inputStream) {
-        List<String[]> result = null;
+        List<String[]> result;
 
         try (BufferedReader bf = new BufferedReader(new InputStreamReader(inputStream));
              CSVReader csvReader = new CSVReader(bf)) {

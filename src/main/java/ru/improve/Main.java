@@ -1,16 +1,30 @@
 package ru.improve;
 
-import ru.improve.config.JdbcTemplateInstance;
-import ru.improve.dao.PersonDao;
 import ru.improve.models.Person;
+import ru.improve.util.CsvParser;
+import ru.improve.util.FillTables;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        PersonDao personDao = new PersonDao(JdbcTemplateInstance.getInstance());
+        FillTables fillTables = new FillTables();
+        CsvParser csvParser = new CsvParser();
 
-        Person person = new Person("personName5", "personSecondName5", "77777777705");
+        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/person.txt")) {
+            List<String[]> people = csvParser.parse(inputStream);
+            List<Object> personList = fillTables.fillPersonTable(people);
 
-        personDao.addPerson(person);
+            for (Object person : personList) {
+                Person person1 = (Person) person;
+                System.out.println(person1);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

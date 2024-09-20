@@ -15,6 +15,6 @@ create table passport (
     person_id int primary key references person("id") on delete cascade ,
     series int not null check ( series >= 0 and series <= 9999 ),
     number int not null check ( number >= 0 and number <= 999999 ),
-    constraint unique (series, number)
+    constraint polis_unique unique (series, number)
 );
 truncate passport cascade;

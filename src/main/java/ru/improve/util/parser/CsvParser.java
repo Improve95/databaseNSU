@@ -1,7 +1,5 @@
 package ru.improve.util.parser;
 
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
@@ -20,9 +18,12 @@ public class CsvParser {
              CSVReader csvReader = new CSVReader(bf)) {
 
             String[] line;
-            CSVParser csvParser = new CSVParserBuilder().withSeparator(' ').build();
             while ((line = csvReader.readNext()) != null) {
-                 result.add(csvParser.parseLine(line[0]));
+                String[] record = line[0].split(" ");
+                if (record[0] == "###") {
+                    break;
+                }
+                result.add(record);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

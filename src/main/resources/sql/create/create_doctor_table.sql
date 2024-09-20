@@ -22,9 +22,6 @@ create table doctor (
 );
 truncate table doctor cascade;
 
-create trigger doctor_limit_trigger before insert on doctor
-    for each ROW execute function check_doctor_limit();
-
 drop table if exists doctor_specialization cascade ;
 create table doctor_specialization (
     doctor_id int references doctor("id") on delete cascade ,

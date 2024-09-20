@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Polis {
+public class Specialization {
 
-    private int patientId;
+    private int id;
 
-    private int number;
+    private String name;
 }

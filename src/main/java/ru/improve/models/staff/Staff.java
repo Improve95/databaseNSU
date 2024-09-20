@@ -13,5 +13,7 @@ public class Staff {
 
     private int salary;
 
+    private int departmentId;
+
     private StaffPosition position;
 }

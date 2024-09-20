@@ -3,7 +3,9 @@ package ru.improve.util;
 import ru.improve.Main;
 import ru.improve.dao.PassportDao;
 import ru.improve.dao.PersonDao;
-import ru.improve.models.Passport;
+import ru.improve.dao.SpecializationDao;
+import ru.improve.dao.StaffDao;
+import ru.improve.models.staff.Staff;
 import ru.improve.util.parser.CsvParser;
 import ru.improve.util.parser.RecordsReader;
 
@@ -18,6 +20,8 @@ public class FillTables {
 
     PersonDao personDao = new PersonDao();
     PassportDao passportDao = new PassportDao();
+    SpecializationDao specializationDao = new SpecializationDao();
+    StaffDao staffDao = new StaffDao();
 
     public void fill() {
         RecordsReader recordsReader = new RecordsReader();
@@ -28,28 +32,46 @@ public class FillTables {
                     .stream()
                     .map(object -> (Person) object)
                     .collect(Collectors.toList());
+            personDao.truncateTable();
             personDao.addPeople(personList);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }*/
+        }
 
         try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/passport.txt")) {
-            List<Passport> passportList = recordsReader.getObjectList(csvParser.parse(inputStream), Passport.class, 1)
+            List<Passport> passportList = recordsReader.getObjectList(csvParser.parse(inputStream), Passport.class, 0)
                     .stream()
                     .map(object -> (Passport) object)
                     .collect(Collectors.toList());
+            passportDao.truncateTable();
             passportDao.addPassports(passportList);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        /*try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/polis.txt")) {
-            List<Object> personList = recordsReader.getObjectList(csvParser.parse(inputStream), Person.class, 0);
+        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/specialization.txt")) {
+            List<Specialization> specializationList = recordsReader.getObjectList(csvParser.parse(inputStream), Specialization.class, 1)
+                    .stream()
+                    .map(object -> (Specialization) object)
+                    .collect(Collectors.toList());
+            specializationDao.truncateTable();
+            specializationDao.addSpecializations(specializationList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }*/
+
+        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/staff.txt")) {
+            List<Staff> staffList = recordsReader.getObjectList(csvParser.parse(inputStream), Staff.class, 0)
+                    .stream()
+                    .map(object -> (Staff) object)
+                    .collect(Collectors.toList());
+            staffDao.truncateTable();
+            staffDao.addStaffs(staffList);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/staff.txt")) {
+        /*try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/doctor.txt")) {
             List<Object> personList = recordsReader.getObjectList(csvParser.parse(inputStream), Person.class, 1);
         } catch (IOException e) {
             throw new RuntimeException(e);

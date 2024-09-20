@@ -20,7 +20,7 @@ public class CsvParser {
             String[] line;
             while ((line = csvReader.readNext()) != null) {
                 String[] record = line[0].split(" ");
-                if (record[0] == "###") {
+                if (record[0].equals("###")) {
                     break;
                 }
                 result.add(record);

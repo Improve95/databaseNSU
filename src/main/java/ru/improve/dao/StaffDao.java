@@ -4,36 +4,37 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.improve.config.JdbcTemplateInstance;
-import ru.improve.models.Person;
+import ru.improve.models.staff.Staff;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class PersonDao {
+public class StaffDao {
 
     private final JdbcTemplate jdbcTemplate = JdbcTemplateInstance.getInstance();
 
-    public void addPerson(Person person) {
-        jdbcTemplate.update("insert into person (name, second_name, phone) values (?, ?, ?)",
-                person.getName(), person.getSecondName(), person.getPhone());
+    public void addStaff(Staff staff) {
+        jdbcTemplate.update("insert into staff (id, salary, department_id, position) values (?, ?, ?, ?)",
+                staff.getId(), staff.getSalary(), staff.getDepartmentId(), staff.getPosition());
     }
 
-    public void addPeople(List<Person> personList) {
-        jdbcTemplate.batchUpdate("insert into person (name, second_name, phone) values (?, ?, ?)",
+    public void addStaffs(List<Staff> staffList) {
+        jdbcTemplate.batchUpdate("insert into staff (id, salary, department_id, position) values (?, ?, ?, ?)",
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
-                        Person person = personList.get(i);
-                        ps.setString(1, person.getName());
-                        ps.setString(2, person.getSecondName());
-                        ps.setString(3, person.getPhone());
+                        Staff staff = staffList.get(i);
+                        ps.setInt(1, staff.getId());
+                        ps.setInt(2, staff.getSalary());
+                        ps.setInt(3, staff.getDepartmentId());
+                        ps.setObject(4, staff.getPosition().name(), java.sql.Types.OTHER);
                     }
 
                     @Override
                     public int getBatchSize() {
-                        return personList.size();
+                        return staffList.size();
                     }
                 });
     }

@@ -1,5 +1,7 @@
 package ru.improve.util.parser;
 
+import ru.improve.models.staff.StaffPosition;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -49,6 +51,8 @@ public class RecordsReader {
             return Integer.valueOf(value);
         } else if (type.equals(long.class) || type.equals(Long.class)) {
             return Integer.valueOf(value);
+        } else if (type.equals(StaffPosition.class)) {
+            return StaffPosition.valueOf(value);
         }
         throw new IllegalArgumentException("Unsupported type: " + type);
     }

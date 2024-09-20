@@ -4,41 +4,40 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.improve.config.JdbcTemplateInstance;
-import ru.improve.models.Passport;
+import ru.improve.models.Specialization;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class PassportDao {
+public class SpecializationDao {
 
     private final JdbcTemplate jdbcTemplate = JdbcTemplateInstance.getInstance();
 
-    public void addPassport(Passport passport) {
-        jdbcTemplate.update("insert into passport values (?, ?, ?)",
-                passport.getPersonId(), passport.getNumber(), passport.getSeries());
+    public void addSpecialization(Specialization specialization) {
+        jdbcTemplate.update("insert into specialization (name) values (?)",
+                specialization.getName());
     }
 
-    public void addPassports(List<Passport> passportList) {
-        jdbcTemplate.batchUpdate("insert into passport (person_id, number, series) values (?, ?, ?)",
+    public void addSpecializations(List<Specialization> specializationList) {
+        jdbcTemplate.batchUpdate("insert into specialization (name) values (?)",
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
-                        Passport passport = passportList.get(i);
-                        ps.setInt(1, passport.getPersonId());
-                        ps.setInt(2, passport.getNumber());
-                        ps.setInt(3, passport.getSeries());
+                        Specialization specialization = specializationList.get(i);
+                        ps.setString(1, specialization.getName());
                     }
 
                     @Override
                     public int getBatchSize() {
-                        return passportList.size();
+                        return specializationList.size();
                     }
                 });
     }
 
     public void truncateTable() {
-        jdbcTemplate.update("truncate table passport cascade");
+        jdbcTemplate.update("alter sequence specialization_id_seq restart with 1");
+        jdbcTemplate.update("truncate table specialization cascade");
     }
 }

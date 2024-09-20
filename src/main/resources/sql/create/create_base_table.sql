@@ -8,6 +8,7 @@ create table person (
     second_name varchar(50) not null ,
     phone varchar(11) unique not null
 );
+alter sequence person_id_seq restart with 1;
 truncate table person cascade;
 
 drop table if exists passport cascade;
@@ -15,6 +16,6 @@ create table passport (
     person_id int primary key references person("id") on delete cascade ,
     series int not null check ( series >= 0 and series <= 9999 ),
     number int not null check ( number >= 0 and number <= 999999 ),
-    constraint polis_unique unique (series, number)
+    constraint passport_unique unique (series, number)
 );
 truncate passport cascade;

@@ -1,5 +1,5 @@
-drop type if exists position_type;
-create type position_type as enum ( 'doctor', 'cleaner' );
+drop type if exists position_type cascade ;
+create type position_type as enum ( 'doctor', 'cleaner', 'accountant');
 
 create or replace function check_doctor_limit()
     returns trigger as $$
@@ -9,7 +9,7 @@ declare
 begin
     if NEW.position == 'doctor' then
 
-        select count(*) into doctor_count from doctor where department_id = NEW.department_id;
+        select count(*) into doctor_count from staff where NEW.department_id = staff.department_id and staff.position == 'doctor';
         select capacity into department_capacity from department where id = NEW.department_id;
 
         if doctor_count >= department_capacity then

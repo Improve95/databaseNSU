@@ -77,7 +77,7 @@ public class FillTables {
             throw new RuntimeException(e);
         }*/
 
-        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/doctor.txt")) {
+        /*try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/doctor.txt")) {
             List<Doctor> doctorList = recordsReader.getObjectList(csvParser.parse(inputStream), Doctor.class, 0)
                     .stream()
                     .map(object -> (Doctor) object)
@@ -86,7 +86,7 @@ public class FillTables {
             doctorDao.addDoctors(doctorList);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
         if (false) {
             try (InputStream inputStream = Main.class.getResourceAsStream("")) {

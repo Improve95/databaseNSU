@@ -1,21 +1,20 @@
-create type patient_status_type as enum ('healthy', 'out_treatment', 'treatment_in_another_place');
+drop type if exists patient_status_type cascade ;
+create type patient_status_type as enum ('HEALTHY', 'OUT_TREATMENT', 'TREATMENT_in_ANOTHER_PLACE');
 
 drop table if exists patient cascade ;
 create table patient (
     id int primary key references person("id") on delete cascade ,
+    polis_number int8 unique not null check ( polis_number > 0 and polis_number < 9999999999999999 ) ,
     coming_time timestamp not null ,
     release_time time ,
-    doctor_id int references doctor("id") on delete set null ,
-    status patient_status_type not null
+    doctor_id int references doctor("staff_id") on delete set null ,
+    status patient_status_type not null ,
+    constraint patient_not_equals_doctor check ( id != patient.doctor_id )
 );
 truncate table patient cascade;
 
-drop table if exists polis cascade;
-create table polis (
-    patient_id int primary key references patient("id") on delete cascade ,
-    number int8 unique not null check ( number > 0 and number < 9999999999999999 )
-);
-truncate polis cascade;
+-- alter table patient
+--     add constraint patient_not_equals_doctor check ( id != patient.doctor_id );
 
 drop table if exists disease cascade ;
 create table disease (
@@ -23,7 +22,7 @@ create table disease (
     patient_id int references patient("id") on delete cascade ,
     name varchar(100) ,
     installation_time timestamp not null ,
-    doctor_id int references doctor("id") ,
+    doctor_id int references doctor("staff_id") ,
     is_relevant bool not null
 );
 create index disease_index on disease using btree (patient_id);

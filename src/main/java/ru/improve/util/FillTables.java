@@ -1,10 +1,12 @@
 package ru.improve.util;
 
 import ru.improve.Main;
+import ru.improve.dao.DoctorDao;
 import ru.improve.dao.PassportDao;
 import ru.improve.dao.PersonDao;
 import ru.improve.dao.SpecializationDao;
 import ru.improve.dao.StaffDao;
+import ru.improve.models.Doctor;
 import ru.improve.models.Passport;
 import ru.improve.models.Person;
 import ru.improve.models.Specialization;
@@ -25,6 +27,7 @@ public class FillTables {
     PassportDao passportDao = new PassportDao();
     SpecializationDao specializationDao = new SpecializationDao();
     StaffDao staffDao = new StaffDao();
+    DoctorDao doctorDao = new DoctorDao();
 
     public void fill() {
         RecordsReader recordsReader = new RecordsReader();
@@ -74,7 +77,16 @@ public class FillTables {
             throw new RuntimeException(e);
         }*/
 
-
+        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/doctor.txt")) {
+            List<Doctor> doctorList = recordsReader.getObjectList(csvParser.parse(inputStream), Doctor.class, 0)
+                    .stream()
+                    .map(object -> (Doctor) object)
+                    .collect(Collectors.toList());
+            doctorDao.truncateTable();
+            doctorDao.addDoctors(doctorList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         if (false) {
             try (InputStream inputStream = Main.class.getResourceAsStream("")) {

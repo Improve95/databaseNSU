@@ -19,7 +19,7 @@ begin
 
     end if;
 
-    return NEW;
+    return new;
 end
 $$ language plpgsql;
 

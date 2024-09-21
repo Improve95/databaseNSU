@@ -1,5 +1,5 @@
 drop type if exists staff_changes;
-create type staff_changes as enum ( 'salary', 'position', 'department' ) ;
+create type staff_changes as enum ( 'SALARY', 'POSITION', 'DEPARTMENT' ) ;
 
 drop table if exists staff_change;
 create table staff_change (

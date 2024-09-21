@@ -10,7 +10,7 @@ declare
 begin
     if new.position = 'DOCTOR'::position_type then
 
-        select count(*) into doctor_count from staff where NEW.department_id = staff.department_id and staff.position == 'doctor';
+        select count(*) into doctor_count from staff where NEW.department_id = staff.department_id and staff.position = 'DOCTOR'::position_type;
         select capacity into department_capacity from department where id = NEW.department_id;
 
         if doctor_count >= department_capacity then

@@ -1,10 +1,13 @@
 package ru.improve.util.parser;
 
+import ru.improve.models.patient.PatientStatus;
 import ru.improve.models.staff.StaffPosition;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +56,8 @@ public class RecordsReader {
             return Integer.valueOf(value);
         } else if (type.equals(StaffPosition.class)) {
             return StaffPosition.valueOf(value);
+        } else if (type.equals(PatientStatus.class)) {
+            return PatientStatus.valueOf(value);
         }
         throw new IllegalArgumentException("Unsupported type: " + type);
     }

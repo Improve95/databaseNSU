@@ -2,20 +2,25 @@ package ru.improve.util;
 
 import ru.improve.Main;
 import ru.improve.dao.DoctorDao;
+import ru.improve.dao.DoctorSpecializationDao;
 import ru.improve.dao.PassportDao;
+import ru.improve.dao.PatientDao;
 import ru.improve.dao.PersonDao;
 import ru.improve.dao.SpecializationDao;
 import ru.improve.dao.StaffDao;
 import ru.improve.models.Doctor;
+import ru.improve.models.DoctorSpecialization;
 import ru.improve.models.Passport;
 import ru.improve.models.Person;
 import ru.improve.models.Specialization;
+import ru.improve.models.patient.Patient;
 import ru.improve.models.staff.Staff;
 import ru.improve.util.parser.CsvParser;
 import ru.improve.util.parser.RecordsReader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +33,8 @@ public class FillTables {
     SpecializationDao specializationDao = new SpecializationDao();
     StaffDao staffDao = new StaffDao();
     DoctorDao doctorDao = new DoctorDao();
+    DoctorSpecializationDao doctorSpecializationDao = new DoctorSpecializationDao();
+    PatientDao patientDao = new PatientDao();
 
     public void fill() {
         RecordsReader recordsReader = new RecordsReader();
@@ -75,9 +82,9 @@ public class FillTables {
             staffDao.addStaffs(staffList);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }*/
+        }
 
-        /*try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/doctor.txt")) {
+        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/doctor.txt")) {
             List<Doctor> doctorList = recordsReader.getObjectList(csvParser.parse(inputStream), Doctor.class, 0)
                     .stream()
                     .map(object -> (Doctor) object)
@@ -86,7 +93,34 @@ public class FillTables {
             doctorDao.addDoctors(doctorList);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/doctorSpecialization.txt")) {
+            List<DoctorSpecialization> doctorSpecializationList = recordsReader.getObjectList(csvParser.parse(inputStream), DoctorSpecialization.class, 0)
+                    .stream()
+                    .map(object -> (DoctorSpecialization) object)
+                    .collect(Collectors.toList());
+            doctorSpecializationDao.truncateTable();
+            doctorSpecializationDao.addDoctorSpecializations(doctorSpecializationList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }*/
+
+        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/patient.txt")) {
+            List<Patient> patientList = recordsReader.getObjectList(csvParser.parse(inputStream), Patient.class, 3)
+                    .stream()
+                    .map(object -> {
+                        Patient patient = (Patient) object;
+                        patient.setComingTime(LocalDateTime.now());
+                        patient.setReleaseTime(null);
+                        return patient;
+                    })
+                    .collect(Collectors.toList());
+            patientDao.truncateTable();
+            patientDao.addPatients(patientList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         if (false) {
             try (InputStream inputStream = Main.class.getResourceAsStream("")) {
@@ -94,7 +128,7 @@ public class FillTables {
                         .stream()
                         .map(object -> (Staff) object)
                         .collect(Collectors.toList());
-                staffDao.truncateTable();
+//                staffDao.truncateTable();
     //            staffDao.addStaffs(staffList);
             } catch (IOException e) {
                 throw new RuntimeException(e);

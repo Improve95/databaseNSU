@@ -23,6 +23,14 @@ create trigger check_doctor_in_staff_trigger
     before insert on doctor
     for each row execute function check_doctor_in_staff();
 
+-- create or replace function check_doctor_specialization()
+--     returns trigger as $$
+-- begin
+--     select
+-- end;
+-- $$ language plpgsql;
+-- end;
+
 drop table if exists doctor_specialization cascade ;
 create table doctor_specialization (
     doctor_id int references doctor("staff_id") on delete cascade ,

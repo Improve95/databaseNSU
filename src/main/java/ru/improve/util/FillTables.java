@@ -5,6 +5,9 @@ import ru.improve.dao.PassportDao;
 import ru.improve.dao.PersonDao;
 import ru.improve.dao.SpecializationDao;
 import ru.improve.dao.StaffDao;
+import ru.improve.models.Passport;
+import ru.improve.models.Person;
+import ru.improve.models.Specialization;
 import ru.improve.models.staff.Staff;
 import ru.improve.util.parser.CsvParser;
 import ru.improve.util.parser.RecordsReader;
@@ -60,7 +63,7 @@ public class FillTables {
             throw new RuntimeException(e);
         }*/
 
-        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/staff.txt")) {
+        /*try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/staff.txt")) {
             List<Staff> staffList = recordsReader.getObjectList(csvParser.parse(inputStream), Staff.class, 0)
                     .stream()
                     .map(object -> (Staff) object)
@@ -69,12 +72,21 @@ public class FillTables {
             staffDao.addStaffs(staffList);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-
-        /*try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/doctor.txt")) {
-            List<Object> personList = recordsReader.getObjectList(csvParser.parse(inputStream), Person.class, 1);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }*/
+
+
+
+        if (false) {
+            try (InputStream inputStream = Main.class.getResourceAsStream("")) {
+                List<Object> staffList = recordsReader.getObjectList(csvParser.parse(inputStream), Staff.class, 0)
+                        .stream()
+                        .map(object -> (Staff) object)
+                        .collect(Collectors.toList());
+                staffDao.truncateTable();
+    //            staffDao.addStaffs(staffList);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

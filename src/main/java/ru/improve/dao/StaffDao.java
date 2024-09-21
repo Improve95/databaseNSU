@@ -40,7 +40,6 @@ public class StaffDao {
     }
 
     public void truncateTable() {
-        jdbcTemplate.update("alter sequence person_id_seq restart with 1");
-        jdbcTemplate.update("truncate table person cascade");
+        jdbcTemplate.update("truncate table staff cascade");
     }
 }

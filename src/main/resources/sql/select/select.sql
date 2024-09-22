@@ -13,11 +13,13 @@ select *, healthy_patient::NUMERIC / patient_number * 100 as "%" from (
 order by "%" desc
 fetch first 10 rows only ;
 
-select sum(case when release_time is null then current_date else release_time end  - patient.coming_time) as total_time, person_id from patient
+select sum((case when release_time is null then current_date else release_time end)  - coming_time) as total_time, person_id from patient
     where coming_time >= current_date - interval '3 years'
     group by person_id
     order by total_time desc
     fetch first 10 rows only;
+
+select * from patient where coming_time >= current_date - interval '3 years';
 
 select department_id from (
     select sum(doctor_patients) as "doctor_patients", count(*) as "doctor_dep_count", department_id from department
@@ -27,8 +29,5 @@ select department_id from (
             group by (doctor_id)) on doctor_id = staff.id
         group by department_id)
     where doctor_patients / doctor_dep_count >= 10;
-
-
-
 
 

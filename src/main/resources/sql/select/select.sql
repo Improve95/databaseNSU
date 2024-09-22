@@ -19,6 +19,10 @@ select sum(case when release_time is null then current_date else release_time en
     order by total_time desc
     fetch first 10 rows only;
 
-select count(*), doctor_id from doctor inner join patient p on doctor.staff_id = p.doctor_id
-group by doctor_id
-order by doctor_id desc ;
+select * from department
+    inner join staff s on department.id = s.department_id
+    inner join doctor d on s.id = d.staff_id
+    inner join patient p on d.staff_id = p.doctor_id
+
+
+

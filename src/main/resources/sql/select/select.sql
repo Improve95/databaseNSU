@@ -18,4 +18,24 @@ select doctor.*, count(*) from doctor inner join patient p on doctor.staff_id = 
     order by count(*) desc;
 --     fetch next 10 rows only;
 
-select
+select count(*) / count(*) over (partition by p.status) as "% of total"
+    from doctor inner join patient p on doctor.staff_id = p.doctor_id
+        where p.status = 'HEALTHY';
+
+select count(*) from doctor inner join patient p on doctor.staff_id = p.doctor_id
+        where p.status = 'HEALTHY'
+    union select count(*) from doctor inner join patient p on doctor.staff_id = p.doctor_id
+        where p.status = 'OUT_TREATMENT' or p.status = 'TREATMENT_IN_ANOTHER_PLACE';
+
+select count(*), p.status, doctor_id from doctor inner join patient p on doctor.staff_id = p.doctor_id
+    group by (p.status='HEALTHY', p.doctor_id)
+    order by doctor_id desc;
+
+select count(*) from doctor inner join patient p on doctor.staff_id = p.doctor_id
+    group by (p.status='HEALTHY')
+    order by count(*) desc;
+
+select total, doctor_id from (
+select count(*) as total, doctor_id from doctor inner join patient p on doctor.staff_id = p.doctor_id
+group by (p.status='HEALTHY', p.doctor_id)
+order by doctor_id desc);

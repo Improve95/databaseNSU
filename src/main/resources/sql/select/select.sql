@@ -9,5 +9,6 @@ select distinct patient.* from patient inner join disease d on patient.id = d.pa
 select *, healthy_patient::NUMERIC / patient_number * 100 as "%" from (
     select count(*) as patient_number, sum(case when p.status = 'HEALTHY' then 1 else 0 end) as healthy_patient,
            doctor_id from doctor inner join patient p on doctor.staff_id = p.doctor_id
-    group by (p.doctor_id)
-);
+    group by (p.doctor_id))
+order by "%" desc
+fetch first 10 rows only ;

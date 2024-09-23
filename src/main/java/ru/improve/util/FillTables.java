@@ -45,7 +45,7 @@ public class FillTables {
                     .stream()
                     .map(object -> (Person) object)
                     .collect(Collectors.toList());
-            personDao.truncateTable();
+//            personDao.truncateTable();
             personDao.addPeople(personList);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -56,13 +56,13 @@ public class FillTables {
                     .stream()
                     .map(object -> (Passport) object)
                     .collect(Collectors.toList());
-            passportDao.truncateTable();
+//            passportDao.truncateTable();
             passportDao.addPassports(passportList);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
-        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/specialization.txt")) {
+        /*try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/specialization.txt")) {
             List<Specialization> specializationList = recordsReader.getObjectList(csvParser.parse(inputStream), Specialization.class, 1)
                     .stream()
                     .map(object -> (Specialization) object)
@@ -104,9 +104,9 @@ public class FillTables {
             doctorSpecializationDao.addDoctorSpecializations(doctorSpecializationList);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }*/
+        }
 
-        /*try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/patient.txt")) {
+        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/patient.txt")) {
             List<Patient> patientList = recordsReader.getObjectList(csvParser.parse(inputStream), Patient.class, 3)
                     .stream()
                     .map(object -> {
@@ -116,7 +116,7 @@ public class FillTables {
                         return patient;
                     })
                     .collect(Collectors.toList());
-//            patientDao.truncateTable();
+            patientDao.truncateTable();
             patientDao.addPatients(patientList);
         } catch (IOException e) {
             throw new RuntimeException(e);

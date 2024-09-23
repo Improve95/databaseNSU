@@ -8,3 +8,5 @@ update patient set coming_time = now() - interval '2 months' where id=12;
 update patient set coming_time = now() - interval '5 months' where id=13;
 
 update patient set release_time = now() where status = 'HEALTHY'::patient_status_type;
+update patient set release_time = now() + interval '1 days' where status = 'OUT_TREATMENT'::patient_status_type;
+update patient set release_time = now() + interval '10 minutes' where status = 'TREATMENT_IN_ANOTHER_PLACE'::patient_status_type;

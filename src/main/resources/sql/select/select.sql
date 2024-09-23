@@ -19,8 +19,6 @@ select sum((case when release_time is null then current_timestamp else release_t
     order by total_time desc
     fetch first 10 rows only;
 
-select * from patient where coming_time >= current_timestamp - interval '3 years';
-
 select department_id from (
     select sum(doctor_patients) as "doctor_patients", count(*) as "doctor_dep_count", department_id from department
         inner join staff on department.id = staff.department_id
@@ -30,4 +28,5 @@ select department_id from (
         group by department_id)
     where doctor_patients / doctor_dep_count >= 10;
 
+select * from doctor inner join patient on doctor.staff_id = patient.doctor_id
 

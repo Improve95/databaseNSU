@@ -28,5 +28,10 @@ select department_id from (
         group by department_id)
     where doctor_patients / doctor_dep_count >= 10;
 
-select * from doctor inner join patient on doctor.staff_id = patient.doctor_id
+select sum((case when release_time is null then current_timestamp else release_time end) -
+           (case when coming_time < current_timestamp - interval '1 years' then current_timestamp - interval '1 years' else coming_time end))
+        as total_time, doctor_id
+    from doctor inner join patient on doctor.staff_id = patient.doctor_id
+    group by doctor_id
+    order by total_time desc;
 

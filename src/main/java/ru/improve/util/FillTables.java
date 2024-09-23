@@ -104,9 +104,9 @@ public class FillTables {
             doctorSpecializationDao.addDoctorSpecializations(doctorSpecializationList);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
-        try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/patient.txt")) {
+        /*try (InputStream inputStream = Main.class.getResourceAsStream("../../dataForTable/patient.txt")) {
             List<Patient> patientList = recordsReader.getObjectList(csvParser.parse(inputStream), Patient.class, 3)
                     .stream()
                     .map(object -> {

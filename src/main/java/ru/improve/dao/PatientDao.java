@@ -46,6 +46,7 @@ public class PatientDao {
     }
 
     public void truncateTable() {
+        jdbcTemplate.update("alter sequence patient_id_seq restart with 1");
         jdbcTemplate.update("truncate table patient cascade");
     }
 }

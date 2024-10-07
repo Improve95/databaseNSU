@@ -1,0 +1,10 @@
+insert into specialization (name) values ('Surgery');
+insert into specialization (name) values ('Neurology');
+insert into specialization (name) values ('Pediatrics');
+insert into specialization (name) values ('Cardiology');
+insert into specialization (name) values ('Dermatology');
+insert into specialization (name) values ('Stomatology');
+insert into specialization (name) values ('Terapevt');
+insert into specialization (name) values ('Dermatolog');
+insert into specialization (name) values ('Okulist');
+insert into specialization (name) values ('Lor');

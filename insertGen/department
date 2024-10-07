@@ -1,0 +1,5 @@
+insert into department (specialization_id, name, capacity) values (1, 'Cardiology', 10);
+insert into department (specialization_id, name, capacity) values (2, 'Neurology', 10);
+insert into department (specialization_id, name, capacity) values (3, 'Orthopedics', 10);
+insert into department (specialization_id, name, capacity) values (4, 'Pediatrics', 10);
+insert into department (specialization_id, name, capacity) values (5, 'Dermatology', 10);

@@ -12,8 +12,10 @@ end;
     $$ language plpgsql;
 
 create table doctor (
-    staff_id int primary key references staff("id") on delete cascade
+    staff_id int primary key references staff("id") on delete cascade,
+    specialization int references specialization("id")
 );
+
 create trigger check_doctor_in_staff_trigger
     before insert on doctor
     for each row execute function check_doctor_in_staff();

@@ -1,6 +1,5 @@
 /* 1 */
 drop schema if exists public cascade ;
-create schema public;
 
 alter sequence person_id_seq restart with 1;
 truncate table person cascade;
@@ -14,6 +13,7 @@ truncate passport cascade;
 
 /* 2 */
 drop table if exists specialization cascade ;
+truncate table specialization cascade ;
 
 drop table if exists department cascade;
 truncate department cascade;
@@ -27,7 +27,6 @@ truncate table staff cascade ;
 
 drop trigger if exists doctor_limit on staff;
 
-/* 4 */
 drop type if exists staff_changes cascade ;
 drop table if exists staff_change;
 

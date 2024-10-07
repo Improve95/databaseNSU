@@ -2,16 +2,15 @@ select distinct staff.* from staff inner join staff_change sc on staff.id = sc.s
     where sc.before is null and sc.change_time > current_date - interval '2 year' and
           staff.salary < 100000;
 
-select patient.* from (
-    select patient.* from patient where disease = 3
-) as patient inner join patient_history ph on patient.id = ph.patient_id;
+select patient.* from patient inner join disease_history dh on patient.id = dh.patient_id
+    where dh.disease = 3 and dh.сoming_time >= current_timestamp - interval '3 month';
 
 select *, healthy_patient::NUMERIC / patient_number * 100 as "%" from (
-    select count(*) as patient_number, sum(case when p.status = 'HEALTHY' then 1 else 0 end) as healthy_patient,
-           doctor_id from doctor inner join patient p on doctor.staff_id = p.doctor_id
-    group by (p.doctor_id))
-order by "%" desc
-fetch first 10 rows only ;
+    select count(*) as patient_number, sum(case when dh.patient_status = 'HEALTHY' then 1 else 0 end) as healthy_patient,
+        current_doctor from doctor inner join disease_history dh on doctor.id = dh.current_doctor
+        group by (dh.current_doctor))
+    order by "%" desc
+    fetch first 10 rows only;
 
 /*select sum((case when release_time is null then current_timestamp else release_time end)  - coming_time) as total_time, person_id from patient
     where coming_time >= current_date - interval '3 years'

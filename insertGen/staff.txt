@@ -1,26 +1,3 @@
-truncate table specialization cascade ;
-alter sequence specialization_id_seq restart with 1;
-insert into specialization (name) values ('Surgery');
-insert into specialization (name) values ('Neurology');
-insert into specialization (name) values ('Pediatrics');
-insert into specialization (name) values ('Cardiology');
-insert into specialization (name) values ('Dermatology');
-insert into specialization (name) values ('Stomatology');
-insert into specialization (name) values ('Terapevt');
-insert into specialization (name) values ('Dermatolog');
-insert into specialization (name) values ('Okulist');
-insert into specialization (name) values ('Lor');
-
-truncate table department cascade ;
-alter sequence department_id_seq restart with 1;
-insert into department (specialization_id, name, capacity) values (1, 'Cardiology', 10);
-insert into department (specialization_id, name, capacity) values (2, 'Neurology', 10);
-insert into department (specialization_id, name, capacity) values (3, 'Orthopedics', 10);
-insert into department (specialization_id, name, capacity) values (4, 'Pediatrics', 10);
-insert into department (specialization_id, name, capacity) values (5, 'Dermatology', 10);
-
-truncate table staff cascade ;
-alter sequence staff_id_seq restart with 1;
 insert into staff (passport_series, passport_number, name, second_name, phone, salary, department_id, position) values ('1234', '123456', 'name0', 'second_name0', '77777777777', 50000, 1, 'DOCTOR');
 insert into staff (passport_series, passport_number, name, second_name, phone, salary, department_id, position) values ('1235', '123457', 'name1', 'second_name1', '77777777778', 52000, 2, 'DOCTOR');
 insert into staff (passport_series, passport_number, name, second_name, phone, salary, department_id, position) values ('1236', '123458', 'name2', 'second_name2', '77777777779', 54000, 3, 'DOCTOR');

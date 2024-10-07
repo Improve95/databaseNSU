@@ -5,7 +5,7 @@ create table research_type (
 
 create table research (
     id uuid primary key default gen_random_uuid() ,
-    patient_id int references patient("id") on delete cascade ,
+    disease uuid not null references disease_history("id") on delete cascade,
     research_type int not null references research_type("id") on delete set null ,
     date_of_research date not null ,
     status int not null ,

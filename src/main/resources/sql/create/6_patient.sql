@@ -7,27 +7,27 @@ create table patient (
 
     name varchar(50) not null ,
     second_name varchar(50) not null ,
-    phone varchar(11) unique check ( phone like '\d{11}' ) ,
+    phone varchar(11) unique check ( phone like '\d{11}' ),
 
-    patient_status patient_status_type default 'SICK'::patient_status_type,
-    doctor_id int references doctor("id") on delete set null ,
-    disease int references disease("id") on delete set null
+    patient_status patient_change_type not null default 'SICK'::patient_change_type
 );
 
--- create or replace function check_patient_not_doctor()
---     returns trigger as $$
--- declare
---     patient_passport_number varchar;
---     patient_passport_series varchar;
---     doctor_passport_number varchar;
---     doctor_passport_series varchar;
--- begin
---     select
--- end;
---     $$ language plpgsql;
+create table disease_history (
+    id uuid primary key default gen_random_uuid() ,
+    patient_id int references patient("id") on delete cascade ,
 
-create type patient_change_type as enum ('STATUS', 'DEPARTMENT', 'DOCTOR');
-create table patient_history (
+    сoming_time timestamp with time zone default current_timestamp not null,
+    release_time timestamp ,
+
+    disease int references disease("id") on delete set null ,
+    doctor_which_set_disease int references doctor("id") on delete set null ,
+
+    patient_status patient_status_type default 'SICK'::patient_status_type,
+    current_doctor int references doctor("id") on delete set null
+);
+
+create type disease_history_change_type as enum ('STATUS', 'DEPARTMENT', 'DOCTOR');
+create table disease_history_change (
     id uuid primary key default gen_random_uuid() ,
     change_type patient_change_type not null ,
     before int ,

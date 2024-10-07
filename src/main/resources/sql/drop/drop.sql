@@ -1,60 +1,55 @@
-/* 1 */
-drop schema if exists public cascade ;
+/*
+drop table if exists  cascade ;
+alter sequence if exists _id_seq restart with 1;
+truncate  cascade;
+drop trigger if exists  on ;
+drop type if exists;
+*/
 
-/* 2 */
+/* 0 */
+drop schema if exists hospital cascade ;
+
+/* 1 */
 drop table if exists specialization cascade ;
 truncate table specialization cascade ;
+alter sequence specialization_id_seq restart with 1;
 
 drop table if exists department cascade;
 truncate department cascade;
+alter sequence department_id_seq restart with 1;
 
-/* 3 */
-drop type if exists position_type cascade ;
-drop function if exists check_staff_limit();
-
+/* 2 */
 drop table if exists staff cascade ;
-truncate table staff cascade ;
+alter sequence staff_id_seq restart with 1;
+truncate staff cascade;
 
-drop trigger if exists doctor_limit on staff;
+drop trigger if exists check_staff_limit_in_department on staff;
 
-drop type if exists staff_changes cascade ;
-drop table if exists staff_change;
-
-truncate table staff_change cascade;
-
-/* 5 */
-drop function if exists check_doctor_in_staff();
-
-drop table if exists doctor cascade ;
-truncate table doctor cascade;
-drop trigger if exists check_doctor_in_staff_trigger on doctor;
-
-drop table if exists doctor_specialization cascade ;
-truncate table doctor_specialization cascade ;
+drop type if exists staff_changes;
 
 /* 6 */
-drop type if exists patient_status_type cascade ;
-
 drop table if exists patient cascade ;
-truncate table patient cascade;
+alter sequence if exists patient_id_seq restart with 1;
+truncate patient cascade;
 
-drop table if exists disease cascade ;
-truncate table disease cascade;
+drop type if exists patient_status_type;
 
-drop table if exists patient_history cascade;
-truncate table patient_history cascade;
+drop type if exists disease_history_change_type;
+
+drop table if exists disease_history_change cascade ;
+alter sequence if exists disease_history_change_id_seq restart with 1;
+truncate disease_history_change cascade;
 
 /* 7 */
-
-drop type if exists patient_change_type cascade ;
-drop table patient_history;
-
 drop table if exists research_type cascade ;
-truncate table research_type cascade ;
+alter sequence research_type_id_seq restart with 1;
+truncate research_type cascade;
 
 drop table if exists research cascade ;
-truncate table research cascade ;
+alter sequence if exists  research_id_seq restart with 1;
+truncate research cascade;
 
 /* 8 */
-drop table if exists duty_schedule;
-truncate table duty_schedule cascade;
+drop table if exists duty_schedule cascade ;
+alter sequence if exists  duty_schedule_id_seq restart with 1;
+truncate duty_schedule cascade;

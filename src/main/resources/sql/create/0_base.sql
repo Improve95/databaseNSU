@@ -1,1 +1,1 @@
-create schema public;
+create schema hospital;

@@ -33,6 +33,9 @@ begin
 end
 $$ language plpgsql;
 
+create trigger check_staff_limit_in_department
+    before insert on staff
+    for each row execute function check_staff_limit();
 
 create type staff_changes as enum ( 'SALARY', 'POSITION', 'DEPARTMENT' ) ;
 create table staff_change (

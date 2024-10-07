@@ -1,16 +1,6 @@
 /* 1 */
 drop schema if exists public cascade ;
 
-alter sequence person_id_seq restart with 1;
-truncate table person cascade;
-
-drop table if exists person cascade;
-alter sequence person_id_seq restart with 1;
-truncate table person cascade;
-
-drop table if exists passport cascade;
-truncate passport cascade;
-
 /* 2 */
 drop table if exists specialization cascade ;
 truncate table specialization cascade ;
@@ -20,7 +10,7 @@ truncate department cascade;
 
 /* 3 */
 drop type if exists position_type cascade ;
-drop function if exists check_doctor_limit();
+drop function if exists check_staff_limit();
 
 drop table if exists staff cascade ;
 truncate table staff cascade ;
@@ -48,16 +38,17 @@ drop type if exists patient_status_type cascade ;
 drop table if exists patient cascade ;
 truncate table patient cascade;
 
-drop table if exists polis cascade ;
-truncate table polis cascade ;
-
 drop table if exists disease cascade ;
 truncate table disease cascade;
 
-drop table if exists patient_change cascade;
-truncate table patient_change cascade;
+drop table if exists patient_history cascade;
+truncate table patient_history cascade;
 
 /* 7 */
+
+drop type if exists patient_change_type cascade ;
+drop table patient_history;
+
 drop table if exists research_type cascade ;
 truncate table research_type cascade ;
 

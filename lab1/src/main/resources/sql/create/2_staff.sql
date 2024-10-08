@@ -13,9 +13,9 @@ create table staff (
     position position_type not null
 );
 
-/*alter table staff drop constraint staff_passport_number_check;
+alter table staff drop constraint staff_passport_number_check;
 alter table staff drop constraint staff_passport_series_check;
-alter table staff drop constraint staff_phone_check;*/
+alter table staff drop constraint staff_phone_check;
 
 /*create or replace function check_staff_limit()
     returns trigger as $$

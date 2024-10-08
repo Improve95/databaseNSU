@@ -10,7 +10,6 @@ insert into specialization (name) values ('Terapevt');
 insert into specialization (name) values ('Dermatolog');
 insert into specialization (name) values ('Okulist');
 insert into specialization (name) values ('Lor');
-
 truncate table department cascade ;
 alter sequence department_id_seq restart with 1;
 insert into department (specialization_id, name, capacity) values (1, 'Cardiology', 10);
@@ -18,7 +17,6 @@ insert into department (specialization_id, name, capacity) values (2, 'Neurology
 insert into department (specialization_id, name, capacity) values (3, 'Orthopedics', 10);
 insert into department (specialization_id, name, capacity) values (4, 'Pediatrics', 10);
 insert into department (specialization_id, name, capacity) values (5, 'Dermatology', 10);
-
 truncate table staff cascade ;
 alter sequence staff_id_seq restart with 1;
 truncate table staff_change cascade ;
@@ -182,28 +180,3 @@ insert into staff (passport_series, passport_number, name, second_name, phone, s
 insert into staff_change (staff_id, change_field, before, after) values(40, 'SALARY', null, 160000);
 insert into staff_change (staff_id, change_field, before, after) values(40, 'POSITION', null, 'ACCOUNTANT');
 insert into staff_change (staff_id, change_field, before, after) values(40, 'DEPARTMENT', null, 5);
-
-truncate table doctor cascade ;
-alter sequence if exists doctor_id_seq restart with 1;
-insert into doctor values (1, 1);
-insert into doctor values (2, 2);
-insert into doctor values (3, 3);
-insert into doctor values (4, 4);
-insert into doctor values (5, 5);
-insert into doctor values (6, 1);
-insert into doctor values (7, 2);
-insert into doctor values (8, 3);
-insert into doctor values (9, 4);
-insert into doctor values (10, 5);
-insert into doctor values (11, 1);
-insert into doctor values (12, 2);
-insert into doctor values (13, 3);
-insert into doctor values (14, 4);
-insert into doctor values (15, 5);
-insert into doctor values (16, 1);
-insert into doctor values (17, 2);
-insert into doctor values (18, 3);
-insert into doctor values (19, 4);
-insert into doctor values (20, 5);
-
-

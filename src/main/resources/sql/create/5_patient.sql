@@ -27,7 +27,7 @@ create table disease_history (
 create type disease_history_change_type as enum ('STATUS', 'DEPARTMENT', 'DOCTOR');
 create table disease_history_change (
     id uuid primary key default gen_random_uuid() ,
-    change_type patient_change_type not null ,
+    change_type disease_history_change_type not null ,
     before int ,
     after int not null ,
     change_time timestamp with time zone default current_timestamp not null,

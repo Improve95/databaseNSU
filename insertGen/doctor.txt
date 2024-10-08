@@ -1,0 +1,23 @@
+
+truncate table staff cascade ;
+alter sequence staff_id_seq restart with 1;
+insert into doctor values (1, 1);
+insert into doctor values (2, 2);
+insert into doctor values (3, 3);
+insert into doctor values (4, 4);
+insert into doctor values (5, 5);
+insert into doctor values (6, 1);
+insert into doctor values (7, 2);
+insert into doctor values (8, 3);
+insert into doctor values (9, 4);
+insert into doctor values (10, 5);
+insert into doctor values (11, 1);
+insert into doctor values (12, 2);
+insert into doctor values (13, 3);
+insert into doctor values (14, 4);
+insert into doctor values (15, 5);
+insert into doctor values (16, 1);
+insert into doctor values (17, 2);
+insert into doctor values (18, 3);
+insert into doctor values (19, 4);
+insert into doctor values (20, 5);

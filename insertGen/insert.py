@@ -119,8 +119,8 @@ for i in range(10):
 diseaseHistory = open("disHistory.txt", "w")
 diseaseHistory.write("\n")
 diseaseHistory.write("truncate table disease_history cascade ;\n")
-patientStatus = ['HEALTHY', 'OUT_TREATMENT', 'ANOTHER_PLACE']
-for i in range(1, 15):
+patientStatus = ['SICK', 'HEALTHY', 'SICK', 'OUT_TREATMENT', 'ANOTHER_PLACE']
+for i in range(1, 30):
     insertQuest = "insert into disease_history (patient_id, release_time, disease, doctor_which_set_disease, patient_status, current_doctor)"
-    insertQuest += f" values ({i}, null, {random.randint(1, 10)}, {random.randint(1, 20)}, '{ patientStatus[random.randint(0, 2)] }', {random.randint(1, 20)});\n"
-    diseaseHistory.write(insertQuest);
+    insertQuest += f" values ({i}, null, {random.randint(1, 10)}, {random.randint(1, 20)}, '{ patientStatus[random.randint(0, 4)] }', {random.randint(1, 20)});\n"
+    diseaseHistory.write(insertQuest)

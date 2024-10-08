@@ -19,7 +19,7 @@ create table disease_history (
     id uuid primary key default gen_random_uuid() ,
     patient_id int references patient("id") on delete cascade ,
 
-    сoming_time timestamp with time zone default current_timestamp not null,
+    coming_time timestamp with time zone default current_timestamp not null,
     release_time timestamp with time zone,
 
     disease int references disease("id") on delete set null ,

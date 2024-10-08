@@ -1,0 +1,13 @@
+
+truncate table doctor_specialization cascade ;
+alter sequence doctor_specialization_id_seq restart with 1;
+insert into doctor_specialization (1, 1);
+insert into doctor_specialization (1, 6);
+insert into doctor_specialization (2, 2);
+insert into doctor_specialization (2, 7);
+insert into doctor_specialization (3, 3);
+insert into doctor_specialization (3, 8);
+insert into doctor_specialization (4, 4);
+insert into doctor_specialization (4, 9);
+insert into doctor_specialization (5, 5);
+insert into doctor_specialization (5, 10);

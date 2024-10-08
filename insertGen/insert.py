@@ -1,3 +1,5 @@
+import random
+
 insert = open("insert.txt", "w")
 
 specs = ["Surgery", "Neurology", "Pediatrics", "Cardiology", "Dermatology", "Stomatology", "Terapevt", "Dermatolog", "Okulist", "Lor"]
@@ -5,7 +7,8 @@ insert.write("truncate table specialization cascade ;\nalter sequence specializa
 for spec in specs:
     insertQuest = f"insert into specialization (name) values ('{spec}');\n"
     insert.write(insertQuest)
-    
+
+
 insert.write("truncate table department cascade ;\nalter sequence department_id_seq restart with 1;\n")
 departs = ["Cardiology", "Neurology", "Orthopedics", "Pediatrics", "Dermatology"]
 specIndex = 1
@@ -14,6 +17,7 @@ for depart in departs:
     insertQuest = f"insert into department (specialization_id, name, capacity) values ({specIndex}, '{depart}', {capacity});\n"
     insert.write(insertQuest)
     specIndex += 1
+
 
 insert.write("truncate table staff cascade ;\nalter sequence staff_id_seq restart with 1;\ntruncate table staff_change cascade ;\nalter sequence staff_change_id_seq restart with 1;")
 series = 1234
@@ -68,6 +72,7 @@ for i in range(1, 11):
     insert.write(insertQuest3)
     insert.write(insertQuest4)
 
+
 doctor = open("doctor.txt", "w")
 doctor.write("\n")
 doctor.write("truncate table doctor cascade ;\n")
@@ -76,13 +81,14 @@ for i in range(1, 21):
     insertQuest = f"insert into doctor values ({str(i)});\n"
     doctor.write(insertQuest)
 
+
 docSpec = open("docSpec.txt", "w")
 docSpec.write("\n")
 docSpec.write("truncate table doctor_specialization cascade ;\n")
 docSpec.write("alter sequence doctor_specialization_id_seq restart with 1;\n")
 for i in range(1, 6):
     insertQuest1 = f"insert into doctor_specialization ({i}, {i});\n"
-    insertQuest2 = f"insert into doctor_specialization ({i}, {str(i * 2)});\n"
+    insertQuest2 = f"insert into doctor_specialization ({i}, {str(i + 5)});\n"
     docSpec.write(insertQuest1)
     docSpec.write(insertQuest2)
 
@@ -91,5 +97,30 @@ patient = open("patient.txt", "w")
 patient.write("\n")
 patient.write("truncate table patient cascade ;\n")
 patient.write("alter sequence patient_id_seq restart with 1;\n")
+polis = 1111111111111111
 for i in range(1, 60):
-    
+    insertQuest1 = f"insert into patient (passport_series, passport_number, polis_number, name, second_name, phone) values ('{series}', '{number}', '{str(polis)}', '{'name' + str(index)}', '{'second_name' + str(index)}', '{phone}');\n"
+    series += 1
+    number += 1
+    phone += 1
+    polis += 1
+    index += 1
+    patient.write(insertQuest1)
+
+disease = open("disease.txt", "w")
+disease.write("\n")
+disease.write("truncate table disease cascade ;\n")
+disease.write("alter sequence disease_id_seq restart with 1;\n")
+for i in range(10):
+    insertQuest = f"insert into disease (name) values('{'disease' + str(i + 1)}');\n"
+    disease.write(insertQuest)
+
+
+diseaseHistory = open("disHistory.txt", "w")
+diseaseHistory.write("\n")
+diseaseHistory.write("truncate table disease_history cascade ;\n")
+patientStatus = ['HEALTHY', 'OUT_TREATMENT', 'ANOTHER_PLACE']
+for i in range(1, 15):
+    insertQuest = "insert into disease_history (patient_id, release_time, disease, doctor_which_set_disease, patient_status, current_doctor)"
+    insertQuest += f" values ({i}, null, {random.randint(1, 10)}, {random.randint(1, 20)}, '{ patientStatus[random.randint(0, 2)] }', {random.randint(1, 20)});\n"
+    diseaseHistory.write(insertQuest);

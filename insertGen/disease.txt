@@ -1,0 +1,13 @@
+
+truncate table disease cascade ;
+alter sequence disease_id_seq restart with 1;
+insert into disease (name) values('disease1');
+insert into disease (name) values('disease2');
+insert into disease (name) values('disease3');
+insert into disease (name) values('disease4');
+insert into disease (name) values('disease5');
+insert into disease (name) values('disease6');
+insert into disease (name) values('disease7');
+insert into disease (name) values('disease8');
+insert into disease (name) values('disease9');
+insert into disease (name) values('disease10');

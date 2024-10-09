@@ -22,7 +22,7 @@ insert into department (specialization_id, name, capacity) values (5, 'Dermatolo
 truncate table staff cascade ;
 alter sequence staff_id_seq restart with 1;
 truncate table staff_change cascade ;
-alter sequence staff_change_id_seq restart with 1;insert into staff (passport_series, passport_number, name, second_name, phone, salary, department_id, position) values ('1234', '123456', 'name0', 'second_name0', '77777777777', 50000, 1, 'DOCTOR');
+insert into staff (passport_series, passport_number, name, second_name, phone, salary, department_id, position) values ('1234', '123456', 'name0', 'second_name0', '77777777777', 50000, 1, 'DOCTOR');
 insert into staff_change (staff_id, change_field, before, after) values(1, 'SALARY', null, 50000);
 insert into staff_change (staff_id, change_field, before, after) values(1, 'POSITION', null, 'DOCTOR');
 insert into staff_change (staff_id, change_field, before, after) values(1, 'DEPARTMENT', null, 1);

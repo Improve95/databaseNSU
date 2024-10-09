@@ -1,0 +1,1 @@
+insert into habitat (name, climate, continent) values ('habitatName0', 'CL1', 'CO1')

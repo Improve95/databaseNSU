@@ -29,8 +29,7 @@ select sum((case when release_time is null then current_timestamp else release_t
            (case when coming_time < current_timestamp - interval '1 years' then current_timestamp - interval '1 years' else coming_time end))
         as total_time, doctor.id
     from doctor inner join disease_history dh on doctor.id = dh.current_doctor
-        where dh.coming_time > current_timestamp - interval '1 years' and
-            dh.release_time > current_timestamp - interval '1 years'
+        where dh.release_time > current_timestamp - interval '1 years' or dh.release_time is null
                 group by doctor.id
                     order by total_time desc;
 

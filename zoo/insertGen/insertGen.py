@@ -63,11 +63,19 @@ def insertAnimal(cursor):
 
     animalType = 3
     cage = 1
+
+    namei = 0
     
-    for i in range(10):
+    for i in range(8):
         insertScript = "insert into animal(animal_type, cage, name, weight, length) values (%s, %s, %s, %s, %s)"
-        insertValue = ()
+        insertValue = (animalType, cage, "name" + str(namei))
         cursor.execute(insertScript, insertValue)
+
+        namei += 1
+        if (cage == 4):
+            cage = 1
+        else:
+            cage += 1
 
     for i in range(50):
         insertScript = "insert into animal(animal_type, cage, name, weight, length) values (%s, %s, %s, %s, %s)"

@@ -6,7 +6,7 @@ create table patient (
 
     name varchar(50) not null ,
     second_name varchar(50) not null ,
-    phone varchar(11) unique check ( phone ~ '\d{11}' )
+    phone varchar(11) unique check ( phone ~ '[789]\d{10}' )
 );
 
 /*alter table patient drop constraint patient_passport_series_check;

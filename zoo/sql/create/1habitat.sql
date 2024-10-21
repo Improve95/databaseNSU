@@ -31,4 +31,4 @@ create table animal (
     weight int not null check ( weight > 0) ,
     length int not null check ( length > 0 ) ,
     coming_time timestamp with time zone not null default current_timestamp
-)
+);

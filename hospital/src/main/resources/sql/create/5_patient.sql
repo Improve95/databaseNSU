@@ -9,11 +9,6 @@ create table patient (
     phone varchar(11) unique check ( phone ~ '[789]\d{10}' )
 );
 
-/*alter table patient drop constraint patient_passport_series_check;
-alter table patient drop constraint patient_passport_number_check;
-alter table patient drop constraint patient_phone_check;
-alter table patient drop constraint patient_polis_number_check;*/
-
 create type patient_status_type as enum ('SICK', 'HEALTHY', 'OUT_TREATMENT', 'ANOTHER_PLACE');
 create table disease_history (
     id uuid primary key default gen_random_uuid() ,

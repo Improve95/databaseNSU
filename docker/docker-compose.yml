@@ -1,6 +1,6 @@
 services:
-  postgres:
-    container_name: postgres
+  databaseNSU:
+    container_name: databaseNSU
     image: postgres:16.4
     hostname: database
     environment:

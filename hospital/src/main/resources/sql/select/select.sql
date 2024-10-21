@@ -19,11 +19,12 @@ select patient.*, sum(case when release_time is null then current_timestamp else
             fetch first 10 rows only;
 
 select department.* from department inner join staff s on department.id = s.department_id
-    inner join (
-        select current_doctor, count(*) as doctor_patient_number from disease_history
-            where patient_status = 'SICK'::patient_status_type
-                group by (current_doctor)) on current_doctor = s.id
-        group by (department.id, department.*) having (sum(doctor_patient_number) / count(*) >= 10);
+inner join (
+    select current_doctor, count(*) as doctor_patient_number from disease_history
+    where patient_status = 'SICK'::patient_status_type
+    group by (current_doctor)) on current_doctor = s.id
+group by (department.id, department.*) 
+having (sum(doctor_patient_number) / count(*) >= 10);
 
 select sum((case when release_time is null then current_timestamp else release_time end) -
            (case when coming_time < current_timestamp - interval '1 years' then current_timestamp - interval '1 years' else coming_time end))

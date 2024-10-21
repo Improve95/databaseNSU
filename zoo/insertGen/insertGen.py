@@ -2,7 +2,7 @@ import random
 import psycopg
 
 hostname = 'localhost'
-database = 'databaseNSU'
+database = 'databaseNsu'
 username = 'postgres'
 passd = 'postgres'
 portId= 5430
@@ -52,7 +52,7 @@ def insertCage(cursor):
     cursor.execute("alter sequence cage_id_seq restart with 1")
     cursor.execute("truncate table cage cascade")
 
-    for i in range(50):
+    for i in range(10):
         insertScript = "insert into cage (length, width, height, place) values (%s, %s, %s, %s)"
         insertValue = (1, 1, 1, "place")
         cursor.execute(insertScript, insertValue)
@@ -61,33 +61,46 @@ def insertAnimal(cursor):
     cursor.execute("alter sequence animal_id_seq restart with 1")
     cursor.execute("truncate table animal cascade")
 
-    animalType = 3
+    animalType = 1
     cage = 1
 
     namei = 0
     
-    for i in range(8):
+    for i in range(10):
         insertScript = "insert into animal(animal_type, cage, name, weight, length) values (%s, %s, %s, %s, %s)"
-        insertValue = (animalType, cage, "name" + str(namei))
+        insertValue = (animalType, cage, "name" + str(namei), random.randint(10, 1000), 1)
         cursor.execute(insertScript, insertValue)
 
         namei += 1
-        if (cage == 4):
+        if (cage == 5):
             cage = 1
         else:
             cage += 1
 
-    for i in range(50):
+    cage = 6
+
+    for i in range(28):
         insertScript = "insert into animal(animal_type, cage, name, weight, length) values (%s, %s, %s, %s, %s)"
 
+        namei += 1
+        if (cage == 10):
+            cage = 6
+        else:
+            cage += 1
+
         animalType = random.randint(1, 15)
-        insertValue = ()
+        insertValue = (animalType, cage, "name" + str(namei), random.randint(10, 1000), 1)
         cursor.execute(insertScript, insertValue)
 
 def insert(cursor):
     insertHabitat(cursor)
     insertAnimalType(cursor)
     insertCage(cursor)
+    insertAnimal(cursor)
+
+def update(cursor):
+    updateScript = "update animal set cage = 7 where animal_type = 14"
+    cursor.execute(updateScript);
 
 def main():
     try:
@@ -102,6 +115,7 @@ def main():
         cursor.execute("set search_path to zoo")
 
         insert(cursor)
+        update(cursor)
         dbConnect.commit()
 
     except Exception as error:

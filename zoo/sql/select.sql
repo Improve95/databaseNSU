@@ -46,7 +46,7 @@ select * from (
 where animals_in_cage = max_in_cage_between_all_cages;
 
 /* == 5 == */
-select cage.* from cage where cage in (
+select cage.* from cage where cage.id in (
     select cage from (
     select cage,
     first_value(animal_type_num) over (partition by cage order by animal_type, animal_type_num) as first_animal_type,

@@ -99,8 +99,9 @@ def insert(cursor):
     insertAnimal(cursor)
 
 def update(cursor):
-    updateScript = "update animal set cage = 7 where animal_type = 14"
-    cursor.execute(updateScript);
+    insertScript = "update animal set cage = %s where animal_type = %s"
+    insertValue = (random.randint(1, 10), range.randint(1, 15))
+    cursor.execute(insertScript, insertValue)
 
 def main():
     try:

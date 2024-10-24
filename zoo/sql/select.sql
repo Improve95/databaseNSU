@@ -6,4 +6,9 @@ select * from (
         from animal a) as ah)
 where animal_in_habitat = max_habitat;
 
+select habitat, min(min_coming_time) from (
+    select *, min(animal_habitat_table.coming_time) over (partition by animal_habitat_table.habitat) as min_coming_time from (
+        select a.*, (select habitat from animal_type at
+                    where a.animal_type = at.id) as habitat from animal a) as animal_habitat_table)
+group by habitat;
 

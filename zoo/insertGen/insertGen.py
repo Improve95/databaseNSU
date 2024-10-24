@@ -1,4 +1,5 @@
-import random
+from random import randint
+import datetime
 import psycopg
 
 hostname = 'localhost'
@@ -67,8 +68,10 @@ def insertAnimal(cursor):
     namei = 0
     
     for i in range(10):
-        insertScript = "insert into animal(animal_type, cage, name, weight, length) values (%s, %s, %s, %s, %s)"
-        insertValue = (animalType, cage, "name" + str(namei), random.randint(10, 1000), 1)
+        nowTime = datetime.datetime.now()
+        comingTime = nowTime - datetime.timedelta(days=randint(1, 5), hours=randint(0, 23));
+        insertScript = "insert into animal(animal_type, cage, name, weight, length, coming_time) values (%s, %s, %s, %s, %s, %s)"
+        insertValue = (animalType, cage, "name" + str(namei), randint(10, 1000), 1, comingTime)
         cursor.execute(insertScript, insertValue)
 
         namei += 1
@@ -80,7 +83,9 @@ def insertAnimal(cursor):
     cage = 6
 
     for i in range(28):
-        insertScript = "insert into animal(animal_type, cage, name, weight, length) values (%s, %s, %s, %s, %s)"
+        nowTime = datetime.datetime.now()
+        comingTime = nowTime - datetime.timedelta(days=randint(1, 5), hours=randint(0, 23));
+        insertScript = "insert into animal(animal_type, cage, name, weight, length, coming_time) values (%s, %s, %s, %s, %s, %s)"
 
         namei += 1
         if (cage == 10):
@@ -88,8 +93,8 @@ def insertAnimal(cursor):
         else:
             cage += 1
 
-        animalType = random.randint(1, 15)
-        insertValue = (animalType, cage, "name" + str(namei), random.randint(10, 1000), 1)
+        animalType = randint(1, 15)
+        insertValue = (animalType, cage, "name" + str(namei), randint(10, 1000), 1, comingTime)
         cursor.execute(insertScript, insertValue)
 
 def insert(cursor):
@@ -100,7 +105,7 @@ def insert(cursor):
 
 def update(cursor):
     insertScript = "update animal set cage = %s where animal_type = %s"
-    insertValue = (random.randint(1, 10), range.randint(1, 15))
+    insertValue = (randint(1, 10), randint(1, 15))
     cursor.execute(insertScript, insertValue)
 
 def main():

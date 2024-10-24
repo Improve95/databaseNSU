@@ -14,6 +14,12 @@ select habitat, min(min_coming_time) from (
                     where a.animal_type = at.id) as habitat from animal a) as animal_habitat_table)
 group by habitat;
 
+select * from (
+    select *, dense_rank() over (partition by habitat order by coming_time) as time_rank from (
+            select a.*, (select habitat from animal_type at
+                         where a.animal_type = at.id) as habitat from animal a)
+) where time_rank = 1;
+
 /* == 3 == */
 select cage.*, light_weight_animal from cage inner join (
     select cage, min(weight) light_weight_animal from animal
@@ -23,20 +29,22 @@ select cage.*, light_weight_animal from cage inner join (
 /* == 4 == */
 select * from (
     select *, max(max_in_cage) over () as max_in_cage_between_all_cages from (
-    select cage, total_weight, max(animals_in_cage) as max_in_cage from (
-        select a.*,
-        sum(a.weight) over (partition by cage) as total_weight,
-        count(*) over (partition by cage) as animals_in_cage
-        from animal a)
-    group by cage, total_weight
-    order by max_in_cage desc))
+        select cage, total_weight, max(animals_in_cage) as max_in_cage from (
+            select a.*,
+            sum(a.weight) over (partition by cage) as total_weight,
+            count(*) over (partition by cage) as animals_in_cage
+            from animal a)
+        group by cage, total_weight
+        order by max_in_cage desc))
 where max_in_cage = max_in_cage_between_all_cages;
 
 select * from (
-    select id as animal_id, weight, animals_in_cage, max(animals_in_cage) over () as max_in_cage_between_all_cages from (
+    select *, max(animals_in_cage) over () as max_in_cage_between_all_cages from (
         select a.*,
         count(*) over (partition by cage) as animals_in_cage
         from animal a)) as cmp_animals_in_cage
 where animals_in_cage = max_in_cage_between_all_cages;
 
 /* == 5 == */
+select *, sum(weight) over (partition by animal_type order by coming_time) from animal
+order by animal_type desc ;

@@ -46,5 +46,18 @@ select * from (
 where animals_in_cage = max_in_cage_between_all_cages;
 
 /* == 5 == */
+select cage.* from cage where cage in (
+    select cage from (
+    select cage,
+    first_value(animal_type_num) over (partition by cage order by animal_type, animal_type_num) as first_animal_type,
+    last_value(animal_type_num) over (partition by cage order by animal_type, animal_type_num) as last_animal_type
+    from (
+        select a.*,
+        dense_rank() over (partition by cage order by animal_type) as animal_type_num
+        from animal a)
+    ) where first_animal_type != last_animal_type
+);
+
+/* == test ==*/
 select *, sum(weight) over (partition by animal_type order by coming_time) from animal
 order by animal_type desc ;

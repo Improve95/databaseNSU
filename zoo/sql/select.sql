@@ -12,3 +12,8 @@ select habitat, min(min_coming_time) from (
                     where a.animal_type = at.id) as habitat from animal a) as animal_habitat_table)
 group by habitat;
 
+select cage.*, light_weight_animal from cage inner join (
+    select cage, min(weight) light_weight_animal from animal
+    group by cage
+    ) as light_weight_cage on cage.id = light_weight_cage.cage;
+

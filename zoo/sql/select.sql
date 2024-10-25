@@ -20,7 +20,7 @@ select * from (
                          where a.animal_type = at.id) as habitat from animal a)
 ) where time_rank = 1;
 
-/* == 3 == */
+/* == 3 == (jrjyyfz функция) */
 select cage.*, light_weight_animal from cage inner join (
     select cage, min(weight) light_weight_animal from animal
     group by cage
@@ -31,7 +31,7 @@ select * from (
     select *, max(max_in_cage) over () as max_in_cage_between_all_cages from (
         select cage, total_weight, max(animals_in_cage) as max_in_cage from (
             select a.*,
-            sum(a.weight) over (partition by cage) as total_weight,
+            sum(a.weight) over (partition by cage) as total_weight, /* без оконных функций внутри */
             count(*) over (partition by cage) as animals_in_cage
             from animal a)
         group by cage, total_weight
@@ -46,6 +46,7 @@ select * from (
 where animals_in_cage = max_in_cage_between_all_cages;
 
 /* == 5 == */
+/* доабавить параметр для колва типов в клетке */
 select cage.* from cage where cage.id in (
     select cage from (
     select cage,

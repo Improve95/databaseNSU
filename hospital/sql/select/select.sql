@@ -2,6 +2,7 @@ select distinct staff.* from staff inner join staff_change sc on staff.id = sc.s
 where sc.before is null and sc.change_time > current_date - interval '2 year' and
 staff.salary < 100000;
 
+/* вывести всех пациентов по болезням */
 select patient.* from patient inner join disease_history dh on patient.id = dh.patient_id
 where dh.disease = 5 and dh.coming_time >= current_timestamp - interval '3 month';
 
@@ -29,7 +30,7 @@ having (sum(doctor_patient_number) / count(*) >= 10);
 select sum((case when release_time is null then current_timestamp else release_time end) -
            (case when coming_time < current_timestamp - interval '1 years' then current_timestamp - interval '1 years' else coming_time end))
 as total_time, doctor.id
-from doctor inner join disease_history dh on doctor.id = dh.current_doctor
-where dh.release_time > current_timestamp - interval '1 years' or dh.release_time is null
+    from doctor inner join disease_history dh on doctor.id = dh.current_doctor
+    where dh.release_time is null
 group by doctor.id
 order by total_time desc;

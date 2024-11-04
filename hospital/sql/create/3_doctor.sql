@@ -13,7 +13,6 @@ end;
 
 create table doctor (
     id int primary key references staff("id") on delete cascade,
-    specialization int references specialization("id")
 );
 
 /*create trigger check_doctor_in_staff_trigger

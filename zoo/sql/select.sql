@@ -20,45 +20,23 @@ select * from (
                          where a.animal_type = at.id) as habitat from animal a)
 ) where time_rank = 1;
 
-/* == 3 == (jrjyyfz функция) */
-select cage.*, light_weight_animal from cage inner join (
-    select cage, min(weight) light_weight_animal from animal
+/* == 3 == (оконная функция) */
+select cage.*, heavy_weight_animal from cage inner join (
+    select cage, max(weight) heavy_weight_animal from animal
     group by cage
-    ) as light_weight_cage on cage.id = light_weight_cage.cage;
+    ) as heavy_weight_cage on cage.id = heavy_weight_cage.cage;
 
 /* == 4 == */
-select * from (
-    select *, max(max_in_cage) over () as max_in_cage_between_all_cages from (
-        select cage, total_weight, max(animals_in_cage) as max_in_cage from (
-            select a.*,
-            sum(a.weight) over (partition by cage) as total_weight, /* без оконных функций внутри */
-            count(*) over (partition by cage) as animals_in_cage
-            from animal a)
-        group by cage, total_weight
-        order by max_in_cage desc))
-where max_in_cage = max_in_cage_between_all_cages;
-
-select * from (
-    select *, max(animals_in_cage) over () as max_in_cage_between_all_cages from (
-        select a.*,
-        count(*) over (partition by cage) as animals_in_cage
-        from animal a)) as cmp_animals_in_cage
-where animals_in_cage = max_in_cage_between_all_cages;
-
-/* == 5 == */
-/* доабавить параметр для колва типов в клетке */
-select cage.* from cage where cage.id in (
-    select cage from (
-    select cage,
-    first_value(animal_type_num) over (partition by cage order by animal_type, animal_type_num) as first_animal_type,
-    last_value(animal_type_num) over (partition by cage order by animal_type, animal_type_num) as last_animal_type
-    from (
-        select a.*,
-        dense_rank() over (partition by cage order by animal_type) as animal_type_num
-        from animal a)
-    ) where first_animal_type != last_animal_type
+select animal.weight from animal where cage = (
+    select cage as animal_count from animal
+    group by cage
+    order by count(*) desc
+    fetch first 1 rows only
 );
 
-/* == test ==*/
-select *, sum(weight) over (partition by animal_type order by coming_time) from animal
-order by animal_type desc ;
+/* == 5 == */
+select cage.* from cage inner join (
+    select cage from animal
+    group by cage
+    having count(distinct animal_type) > 2
+) as cage_type_freq on cage_type_freq.cage = cage.id;

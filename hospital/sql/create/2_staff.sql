@@ -40,11 +40,11 @@ $$ language plpgsql;*/
     before insert on staff
     for each row execute function check_staff_limit();*/
 
-create type staff_changes_type as enum ( 'SALARY', 'POSITION', 'DEPARTMENT' ) ;
+create type staff_changes_type as enum ( 'SALARY', 'POSITION', 'DEPARTMENT', 'EMPLOY' ) ;
 create table staff_change (
     change_time timestamp primary key not null default current_timestamp ,
     staff_id int not null references staff("id") on delete cascade ,
-    change_field staff_changes_type not null ,
+    change_type staff_changes_type not null ,
     before varchar(15),
     after varchar(15) not null
 );

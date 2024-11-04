@@ -323,3 +323,8 @@ update disease_history set coming_time = now() - interval '5 months' where patie
 update disease_history set release_time = now() where patient_status != 'SICK'::patient_status_type;
 update disease_history set release_time = now() + interval '1 days' where patient_status = 'OUT_TREATMENT'::patient_status_type;
 update disease_history set release_time = now() + interval '10 minutes' where patient_status = 'ANOTHER_PLACE'::patient_status_type;
+
+insert into staff_change (staff_id, change_type, before, after) values(1, 'EMPLOY', null, 'DOCTOR');
+insert into staff_change (staff_id, change_type, before, after) values(2, 'EMPLOY', null, 'DOCTOR');
+insert into staff_change (staff_id, change_type, before, after) values(3, 'EMPLOY', null, 'DOCTOR');
+insert into staff_change (staff_id, change_type, before, after) values(4, 'EMPLOY', null, 'DOCTOR');

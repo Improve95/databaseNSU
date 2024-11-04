@@ -180,3 +180,8 @@ insert into staff (passport_series, passport_number, name, second_name, phone, s
 insert into staff_change (staff_id, change_field, before, after) values(40, 'SALARY', null, 160000);
 insert into staff_change (staff_id, change_field, before, after) values(40, 'POSITION', null, 'ACCOUNTANT');
 insert into staff_change (staff_id, change_field, before, after) values(40, 'DEPARTMENT', null, 5);
+
+insert into staff_change (staff_id, change_type, before, after) values(1, 'EMPLOY', null, 'DOCTOR');
+insert into staff_change (staff_id, change_type, before, after) values(2, 'EMPLOY', null, 'DOCTOR');
+insert into staff_change (staff_id, change_type, before, after) values(3, 'EMPLOY', null, 'DOCTOR');
+insert into staff_change (staff_id, change_type, before, after) values(4, 'EMPLOY', null, 'DOCTOR');

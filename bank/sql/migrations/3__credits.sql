@@ -23,3 +23,5 @@ create table payments (
     client_id int not null references clients("id") on delete cascade ,
     credit_id uuid not null references credits("id") on delete set null
 );
+
+alter table payments drop column client_id;

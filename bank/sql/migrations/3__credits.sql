@@ -24,16 +24,15 @@ create table penalties (
     primary key (credit_id, date)
 );
 
-drop table if exists payments_schedule;
 create table payments_schedule (
     credit_id uuid not null references credits("id") on delete cascade ,
     month_amount float4 not null check ( month_amount >= 0 ) ,
     payment_date timestamp with time zone not null,
+    payment_paid boolean default false,
     primary key (credit_id, payment_date)
 );
 
 create type payment_type as enum ('bank_account', 'qiwi', 'yandex_pay');
-drop table if exists payments;
 create table payments (
     id uuid default gen_random_uuid() ,
     amount int not null check ( amount > 0 ) ,

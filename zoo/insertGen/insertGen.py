@@ -12,7 +12,7 @@ dbConnect = None
 cursor = None
 
 def insertHabitat(cursor):
-    cursor.execute("alter sequence habitat_id_seq restart with 1")
+    cursor.execute("alter sequence if exists habitat_id_seq restart with 1")
     cursor.execute("truncate table habitat cascade")
 
     climateType = ['CL1', 'CL2', 'CL3', 'CL4']
@@ -32,7 +32,7 @@ def insertHabitat(cursor):
         continentTypei = (continentTypei + 1) % 6
 
 def insertAnimalType(cursor):
-    cursor.execute("alter sequence animal_type_id_seq restart with 1")
+    cursor.execute(" alter sequence if exists animal_type_id_seq restart with 1")
     cursor.execute("truncate table animal_type cascade")
 
     foodType = ['PREDATOR', 'HERBIVORE', 'OMNIVOROUS']
@@ -50,7 +50,7 @@ def insertAnimalType(cursor):
             habitat += 1
 
 def insertCage(cursor):
-    cursor.execute("alter sequence cage_id_seq restart with 1")
+    cursor.execute(" alter sequence if exists cage_id_seq restart with 1")
     cursor.execute("truncate table cage cascade")
 
     for i in range(10):
@@ -59,7 +59,7 @@ def insertCage(cursor):
         cursor.execute(insertScript, insertValue)
 
 def insertAnimal(cursor):
-    cursor.execute("alter sequence animal_id_seq restart with 1")
+    cursor.execute(" alter sequence if exists animal_id_seq restart with 1")
     cursor.execute("truncate table animal cascade")
 
     animalType = 1

@@ -21,10 +21,10 @@ select * from (
 ) where time_rank = 1;
 
 /* == 3 == (оконная функция) */
-select cage.*, heavy_weight_animal from cage inner join (
-    select cage, max(weight) heavy_weight_animal from animal
-    group by cage
-    ) as heavy_weight_cage on cage.id = heavy_weight_cage.cage;
+select id, animal_type, cage, name, weight, length, coming_time from (
+    select animal.*, max(weight) over (partition by cage) as heaviest_weight from animal
+)
+where heaviest_weight = weight;
 
 /* == 4 == */
 select animal.weight from animal where cage = (

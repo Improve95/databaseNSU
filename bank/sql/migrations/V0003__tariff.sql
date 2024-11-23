@@ -5,20 +5,11 @@ create table credit_tariff (
     initial_amount float4 not null check ( initial_amount > 0 ),
     final_amount float4 not null check ( initial_amount > 0 ) ,
     payment_period interval not null ,
-    credit_rate int not null check ( credit_rate > 0 )
+    credit_percent int not null check ( credit_percent > 0 )
 );
 
 create table credit_tariff_client (
     client_id int references clients("id") on delete cascade ,
     credit_tariff_id int references credit_tariff("id") on delete cascade ,
-    primary key (client_id, credit_tariff_id)
-);
-
-create type credit_scoring_status as enum ('approve', 'reject');
-create table credit_scoring (
-    score float4 not null ,
-    status credit_scoring_status not null ,
-    credit_tariff_id int not null references credit_tariff("id") on delete cascade ,
-    client_id int not null references clients("id") on delete cascade,
     primary key (client_id, credit_tariff_id)
 );

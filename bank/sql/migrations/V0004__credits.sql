@@ -10,20 +10,6 @@ create table credits (
     credit_status credit_status not null default 'open'::credit_status
 );
 
-create table commissions (
-    credit_id uuid not null references credits("id") ,
-    amount float4 not null check ( amount > 0 ) ,
-    date date not null default current_date ,
-    primary key (credit_id, date)
-);
-
-create table penalties (
-    credit_id uuid not null references credits("id") ,
-    amount float4 not null check ( amount > 0 ) ,
-    date date not null default current_date ,
-    primary key (credit_id, date)
-);
-
 create table payments_schedule (
     credit_id uuid not null references credits("id") on delete cascade ,
     month_amount float4 not null check ( month_amount >= 0 ) ,

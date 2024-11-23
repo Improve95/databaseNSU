@@ -20,7 +20,7 @@ select * from (
                          where a.animal_type = at.id) as habitat from animal a)
 ) where time_rank = 1;
 
-/* == 3 == (оконная функция) */
+/* == 3 == (оконная функция) (вывести самого животного) */
 select cage.*, heavy_weight_animal from cage inner join (
     select cage, max(weight) heavy_weight_animal from animal
     group by cage

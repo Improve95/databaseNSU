@@ -8,4 +8,5 @@ flyway {
     password = env.fetch('PG_PASSWORD')
     locations = ['filesystem:sql/migrations']
     schemas = ['bank']
+    cleanDisabled = false
 }

@@ -8,3 +8,5 @@ insert into credit_tariffs (type, initial_amount, final_amount, payment_period, 
                                                                                                        ('t3', 300000, 3000000, interval '7 years', 12),
                                                                                                        ('t4', 400000, 4000000, interval '8 years', 13),
                                                                                                        ('t5', 500000, 5000000, interval '9 years', 14);
+
+-- insert into payments_schedule (credit_id, up_to_payment_date) VALUES ()

@@ -4,7 +4,7 @@ create table credits (
     initial_debt float4 not null check ( initial_debt >= 0 ) ,
     taking_date date not null default current_date,
     percent int not null check ( percent > 0 ),
-    month_amount float4 not null check ( month_amount >= 0 ) ,
+    month_amount float4 not null check ( month_amount > 0 ) ,
     client_id int not null references clients("id") on delete set null,
     credit_status credit_status not null default 'open'::credit_status
 );

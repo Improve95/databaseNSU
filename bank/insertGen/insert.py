@@ -61,10 +61,50 @@ def insertClients(dbConnect):
             
         insertScript = "insert into clients (name, employment) values (%s, %s)"
         cursor.executemany(insertScript, clients)
-            
+
+def insertCreditTariffs(dbConnect):
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table credit_tariff_client cascade")
+
+        creditTariffs = []
+        clientId = 1
+        for i in range(0, 30000):
+            creditTariffs.append((clientId, 1))
+            creditTariffs.append((clientId, 2))
+            clientId += 1
+        
+        for i in range(0, 30000):
+            creditTariffs.append((clientId, 2))
+            creditTariffs.append((clientId, 3))
+            clientId += 1
+
+        for i in range(0, 30000):
+            creditTariffs.append((clientId, 3))
+            creditTariffs.append((clientId, 4))
+            clientId += 1
+
+        for i in range(0, 30000):
+            creditTariffs.append((clientId, 4))
+            creditTariffs.append((clientId, 5))
+            clientId += 1
+
+        for i in range(0, 30000):
+            creditTariffs.append((clientId, 1))
+            creditTariffs.append((clientId, 5))
+            clientId += 1
+
+        insertScript = "insert into credit_tariff_client(client_id, credit_tariff_id) values (%s, %s)"
+        cursor.executemany(insertScript, creditTariffs)
+
+
+def insertCredits(dbConnect):
+    None
+
 def insert(dbConnect):
-    insertEmployees(dbConnect)
+    # insertEmployees(dbConnect)
     # insertClients(dbConnect)
+    insertCreditTariffs(dbConnect)
+    # insertCredits(dbConnect)
     print("insert")
 
 def update(dbConnect):

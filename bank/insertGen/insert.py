@@ -1,5 +1,6 @@
 from random import randint
-import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 import psycopg
 
 hostname = 'localhost'
@@ -118,21 +119,44 @@ def insertCredits(dbConnect):
             else:
                 creditTariffId = randint(1, 5)
 
+            monthAmount = initialDebt * (0.12 / 12.0 * (1.0 + 0.01)**360) / ((1.0 + 0.01)**360 - 1.0)
+
+            creditPeriod = randint(36, 360)
+
             clientId += 2
 
-            credits.append((initialDebt, takingDateMonthBefore, percent, clientId, creditTariffId))
+            credits.append((initialDebt, takingDateMonthBefore, creditPeriod, percent, monthAmount, clientId, creditTariffId))
 
         insertScript = """
-            insert into credits (initial_debt, taking_date, percent, client_id, credit_tariff_id) 
-            VALUES (%s, current_timestamp - make_interval(months => %s), %s, %s, %s)
+            insert into credits (initial_debt, taking_date, credit_period, percent, month_amount, client_id, credit_tariff_id) 
+            VALUES (%s, current_timestamp - make_interval(months => %s), make_interval(months => %s), %s, %s, %s, %s)
             """
         cursor.executemany(insertScript, credits)
+
+def insertSchedule(dbConnect):
+     with dbConnect.cursor() as cursor:
+        cursor.execute("SELECT id, taking_date, credit_period FROM credits")
+        credits = cursor.fetchall()
+
+        shedules = []
+        for credit_id, taking_date, credit_period in credits:
+            # current_payment_date = taking_date
+            for i in range (int(credit_period)):
+                # current_payment_date += timedelta(days=1)
+                print(taking_date)
+                # if (taking_date.day == (taking_date + current_payment_date).day):
+                    # shedules.append((credit_id, current_payment_date))
+                    # print(taking_date.day + " " + (taking_date + current_payment_date).day)
+
+        # insertScript = "insert into payments_schedule (credit_id, up_to_payment_date) VALUES (%s, %s)"
+        # cursor.executemany(insertScript, shedules);
 
 def insert(dbConnect):
     # insertEmployees(dbConnect)
     # insertClients(dbConnect)
     # insertCreditTariffs(dbConnect)
     # insertCredits(dbConnect)
+    insertSchedule(dbConnect)
     print("insert")
 
 def update(dbConnect):
@@ -153,7 +177,7 @@ def main():
             cursor.execute("set search_path to bank")
 
         insert(dbConnect)
-        update(dbConnect)
+        # update(dbConnect)
 
     except Exception as error:
         print(error)

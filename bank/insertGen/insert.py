@@ -68,27 +68,27 @@ def insertCreditTariffs(dbConnect):
 
         creditTariffs = []
         clientId = 1
-        for i in range(0, 30000):
+        for i in range(30000):
             creditTariffs.append((clientId, 1))
             creditTariffs.append((clientId, 2))
             clientId += 1
         
-        for i in range(0, 30000):
+        for i in range(30000):
             creditTariffs.append((clientId, 2))
             creditTariffs.append((clientId, 3))
             clientId += 1
 
-        for i in range(0, 30000):
+        for i in range(30000):
             creditTariffs.append((clientId, 3))
             creditTariffs.append((clientId, 4))
             clientId += 1
 
-        for i in range(0, 30000):
+        for i in range(30000):
             creditTariffs.append((clientId, 4))
             creditTariffs.append((clientId, 5))
             clientId += 1
 
-        for i in range(0, 30000):
+        for i in range(30000):
             creditTariffs.append((clientId, 1))
             creditTariffs.append((clientId, 5))
             clientId += 1
@@ -96,14 +96,42 @@ def insertCreditTariffs(dbConnect):
         insertScript = "insert into credit_tariff_client(client_id, credit_tariff_id) values (%s, %s)"
         cursor.executemany(insertScript, creditTariffs)
 
-
 def insertCredits(dbConnect):
-    None
+     with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table credits cascade")
+
+        credits = []
+        clientId = 1
+        for i in range(70000):
+            initialDebt = randint(1000000, 2000000)
+            takingDateMonthBefore = randint(6, 60)
+            percent = randint(12, 19)
+            creditTariffId = 0;
+            if (clientId < 30001):
+                creditTariffId = randint(1, 2)
+            elif (clientId < 60001):
+                creditTariffId = randint(2, 3)
+            elif (clientId < 90001):
+                creditTariffId = randint(3, 4)
+            elif (clientId < 120001):
+                creditTariffId = randint(4, 5)
+            else:
+                creditTariffId = randint(1, 5)
+
+            clientId += 2
+
+            credits.append((initialDebt, takingDateMonthBefore, percent, clientId, creditTariffId))
+
+        insertScript = """
+            insert into credits (initial_debt, taking_date, percent, client_id, credit_tariff_id) 
+            VALUES (%s, current_timestamp - make_interval(months => %s), %s, %s, %s)
+            """
+        cursor.executemany(insertScript, credits)
 
 def insert(dbConnect):
     # insertEmployees(dbConnect)
     # insertClients(dbConnect)
-    insertCreditTariffs(dbConnect)
+    # insertCreditTariffs(dbConnect)
     # insertCredits(dbConnect)
     print("insert")
 

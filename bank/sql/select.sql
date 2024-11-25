@@ -1,3 +1,7 @@
+/* == noting == */
+select count(*) from credit_tariff_client;
+select * from credit_tariff_client limit 100;
+
 /* == 1 == */
 
 

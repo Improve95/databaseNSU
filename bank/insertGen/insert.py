@@ -105,7 +105,7 @@ def insertCredits(dbConnect):
         clientId = 1
         for i in range(70000):
             initialDebt = randint(1000000, 2000000)
-            takingDateMonthBefore = randint(3, 6)
+            takingDateMonthBefore = randint(1, 2)
             percent = randint(12, 19)
             creditTariffId = 0
             if (clientId < 30001):
@@ -119,7 +119,7 @@ def insertCredits(dbConnect):
             else:
                 creditTariffId = randint(1, 5)
 
-            creditPeriod = randint(36, 360)
+            creditPeriod = randint(36, 48)
 
             percentDh = percent / 100
             monthAmount = initialDebt * (percentDh / 12.0 * (1.0 + percentDh / 12)**creditPeriod) / ((1.0 + percentDh / 12)**creditPeriod - 1.0)
@@ -161,25 +161,29 @@ def insertBalancesAndPayments(dbConnect):
         cursor.execute("SELECT id, initial_debt, percent, month_amount, taking_date FROM credits")
         credits = cursor.fetchall()
 
-    balances = []
     payments = []
-
-    insertScriptPayment = "insert into payments (amount, payment_for_what, way_of_payment, credit_id) VALUES (%s, %s, %s, %s)"
-    insertScriptBalance = "insert into balances (credit_id, remaining_debt, accrued_by_percent) VALUES (%s, %s, %s)"
-
+    balances = []
     currentDate = datetime.now().date()
     for creditId, debt, percent, monthAmount, takingDate in credits:
+        remainingDebt = debt
         while (takingDate < currentDate):
-            with dbConnect.cursor() as cursor:
-                takingDate += timedelta(days=1)
+            takingDate += timedelta(days=1)
+            paymentDayBefore = randint(1, 20)
+            payments.append((monthAmount, "mountly", "bank_account", creditId, takingDate - timedelta(paymentDayBefore)))
 
-                cursor.execute(insertScriptPayment, (monthAmount, "mountly", "bank_account", creditId))
+            accruedByPercent = remainingDebt * (percent / 100)
+            remainingDebt -= (monthAmount - accruedByPercent)
+            balances.append((creditId, remainingDebt, accruedByPercent, currentDate))
 
-                remainingDebt = debt - monthAmount
-                cursor.execute("update credits set initial_debt = %s where id = %s", (remainingDebt, creditId))
+        with dbConnect.cursor() as cursor:
+            cursor.execute("update credits set initial_debt = %s where id = %s", (remainingDebt, creditId))
 
-                accruedByPercent = remainingDebt * percent / 100
-                cursor.execute(insertScriptBalance, (creditId, debt, accruedByPercent))
+    insertScriptPayment = "insert into payments (amount, payment_for_what, way_of_payment, credit_id, date) VALUES (%s, %s, %s, %s, %s)"
+    insertScriptBalance = "insert into balances (credit_id, remaining_debt, accrued_by_percent, date) VALUES (%s, %s, %s, %s)"
+    with dbConnect.cursor() as cursor:
+        cursor.executemany(insertScriptPayment, payments)
+        cursor.executemany(insertScriptBalance, balances)
+
 
 def insert(dbConnect):
     # insertEmployees(dbConnect)

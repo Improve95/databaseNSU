@@ -7,6 +7,8 @@ select * from credit_tariff_client limit 100;
 select count(*) from credits;
 select * from credits limit 100;
 
+select count(*) from payments_schedule;
+
 /* == 1 == */
 
 

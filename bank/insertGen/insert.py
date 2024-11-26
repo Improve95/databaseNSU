@@ -12,33 +12,33 @@ portId= 5430
 def insertEmployees(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table employees cascade")
-        cursor.execute("alter sequence employees_id_seq restart with 1");
+        cursor.execute("alter sequence employees_id_seq restart with 1")
         
-        nameNumber = 0;
+        nameNumber = 0
         employees = []
         for i in range(20):
-            employees.append(("name" + str(nameNumber), 1, None));
+            employees.append(("name" + str(nameNumber), 1, None))
             nameNumber += 1
         
-        managerId = 1;
+        managerId = 1
         for i in range(200):
-            employees.append(("name" + str(nameNumber), 2, managerId));
+            employees.append(("name" + str(nameNumber), 2, managerId))
             nameNumber += 1
             managerId += 1
             if (managerId > 20):
                 managerId = 1
         
-        managerId = 21;
+        managerId = 21
         for i in range(1000):
-            employees.append(("name" + str(nameNumber), 3, managerId));
+            employees.append(("name" + str(nameNumber), 3, managerId))
             nameNumber += 1
             managerId += 1
             if (managerId > 220):
                 managerId = 21
         
-        managerId = 221;
+        managerId = 221
         for i in range(4000):
-            employees.append(("name" + str(nameNumber), 4, managerId));
+            employees.append(("name" + str(nameNumber), 4, managerId))
             nameNumber += 1
             managerId += 1
             if (managerId > 1220):
@@ -50,14 +50,14 @@ def insertEmployees(dbConnect):
 def insertClients(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table clients cascade")
-        cursor.execute("alter sequence clients_id_seq restart with 1");
+        cursor.execute("alter sequence clients_id_seq restart with 1")
 
-        nameNumber = 5221;
+        nameNumber = 5221
         clients = []
         employment = ['t1', 't2', 't3', 't4']
-        employmentIndex = 0;
+        employmentIndex = 0
         for i in range (150000):
-            clients.append(("name" + str(nameNumber), employment[employmentIndex]));
+            clients.append(("name" + str(nameNumber), employment[employmentIndex]))
             employmentIndex = (employmentIndex + 1) % 4
             
         insertScript = "insert into clients (name, employment) values (%s, %s)"
@@ -107,7 +107,7 @@ def insertCredits(dbConnect):
             initialDebt = randint(1000000, 2000000)
             takingDateMonthBefore = randint(6, 60)
             percent = randint(12, 19)
-            creditTariffId = 0;
+            creditTariffId = 0
             if (clientId < 30001):
                 creditTariffId = randint(1, 2)
             elif (clientId < 60001):
@@ -135,32 +135,43 @@ def insertCredits(dbConnect):
 
 def insertSchedule(dbConnect):
      with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table payments_schedule cascade")
+
         cursor.execute("SELECT id, taking_date, credit_period FROM credits")
         credits = cursor.fetchall()
 
         shedules = []
         for credit_id, taking_date, credit_period in credits:
-            # current_payment_date = taking_date
-            for i in range (int(credit_period)):
-                # current_payment_date += timedelta(days=1)
-                print(taking_date)
-                # if (taking_date.day == (taking_date + current_payment_date).day):
-                    # shedules.append((credit_id, current_payment_date))
-                    # print(taking_date.day + " " + (taking_date + current_payment_date).day)
+            payment_day = taking_date
+            for i in range (credit_period.days):
+                payment_day += timedelta(days=1)
+                if (taking_date.day == payment_day.day):
+                    shedules.append((credit_id, payment_day))
 
-        # insertScript = "insert into payments_schedule (credit_id, up_to_payment_date) VALUES (%s, %s)"
-        # cursor.executemany(insertScript, shedules);
+        insertScript = "insert into payments_schedule (credit_id, up_to_payment_date) VALUES (%s, %s)"
+        cursor.executemany(insertScript, shedules)
+
+def insertPayments(dbConnect):
+     with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table payments cascade")
+
+        insertScript = "insert into payments (amount, type_of_payment, credit_id) VALUES (%s, %s, %s)"
+        
+
+def insertBalance(dbConnect):
+    None
 
 def insert(dbConnect):
     # insertEmployees(dbConnect)
     # insertClients(dbConnect)
     # insertCreditTariffs(dbConnect)
     # insertCredits(dbConnect)
-    insertSchedule(dbConnect)
+    # insertSchedule(dbConnect)
+    # insertPayments(dbConnect)
     print("insert")
 
 def update(dbConnect):
-    print("update");
+    print("update")
 
 def main():
     try:

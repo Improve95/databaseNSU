@@ -103,7 +103,7 @@ def insertCredits(dbConnect):
 
         credits = []
         clientId = 1
-        for i in range(70000):
+        for i in range(1000):
             initialDebt = randint(1000000, 2000000)
             takingDateMonthBefore = randint(1, 2)
             percent = randint(12, 19)
@@ -119,10 +119,10 @@ def insertCredits(dbConnect):
             else:
                 creditTariffId = randint(1, 5)
 
-            creditPeriod = randint(36, 48)
+            creditPeriod = randint(12, 24)
 
             percentDh = percent / 100
-            monthAmount = initialDebt * (percentDh / 12.0 * (1.0 + percentDh / 12)**creditPeriod) / ((1.0 + percentDh / 12)**creditPeriod - 1.0)
+            monthAmount = initialDebt * (percentDh / 12.0 * (1.0 + percentDh / 12.0)**creditPeriod) / ((1.0 + percentDh / 12.0)**creditPeriod - 1.0)
 
             clientId += 2
 
@@ -171,15 +171,15 @@ def insertBalancesAndPayments(dbConnect):
             paymentDayBefore = randint(1, 20)
             payments.append((monthAmount, "mountly", "bank_account", creditId, takingDate - timedelta(paymentDayBefore)))
 
-            accruedByPercent = remainingDebt * (percent / 100)
+            accruedByPercent = remainingDebt * (percent / 365)
             remainingDebt -= (monthAmount - accruedByPercent)
-            balances.append((creditId, remainingDebt, accruedByPercent, currentDate))
+            balances.append((creditId, accruedByPercent, currentDate))
 
         with dbConnect.cursor() as cursor:
             cursor.execute("update credits set initial_debt = %s where id = %s", (remainingDebt, creditId))
 
     insertScriptPayment = "insert into payments (amount, payment_for_what, way_of_payment, credit_id, date) VALUES (%s, %s, %s, %s, %s)"
-    insertScriptBalance = "insert into balances (credit_id, remaining_debt, accrued_by_percent, date) VALUES (%s, %s, %s, %s)"
+    insertScriptBalance = "insert into balances (credit_id, accrued_by_percent, date) VALUES (%s, %s, %s)"
     with dbConnect.cursor() as cursor:
         cursor.executemany(insertScriptPayment, payments)
         cursor.executemany(insertScriptBalance, balances)
@@ -188,9 +188,9 @@ def insertBalancesAndPayments(dbConnect):
 def insert(dbConnect):
     # insertEmployees(dbConnect)
     # insertClients(dbConnect)
-    # insertCreditTariffs(dbConnect)
-    # insertCredits(dbConnect)
-    # insertSchedule(dbConnect)
+    insertCreditTariffs(dbConnect)
+    insertCredits(dbConnect)
+    insertSchedule(dbConnect)
     insertBalancesAndPayments(dbConnect)
     print("insert")
 

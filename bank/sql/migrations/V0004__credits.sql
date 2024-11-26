@@ -2,9 +2,12 @@ create type credit_status as enum ('open', 'close');
 create table credits (
     id uuid primary key default gen_random_uuid() ,
     initial_debt float4 not null check ( initial_debt >= 0 ) ,
+    remaining_debt float4 not null check ( remaining_debt >= 0 ) ,
     taking_date date not null default current_date,
     percent int not null check ( percent > 0 ),
+    credit_period interval not null ,
     month_amount float4 not null check ( month_amount > 0 ) ,
+    credit_tariff_id int not null references credit_tariffs("id") on delete set null ,
     client_id int not null references clients("id") on delete set null,
     credit_status credit_status not null default 'open'::credit_status
 );

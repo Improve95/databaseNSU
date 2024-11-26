@@ -166,14 +166,17 @@ def insertBalancesAndPayments(dbConnect):
     currentDate = datetime.now().date()
     for creditId, debt, percent, monthAmount, takingDate in credits:
         remainingDebt = debt
-        while (takingDate < currentDate):
-            takingDate += timedelta(days=1)
+        curTakingDate = takingDate
+        while (curTakingDate < currentDate):
+            curTakingDate += timedelta(days=1)
             paymentDayBefore = randint(1, 20)
-            payments.append((monthAmount, "mountly", "bank_account", creditId, takingDate - timedelta(paymentDayBefore)))
 
-            accruedByPercent = remainingDebt * (percent / 365)
-            remainingDebt -= (monthAmount - accruedByPercent)
-            balances.append((creditId, accruedByPercent, currentDate))
+            accruedByPercent = remainingDebt * (percent / 100 / 365)
+            if (takingDate.day == curTakingDate.day):
+                payments.append((monthAmount, "mountly", "bank_account", creditId, curTakingDate - timedelta(paymentDayBefore)))
+                remainingDebt -= (monthAmount - accruedByPercent)
+
+            balances.append((creditId, accruedByPercent, curTakingDate))
 
         with dbConnect.cursor() as cursor:
             cursor.execute("update credits set initial_debt = %s where id = %s", (remainingDebt, creditId))
@@ -183,7 +186,6 @@ def insertBalancesAndPayments(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.executemany(insertScriptPayment, payments)
         cursor.executemany(insertScriptBalance, balances)
-
 
 def insert(dbConnect):
     # insertEmployees(dbConnect)

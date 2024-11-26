@@ -6,7 +6,10 @@ select count(*) from credits;
 select * from credits limit 100;
 select count(*) from payments_schedule;
 select count(*) from balances;
-select * from balances where credit_id='0001d962-9ea8-4f33-86b3-fa7128aa69d9' order by date desc limit 100;
+
+select * from credits where id = '13c29540-29e3-4ce4-bbb3-269ba4b3d080';
+select * from balances where id = '13c29540-29e3-4ce4-bbb3-269ba4b3d080' order by date desc limit 100;
+
 select count(*) from payments;
 
 /* == 1 == */

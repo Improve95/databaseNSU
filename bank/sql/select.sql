@@ -4,7 +4,7 @@ select count(*) from credit_tariff_client;
 select * from credit_tariff_client limit 100;
 select count(*) from credits;
 select * from credits limit 100;
-select count(*) from payments_schedule;
+select count(*) from payments_schedule;\
 select count(*) from balances;
 select * from credits where id = '73b4abfa-563b-4a3a-87f9-ce737cc85e11';
 select * from balances where credit_id = '73b4abfa-563b-4a3a-87f9-ce737cc85e11' order by date desc limit 200;
@@ -36,3 +36,16 @@ with recursive tmp(id, name, position, manager_id) as (
     select e.*, cast (tmp.path || '->'|| e.id as varchar(200)) from employees e
         inner join tmp on e.manager_id = tmp.id
 ) select * from tmp;
+
+/* == 4 == */
+-- pnp_number - paid_not_paid_number
+select c.id, paid_number, not_paid_number,
+       (paid_number + not_paid_number) / not_paid_number * 100.0 as np_percent,
+       not_paid_number * c.month_amount as not_paid_sum
+from credits c inner join (
+    select sum(case when ps.is_paid = true then 1 else 0 end) as paid_number,
+           sum(case when ps.is_paid = false then 1 else 0 end) as not_paid_number,
+           credit_id
+    from payments_schedule ps
+    group by credit_id
+) as pnp_number on c.id = pnp_number.credit_id;

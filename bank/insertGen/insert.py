@@ -155,8 +155,8 @@ def insertSchedule(dbConnect):
 def insertBalancesAndPayments(dbConnect):
     credits = []
     with dbConnect.cursor() as cursor:
-        # cursor.execute("truncate table payments cascade")
-        # cursor.execute("truncate table balances cascade")
+        cursor.execute("truncate table payments cascade")
+        cursor.execute("truncate table balances cascade")
 
         cursor.execute("SELECT id, initial_debt, percent, month_amount, taking_date FROM credits")
         credits = cursor.fetchall()
@@ -185,16 +185,16 @@ def insertBalancesAndPayments(dbConnect):
 
     insertScriptPayment = "insert into payments (amount, payment_for_what, way_of_payment, credit_id, date) VALUES (%s, %s, %s, %s, %s)"
     insertScriptBalance = "insert into balances (credit_id, accrued_by_percent, date) VALUES (%s, %s, %s)"
-    # with dbConnect.cursor() as cursor:
-    #     cursor.executemany(insertScriptPayment, payments)
-    #     cursor.executemany(insertScriptBalance, balances)
+    with dbConnect.cursor() as cursor:
+        cursor.executemany(insertScriptPayment, payments)
+        cursor.executemany(insertScriptBalance, balances)
 
 def insert(dbConnect):
-    # insertEmployees(dbConnect)
-    # insertClients(dbConnect)
-    # insertCreditTariffs(dbConnect)
-    # insertCredits(dbConnect)
-    # insertSchedule(dbConnect)
+    insertEmployees(dbConnect)
+    insertClients(dbConnect)
+    insertCreditTariffs(dbConnect)
+    insertCredits(dbConnect)
+    insertSchedule(dbConnect)
     insertBalancesAndPayments(dbConnect)
     print("insert")
 

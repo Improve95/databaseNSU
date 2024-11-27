@@ -155,8 +155,8 @@ def insertSchedule(dbConnect):
 def insertBalancesAndPayments(dbConnect):
     credits = []
     with dbConnect.cursor() as cursor:
-        cursor.execute("truncate table payments cascade")
-        cursor.execute("truncate table balances cascade")
+        # cursor.execute("truncate table payments cascade")
+        # cursor.execute("truncate table balances cascade")
 
         cursor.execute("SELECT id, initial_debt, percent, month_amount, taking_date FROM credits")
         credits = cursor.fetchall()
@@ -167,14 +167,16 @@ def insertBalancesAndPayments(dbConnect):
     for creditId, debt, percent, monthAmount, takingDate in credits:
         remainingDebt = debt
         curTakingDate = takingDate
+        totalAccuredByPercentByMonth = 0;
         while (curTakingDate < currentDate):
             curTakingDate += timedelta(days=1)
-            paymentDayBefore = randint(1, 20)
 
-            accruedByPercent = remainingDebt * (percent / 100 / 365)
+            accruedByPercent = remainingDebt * (percent / 100.0 / 365.0)
             if (takingDate.day == curTakingDate.day):
+                paymentDayBefore = randint(1, 20)
                 payments.append((monthAmount, "mountly", "bank_account", creditId, curTakingDate - timedelta(paymentDayBefore)))
-                remainingDebt -= (monthAmount - accruedByPercent)
+                remainingDebt -= (monthAmount - totalAccuredByPercentByMonth)
+                totalAccuredByPercentByMonth = 0;
 
             balances.append((creditId, accruedByPercent, curTakingDate))
 
@@ -183,9 +185,9 @@ def insertBalancesAndPayments(dbConnect):
 
     insertScriptPayment = "insert into payments (amount, payment_for_what, way_of_payment, credit_id, date) VALUES (%s, %s, %s, %s, %s)"
     insertScriptBalance = "insert into balances (credit_id, accrued_by_percent, date) VALUES (%s, %s, %s)"
-    with dbConnect.cursor() as cursor:
-        cursor.executemany(insertScriptPayment, payments)
-        cursor.executemany(insertScriptBalance, balances)
+    # with dbConnect.cursor() as cursor:
+    #     cursor.executemany(insertScriptPayment, payments)
+    #     cursor.executemany(insertScriptBalance, balances)
 
 def insert(dbConnect):
     # insertEmployees(dbConnect)

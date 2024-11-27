@@ -49,3 +49,8 @@ from credits c inner join (
     from payments_schedule ps
     group by credit_id
 ) as pnp_number on c.id = pnp_number.credit_id;
+
+/* == 5 == */
+
+
+/* == 6 == */

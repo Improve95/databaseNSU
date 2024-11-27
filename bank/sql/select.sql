@@ -3,7 +3,7 @@ select * from clients limit 100;
 select count(*) from credit_tariff_client;
 select * from credit_tariff_client limit 100;
 select count(*) from credits;
-select * from credits limit 100;
+select * from credits;
 select count(*) from payments_schedule;\
 select count(*) from balances;
 select * from credits where id = '73b4abfa-563b-4a3a-87f9-ce737cc85e11';
@@ -51,6 +51,13 @@ from credits c inner join (
 ) as pnp_number on c.id = pnp_number.credit_id;
 
 /* == 5 == */
-
+/* здесь я выбираю кредиты выданные в конкретный срок,
+   потом считаю платежи по этим кредитам */
+select sum_pay_credit.*, payment_sum / give_credit_sum as profit from (
+    select sum(p.amount) as payment_sum,
+           sum(c.initial_debt) as give_credit_sum
+           from payments p inner join credits c on c.id = p.credit_id
+    where c.taking_date between current_timestamp - interval '2 month' and current_timestamp - interval '3 days'
+) as sum_pay_credit;
 
 /* == 6 == */

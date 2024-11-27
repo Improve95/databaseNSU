@@ -6,13 +6,20 @@ select count(*) from credits;
 select * from credits limit 100;
 select count(*) from payments_schedule;
 select count(*) from balances;
-
-select * from credits where id = 'b218d58e-6314-4790-8711-7378cd365f82';
-select * from balances where credit_id = 'b218d58e-6314-4790-8711-7378cd365f82' order by date desc limit 100;
-
+select * from credits where id = '73b4abfa-563b-4a3a-87f9-ce737cc85e11';
+select * from balances where credit_id = '73b4abfa-563b-4a3a-87f9-ce737cc85e11' order by date desc limit 100;
 select count(*) from payments;
 
 /* == 1 == */
+select * from (
+select count(*), sum(initial_debt), avg(initial_debt), max(initial_debt),
+       (select c2.client_id from credits c2 where c2.credit_tariff_id = c1.credit_tariff_id and
+        c2.initial_debt = (select max(c1.initial_debt) from credits group by c1.credit_tariff_id)) as client_with_max_debt
+from credits c1
+where taking_date > current_timestamp - interval '2 month' and taking_date < current_timestamp - interval '20 days'
+group by credit_tariff_id) inner join clients c on c.id = client_with_max_debt;
+
+/* == 2 == */
 
 
 /* == 3 == */

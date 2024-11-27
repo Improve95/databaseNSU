@@ -42,7 +42,7 @@ create table payments (
 create table balances (
     id uuid primary key default gen_random_uuid() ,
     credit_id uuid not null references credits("id") ,
-    remaining_debt float4 not null check ( remaining_debt > 0 ) ,
+--     remaining_debt float4 not null check ( remaining_debt > 0 ) ,
     accrued_by_percent float4 not null check ( accrued_by_percent > 0 ) ,
     date date not null default current_date
 );

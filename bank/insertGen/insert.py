@@ -126,11 +126,11 @@ def insertCredits(dbConnect):
 
             clientId += 2
 
-            credits.append((initialDebt, takingDateMonthBefore, creditPeriod, percent, monthAmount, clientId, creditTariffId))
+            credits.append((initialDebt, initialDebt, takingDateMonthBefore, creditPeriod, percent, monthAmount, clientId, creditTariffId))
 
         insertScript = """
-            insert into credits (initial_debt, taking_date, credit_period, percent, month_amount, client_id, credit_tariff_id) 
-            VALUES (%s, current_timestamp - make_interval(months => %s), make_interval(months => %s), %s, %s, %s, %s)
+            insert into credits (initial_debt, remaining_debt, taking_date, credit_period, percent, month_amount, client_id, credit_tariff_id) 
+            VALUES (%s, %s, current_timestamp - make_interval(months => %s), make_interval(months => %s), %s, %s, %s, %s)
             """
         cursor.executemany(insertScript, credits)
 
@@ -190,9 +190,9 @@ def insertBalancesAndPayments(dbConnect):
 def insert(dbConnect):
     # insertEmployees(dbConnect)
     # insertClients(dbConnect)
-    insertCreditTariffs(dbConnect)
-    insertCredits(dbConnect)
-    insertSchedule(dbConnect)
+    # insertCreditTariffs(dbConnect)
+    # insertCredits(dbConnect)
+    # insertSchedule(dbConnect)
     insertBalancesAndPayments(dbConnect)
     print("insert")
 

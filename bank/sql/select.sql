@@ -51,13 +51,11 @@ from credits c inner join (
 ) as pnp_number on c.id = pnp_number.credit_id;
 
 /* == 5 == */
-/* здесь я выбираю кредиты выданные в конкретный срок,
-   потом считаю платежи по этим кредитам */
 select sum_pay_credit.*, payment_sum / give_credit_sum as profit from (
     select sum(p.amount) as payment_sum,
            sum(c.initial_debt) as give_credit_sum
            from payments p inner join credits c on c.id = p.credit_id
-    where c.taking_date between current_timestamp - interval '2 month' and current_timestamp - interval '3 days'
+    where c.taking_date + c.credit_period between current_timestamp - interval '2 month' and current_timestamp + interval '2 year'
 ) as sum_pay_credit;
 
 /* == 6 == */

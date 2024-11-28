@@ -61,3 +61,11 @@ select sum_pay_credit.*, payment_sum / give_credit_sum as profit from (
 ) as sum_pay_credit;
 
 /* == 6 == */
+select pay_sum / initial_debt as profit, credit_id from (
+    select c.id as credit_id, pay_sum, c.initial_debt from credits c right join (
+        select sum(p.amount) as pay_sum, p.credit_id from payments p
+        group by p.credit_id
+    ) as paymens on c.id = paymens.credit_id
+    where c.taking_date between current_timestamp - interval '2 month' and current_timestamp - interval '3 days' and
+          c.taking_date + c.credit_period <= current_date - interval '2 month' and
+          c.credit_status = 'close'::credit_status);

@@ -14,6 +14,18 @@ order by p.date
 limit 100;
 
 /* == 1 == */
+select c2.* from credits c2 where initial_debt in (
+    select max(c1.initial_debt), c1.credit_tariff_id from credits c1
+    group by c1.credit_tariff_id);
+
+with client_with_max_init_debt as (
+    select max_init_debt, clients.*, c2.credit_tariff_id from credits c2 inner join
+        (select max(c1.initial_debt) as max_init_debt, c1.credit_tariff_id from credits c1
+        group by c1.credit_tariff_id) as tmp on c2.credit_tariff_id = tmp.credit_tariff_id
+                inner join clients on c2.client_id = clients.id
+    where tmp.max_init_debt = c2.initial_debt
+) select * from client_with_max_init_debt;
+
 select * from (
 select count(*), sum(initial_debt), avg(initial_debt),
        (select c2.client_id from credits c2 where c2.credit_tariff_id = c1.credit_tariff_id and
@@ -42,15 +54,6 @@ order by tmp.depth;
 
 /* == 4 == */
 -- pnp_number - paid_not_paid_number
-select count(*) from payments_schedule where is_paid = false;
-select count(*) from payments_schedule where credit_id = '00003ed6-c719-464b-913c-df308904c50b';
-select sum(case when ps.is_paid = true then 1 else 0 end) as paid_number,
-       sum(case when ps.is_paid = false then 1 else 0 end) as not_paid_number,
-       credit_id
-from payments_schedule ps
-group by credit_id
-order by credit_id;
-
 select c.id, paid_number, not_paid_number,
        (paid_number + not_paid_number) / not_paid_number * 100.0 as np_percent,
        not_paid_number * c.month_amount as not_paid_sum
@@ -61,6 +64,20 @@ from credits c inner join (
     from payments_schedule ps
     group by credit_id
 ) as pnp_number on c.id = pnp_number.credit_id;
+
+select sum(case when ps.is_paid = true then 1 else 0 end) as paid_number,
+       sum(case when ps.is_paid = false then 1 else 0 end) as not_paid_number,
+       credit_id
+from payments_schedule ps
+group by credit_id;
+
+/*with pnp_number as (
+    select ps.*, count(*) over (partition by ps.credit_id order by ps.is_paid) as status_number
+    from payments_schedule ps
+) select pn1.credit_id,
+         (select status_number from pnp_number pn2 where pn2.credit_id = pn1.credit_id and is_paid = true limit 1),
+         (select status_number from pnp_number pn2 where pn2.credit_id = pn1.credit_id and is_paid = false limit 1)
+  from pnp_number pn1;*/
 
 /* == 5 == */
 select sum_pay_credit.*, payment_sum / give_credit_sum as profit from (
@@ -77,11 +94,3 @@ select pay_sum / initial_debt as profit, id from (
           c.taking_date + c.credit_period <= current_date - interval '1 month' and
           c.credit_status = 'close'
     group by c.id);
-
-select * from credits c
-    where (c.taking_date between current_timestamp - interval '5 month' and current_timestamp + interval '2 year') and
-      c.taking_date + c.credit_period <= current_date - interval '1 month' and
-      c.credit_status = 'close';
-
-select * from payments where credit_id = '45bd82d6-25a3-4f33-84e9-aedd26b73aaf';
-select * from balances where credit_id = '45bd82d6-25a3-4f33-84e9-aedd26b73aaf';

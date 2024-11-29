@@ -1,6 +1,6 @@
 from random import randint
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
+from decimal import Decimal
 import psycopg
 
 hostname = 'localhost'
@@ -103,34 +103,39 @@ def insertCredits(dbConnect):
 
         credits = []
         clientId = 1
-        for i in range(1000):
+        for i in range(70000):
             initialDebt = randint(1000000, 2000000)
-            takingDateMonthBefore = randint(1, 2)
             percent = randint(12, 19)
             creditTariffId = 0
             if (clientId < 30001):
                 creditTariffId = randint(1, 2)
-            elif (clientId < 60001):
+            elif (30001 <= clientId and clientId < 60001):
                 creditTariffId = randint(2, 3)
-            elif (clientId < 90001):
+            elif (60001 <= clientId and clientId < 90001):
                 creditTariffId = randint(3, 4)
-            elif (clientId < 120001):
+            elif (90001 <= clientId and clientId < 120001):
                 creditTariffId = randint(4, 5)
             else:
                 creditTariffId = randint(1, 5)
 
             creditPeriod = randint(12, 24)
 
+            takingCreditData = datetime.today() - timedelta(days=(randint(1, 3) * 30))
+            if (i % 1000 == 1):
+                initialDebt = randint(100000, 200000)
+                creditPeriod = 2
+                takingCreditData = datetime.today() - timedelta(days=(4 * 30))
+                
             percentDh = percent / 100
             monthAmount = initialDebt * (percentDh / 12.0 * (1.0 + percentDh / 12.0)**creditPeriod) / ((1.0 + percentDh / 12.0)**creditPeriod - 1.0)
 
-            clientId += 2
+            credits.append((initialDebt, initialDebt, takingCreditData, creditPeriod, percent, monthAmount, clientId, creditTariffId))
 
-            credits.append((initialDebt, initialDebt, takingDateMonthBefore, creditPeriod, percent, monthAmount, clientId, creditTariffId))
+            clientId += 1
 
         insertScript = """
             insert into credits (initial_debt, remaining_debt, taking_date, credit_period, percent, month_amount, client_id, credit_tariff_id) 
-            VALUES (%s, %s, current_timestamp - make_interval(months => %s), make_interval(months => %s), %s, %s, %s, %s)
+            VALUES (%s, %s, %s, make_interval(months => %s), %s, %s, %s, %s)
             """
         cursor.executemany(insertScript, credits)
 
@@ -147,9 +152,9 @@ def insertSchedule(dbConnect):
             for i in range (credit_period.days):
                 payment_day += timedelta(days=1)
                 if (taking_date.day == payment_day.day):
-                    shedules.append((credit_id, payment_day))
+                    shedules.append((credit_id, payment_day, True))
 
-        insertScript = "insert into payments_schedule (credit_id, up_to_payment_date) VALUES (%s, %s)"
+        insertScript = "insert into payments_schedule (credit_id, deadline, is_paid) VALUES (%s, %s, %s)"
         cursor.executemany(insertScript, shedules)
 
 def insertBalancesAndPayments(dbConnect):
@@ -158,30 +163,39 @@ def insertBalancesAndPayments(dbConnect):
         cursor.execute("truncate table payments cascade")
         cursor.execute("truncate table balances cascade")
 
-        cursor.execute("SELECT id, initial_debt, percent, month_amount, taking_date FROM credits")
+        cursor.execute("SELECT id, remaining_debt, percent, month_amount, taking_date FROM credits")
         credits = cursor.fetchall()
 
     payments = []
     balances = []
     currentDate = datetime.now().date()
-    for creditId, debt, percent, monthAmount, takingDate in credits:
-        remainingDebt = debt
+    for creditId, remainingDebt, percent, monthAmount, takingDate in credits:
+        creditIsClose = False
         curTakingDate = takingDate
-        totalAccuredByPercentByMonth = 0;
+        totalAccuredByPercentByMonth = Decimal.from_float(0.0);
         while (curTakingDate < currentDate):
             curTakingDate += timedelta(days=1)
 
-            accruedByPercent = remainingDebt * (percent / 100.0 / 365.0)
+            accruedByPercent = remainingDebt * Decimal.from_float(percent / 100.0 / 365.0)
+            totalAccuredByPercentByMonth += accruedByPercent
             if (takingDate.day == curTakingDate.day):
                 paymentDayBefore = randint(1, 20)
-                payments.append((monthAmount, "mountly", "bank_account", creditId, curTakingDate - timedelta(paymentDayBefore)))
+                payments.append((monthAmount, "month", "bank_account", creditId, curTakingDate - timedelta(paymentDayBefore)))
                 remainingDebt -= (monthAmount - totalAccuredByPercentByMonth)
-                totalAccuredByPercentByMonth = 0;
+                totalAccuredByPercentByMonth = 0
 
-            balances.append((creditId, accruedByPercent, curTakingDate))
-
+            if (remainingDebt <= 0):
+                remainingDebt = 0
+                creditIsClose = True
+                break
+            
+            if (accruedByPercent > 0):
+                balances.append((creditId, accruedByPercent, curTakingDate))
+            
         with dbConnect.cursor() as cursor:
-            cursor.execute("update credits set initial_debt = %s where id = %s", (remainingDebt, creditId))
+            cursor.execute("update credits set remaining_debt = %s where id = %s", (remainingDebt, creditId))
+            if (creditIsClose):
+                cursor.execute("update credits set credit_status = %s, remaining_debt = %s where id = %s", ("close", 0, creditId))
 
     insertScriptPayment = "insert into payments (amount, payment_for_what, way_of_payment, credit_id, date) VALUES (%s, %s, %s, %s, %s)"
     insertScriptBalance = "insert into balances (credit_id, accrued_by_percent, date) VALUES (%s, %s, %s)"
@@ -190,11 +204,11 @@ def insertBalancesAndPayments(dbConnect):
         cursor.executemany(insertScriptBalance, balances)
 
 def insert(dbConnect):
-    insertEmployees(dbConnect)
-    insertClients(dbConnect)
-    insertCreditTariffs(dbConnect)
-    insertCredits(dbConnect)
-    insertSchedule(dbConnect)
+    # insertEmployees(dbConnect)
+    # insertClients(dbConnect)
+    # insertCreditTariffs(dbConnect)
+    # insertCredits(dbConnect)
+    # insertSchedule(dbConnect)
     insertBalancesAndPayments(dbConnect)
     print("insert")
 

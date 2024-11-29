@@ -7,7 +7,7 @@ create table requests (
 
 create type credit_scoring_status as enum ('approve', 'reject');
 create table credits_scoring (
-    score float4 not null ,
+    score numeric(15, 2) not null ,
     credit_request_id uuid primary key references requests("id") on delete cascade ,
     status credit_scoring_status not null
 );

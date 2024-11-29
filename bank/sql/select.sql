@@ -9,7 +9,9 @@ select count(*) from balances;
 select * from credits where id = '73b4abfa-563b-4a3a-87f9-ce737cc85e11';
 select * from balances where credit_id = '73b4abfa-563b-4a3a-87f9-ce737cc85e11' order by date desc limit 200;
 select count(*) from payments;
-select * from payments where credit_id = '73b4abfa-563b-4a3a-87f9-ce737cc85e11';
+select * from payments p
+order by p.date
+limit 100;
 
 /* == 1 == */
 select * from (
@@ -23,7 +25,7 @@ group by credit_tariff_id) inner join clients c on c.id = client_with_max_debt;
 /* == 2 == */
 select DATE_TRUNC('year', p.date) AS year,
        DATE_TRUNC('month', p.date) AS month,
-       DATE_TRUNC('day', p.date) AS day,
+       DATE(p.date) AS day,
        count(*), sum(amount) from payments p
 where date between current_timestamp - interval '2 month' and current_timestamp - interval '20 days'
 group by rollup (year, month, day)
@@ -69,12 +71,17 @@ select sum_pay_credit.*, payment_sum / give_credit_sum as profit from (
 ) as sum_pay_credit;
 
 /* == 6 == */
-select * from credits where remaining_debt = 0;
-select pay_sum / initial_debt as profit, credit_id from (
-    select c.id as credit_id, pay_sum, c.initial_debt, c.id from credits c right join (
-        select sum(p.amount) as pay_sum, p.credit_id from payments p
-        group by p.credit_id
-    ) as paymens on c.id = paymens.credit_id
-    where c.taking_date >= current_timestamp - interval '5 month' and
-          c.taking_date + c.credit_period <= current_date - interval '2 month' and
-          c.credit_status = 'close');
+select pay_sum / initial_debt as profit, id from (
+    select sum(p.amount) as pay_sum, c.id, c.initial_debt from payments p inner join credits c on p.credit_id = c.id
+    where (c.taking_date between current_timestamp - interval '5 month' and current_timestamp + interval '2 year') and
+          c.taking_date + c.credit_period <= current_date - interval '1 month' and
+          c.credit_status = 'close'
+    group by c.id);
+
+select * from credits c
+    where (c.taking_date between current_timestamp - interval '5 month' and current_timestamp + interval '2 year') and
+      c.taking_date + c.credit_period <= current_date - interval '1 month' and
+      c.credit_status = 'close';
+
+select * from payments where credit_id = '45bd82d6-25a3-4f33-84e9-aedd26b73aaf';
+select * from balances where credit_id = '45bd82d6-25a3-4f33-84e9-aedd26b73aaf';

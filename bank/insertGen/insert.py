@@ -163,14 +163,15 @@ def insertBalancesAndPayments(dbConnect):
         cursor.execute("truncate table payments cascade")
         cursor.execute("truncate table balances cascade")
 
-        cursor.execute("SELECT id, remaining_debt, percent, month_amount, taking_date FROM credits")
+        cursor.execute("SELECT id, initial_debt, percent, month_amount, taking_date FROM credits")
         credits = cursor.fetchall()
 
     payments = []
     balances = []
     currentDate = datetime.now().date()
-    for creditId, remainingDebt, percent, monthAmount, takingDate in credits:
+    for creditId, initialDebt, percent, monthAmount, takingDate in credits:
         creditIsClose = False
+        remainingDebt = initialDebt
         curTakingDate = takingDate
         totalAccuredByPercentByMonth = Decimal.from_float(0.0);
         while (curTakingDate < currentDate):
@@ -179,7 +180,7 @@ def insertBalancesAndPayments(dbConnect):
             accruedByPercent = remainingDebt * Decimal.from_float(percent / 100.0 / 365.0)
             totalAccuredByPercentByMonth += accruedByPercent
             if (takingDate.day == curTakingDate.day):
-                paymentDayBefore = randint(1, 20)
+                paymentDayBefore = randint(1, 10)
                 payments.append((monthAmount, "month", "bank_account", creditId, curTakingDate - timedelta(paymentDayBefore)))
                 remainingDebt -= (monthAmount - totalAccuredByPercentByMonth)
                 totalAccuredByPercentByMonth = 0
@@ -189,7 +190,7 @@ def insertBalancesAndPayments(dbConnect):
                 creditIsClose = True
                 break
             
-            if (accruedByPercent > 0):
+            if (accruedByPercent > 1):
                 balances.append((creditId, accruedByPercent, curTakingDate))
             
         with dbConnect.cursor() as cursor:

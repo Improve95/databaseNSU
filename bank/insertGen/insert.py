@@ -143,18 +143,18 @@ def insertSchedule(dbConnect):
      with dbConnect.cursor() as cursor:
         cursor.execute("truncate table payments_schedule cascade")
 
-        cursor.execute("SELECT id, taking_date, credit_period FROM credits")
+        cursor.execute("SELECT id, taking_date, credit_period, month_amount FROM credits")
         credits = cursor.fetchall()
 
         shedules = []
-        for credit_id, taking_date, credit_period in credits:
+        for credit_id, taking_date, credit_period, month_amount in credits:
             payment_day = taking_date
             for i in range (credit_period.days):
                 payment_day += timedelta(days=1)
                 if (taking_date.day == payment_day.day):
-                    shedules.append((credit_id, payment_day, True))
+                    shedules.append((credit_id, payment_day, True, month_amount))
 
-        insertScript = "insert into payments_schedule (credit_id, deadline, is_paid) VALUES (%s, %s, %s)"
+        insertScript = "insert into payments_schedule (credit_id, deadline, is_paid, amount) VALUES (%s, %s, %s, %s)"
         cursor.executemany(insertScript, shedules)
 
 def insertBalancesAndPayments(dbConnect):
@@ -209,7 +209,7 @@ def insert(dbConnect):
     # insertClients(dbConnect)
     # insertCreditTariffs(dbConnect)
     # insertCredits(dbConnect)
-    # insertSchedule(dbConnect)
+    insertSchedule(dbConnect)
     insertBalancesAndPayments(dbConnect)
     print("insert")
 

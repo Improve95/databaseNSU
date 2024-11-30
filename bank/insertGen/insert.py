@@ -120,7 +120,7 @@ def insertCredits(dbConnect):
 
             creditPeriod = randint(12, 24)
 
-            takingCreditData = datetime.today() - timedelta(days=(randint(1, 3) * 30))
+            takingCreditData = datetime.today() - timedelta(days=(randint(1, 4) * 30))
             if (i % 1000 == 1):
                 initialDebt = randint(100000, 200000)
                 creditPeriod = 2
@@ -205,10 +205,10 @@ def insertBalancesAndPayments(dbConnect):
         cursor.executemany(insertScriptBalance, balances)
 
 def insert(dbConnect):
-    # insertEmployees(dbConnect)
-    # insertClients(dbConnect)
-    # insertCreditTariffs(dbConnect)
-    # insertCredits(dbConnect)
+    insertEmployees(dbConnect)
+    insertClients(dbConnect)
+    insertCreditTariffs(dbConnect)
+    insertCredits(dbConnect)
     insertSchedule(dbConnect)
     insertBalancesAndPayments(dbConnect)
     print("insert")

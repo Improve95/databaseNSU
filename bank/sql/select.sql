@@ -62,9 +62,11 @@ select sum_pay_credit.*, payment_sum / give_credit_sum as profit from (
 ) as sum_pay_credit;
 
 /* == 6 == */
-select pay_sum / initial_debt as profit, id from (
-    select sum(p.amount) as pay_sum, c.id, c.initial_debt from payments p inner join credits c on p.credit_id = c.id
-    where (c.taking_date between current_timestamp - interval '5 month' and current_timestamp + interval '2 year') and
-          c.taking_date + c.credit_period <= current_date - interval '1 month' and
-          c.credit_status = 'close'
-    group by c.id);
+select pay_credit_sum.*, payment_sum / give_credit_sum as profit from (
+    select p.credit_id,
+           sum(p.amount) as payment_sum,
+           sum(c.initial_debt) as give_credit_sum
+    from payments_schedule p inner join credits c on p.credit_id = c.id
+        where (c.taking_date between current_timestamp - interval '5 month' and current_timestamp) and
+              p.deadline <= current_timestamp + interval '2 month'
+    group by p.credit_id) as pay_credit_sum;

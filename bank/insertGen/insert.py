@@ -181,7 +181,7 @@ def insertBalancesAndPayments(dbConnect):
             totalAccuredByPercentByMonth += accruedByPercent
             if (takingDate.day == curTakingDate.day):
                 paymentDayBefore = randint(1, 10)
-                payments.append((monthAmount, "month", "bank_account", creditId, curTakingDate - timedelta(paymentDayBefore)))
+                payments.append((monthAmount, creditId, curTakingDate - timedelta(paymentDayBefore)))
                 remainingDebt -= (monthAmount - totalAccuredByPercentByMonth)
                 totalAccuredByPercentByMonth = 0
 
@@ -198,7 +198,7 @@ def insertBalancesAndPayments(dbConnect):
             if (creditIsClose):
                 cursor.execute("update credits set credit_status = %s, remaining_debt = %s where id = %s", ("close", 0, creditId))
 
-    insertScriptPayment = "insert into payments (amount, payment_for_what, way_of_payment, credit_id, date) VALUES (%s, %s, %s, %s, %s)"
+    insertScriptPayment = "insert into payments (amount, credit_id, date) VALUES (%s, %s, %s)"
     insertScriptBalance = "insert into balances (credit_id, accrued_by_percent, date) VALUES (%s, %s, %s)"
     with dbConnect.cursor() as cursor:
         cursor.executemany(insertScriptPayment, payments)

@@ -70,3 +70,16 @@ select pay_credit_sum.*, payment_sum / give_credit_sum as profit from (
         where (c.taking_date between current_timestamp - interval '5 month' and current_timestamp) and
               p.deadline <= current_timestamp + interval '2 month'
     group by p.credit_id) as pay_credit_sum;
+
+
+/* ============================================================================================================ */
+
+
+/* == 1 == */
+select * from (
+select count(*), sum(initial_debt), avg(initial_debt),
+       (select c2.client_id from credits c2 where c2.credit_tariff_id = c1.credit_tariff_id and
+        c2.initial_debt = (select max(c3.initial_debt) from credits c3 where c3.credit_tariff_id = c1.credit_tariff_id)) as client_with_max_debt
+from credits c1
+where taking_date between current_timestamp - interval '3 month' and current_timestamp - interval '20 days'
+group by credit_tariff_id) inner join clients c on c.id = client_with_max_debt;

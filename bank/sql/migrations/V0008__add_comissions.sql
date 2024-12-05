@@ -1,2 +1,2 @@
 alter table payments drop column way_of_payment;
-alter table payments add column commissions_percent int not null check ( commissions_percent >= 0 ) default 0;
+alter table payments add column commission decimal(15, 2) not null check ( commission >= 0 ) default 0;

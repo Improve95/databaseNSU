@@ -80,3 +80,10 @@ with suppose_payments as (
                     left join suppose_payments sp on sp.credit_id = c.id
         where (c.taking_date between current_timestamp - interval '1 year' and current_timestamp)
     group by c.id) as pay_credit_sum;
+
+select pay_credit_sum.*, pay_credit_sum.payment_sum::float4 / pay_credit_sum.initial_debt as profit from (
+    select sum(p.amount) as payment_sum,
+           c.initial_debt
+    from payments p inner join credits c on c.id = p.credit_id
+    where p.date <= c.taking_date + interval '2 month'
+    group by c.id) as pay_credit_sum;

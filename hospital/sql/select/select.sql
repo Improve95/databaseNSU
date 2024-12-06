@@ -4,7 +4,7 @@ where sc.change_type = 'EMPLOY'::staff_changes_type and sc.change_time > current
 staff.salary < 100000;
 
 /* == 2 == */
-select patient.*, dh.disease from patient inner join disease_history dh on patient.id = dh.patient_id
+select patient.*, dh.disease, count(*) over  from patient inner join disease_history dh on patient.id = dh.patient_id
 where coming_time > current_timestamp - interval '2 month'
 order by dh.disease;
 

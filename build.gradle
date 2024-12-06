@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id "co.uzzu.dotenv.gradle" version "4.0.0"
+}
+
+allprojects {
+    group 'ru.improve'
+    version '1.0'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    dependencies {
+        implementation 'org.postgresql:postgresql:42.7.4'
+    }
+}

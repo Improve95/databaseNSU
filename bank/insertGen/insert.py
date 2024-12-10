@@ -205,11 +205,11 @@ def insertBalancesAndPayments(dbConnect):
         cursor.executemany(insertScriptBalance, balances)
 
 def insert(dbConnect):
-    # insertEmployees(dbConnect)
-    # insertClients(dbConnect)
-    # insertCreditTariffs(dbConnect)
-    # insertCredits(dbConnect)
-    # insertSchedule(dbConnect)
+    insertEmployees(dbConnect)
+    insertClients(dbConnect)
+    insertCreditTariffs(dbConnect)
+    insertCredits(dbConnect)
+    insertSchedule(dbConnect)
     insertBalancesAndPayments(dbConnect)
     print("insert")
 

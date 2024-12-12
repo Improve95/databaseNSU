@@ -49,8 +49,26 @@ with recursive tmp(id, name, position, manager_id, path, depth) as (
       manager_id,
       depth
   from tmp
-group by manager_id, depth
-order by depth, manager_id;
+  group by manager_id, depth
+  order by depth, manager_id;
+
+with recursive tmp(id, name, position, manager_id, path, depth) as (
+    select e.*, cast (id as varchar (200)) as path, 1 from employees e where e.manager_id is null
+    union
+    select e.*, cast (tmp.path || '->'|| e.id as varchar(200)), depth + 1 from employees e
+        inner join tmp on e.manager_id = tmp.id
+) select string_agg(case when emp.manager_id is null then 'null' else emp.manager_id::varchar end || ': ' || emp.employees, '; ') as emps_managers,
+         emp.depth
+  from (
+    select
+          string_agg(tmp.id::varchar, '; ') as employees,
+          manager_id,
+          depth
+      from tmp
+    group by manager_id, depth
+    order by depth, manager_id) as emp
+group by depth
+order by depth;
 
 /* == 4 == */
 -- pnp_number - paid_not_paid_number

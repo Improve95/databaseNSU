@@ -39,28 +39,34 @@ with recursive tmp(id, name, position, manager_id, path, depth) as (
 ) select * from tmp
 order by tmp.depth;
 
-WITH RECURSIVE employee_hierarchy AS (
-    SELECT id, manager_id, 0 AS level
-    FROM employees
-    WHERE employees.manager_id IS NULL
-    UNION ALL
-    SELECT e.id, e.manager_id, eh.level + 1
-    FROM employees e
-             JOIN employee_hierarchy eh ON e.manager_id = eh.id
-)
-SELECT
-    level,
-    STRING_AGG(employees, ' / ') AS employees
-FROM (
-         SELECT
-             level,
-             CONCAT(STRING_AGG(id::VARCHAR, ' ' ORDER BY id), ' (', manager_id, ')') AS employees,
-             manager_id
-         FROM employee_hierarchy
-         GROUP BY level, manager_id
-     ) AS subordinates
-GROUP BY level
-ORDER BY level;
+with recursive tmp(id, name, position, manager_id, path, depth) as (
+    select e.*, cast (id as varchar (200)) as path, 1 from employees e where e.manager_id is null
+    union
+    select e.*, cast (tmp.path || '->'|| e.id as varchar(200)), depth + 1 from employees e
+        inner join tmp on e.manager_id = tmp.id
+) select
+      string_agg(tmp.id::varchar, '; ') as employees,
+      tmp.manager_id,
+      tmp.depth
+  from tmp
+group by tmp.manager_id, tmp.depth
+order by tmp.depth, tmp.manager_id;
+
+with recursive tmp(id, name, position, manager_id, path, depth) as (
+    select e.*, cast (id as varchar (200)) as path, 1 from employees e where e.manager_id is null
+    union
+    select e.*, cast (tmp.path || '->'|| e.id as varchar(200)), depth + 1 from employees e
+        inner join tmp on e.manager_id = tmp.id
+) select depth, string_agg(employees, ' / ') AS employees FROM (
+    select
+        depth,
+        concat(string_agg(id::varchar, ' ' order by id), ' (', manager_id, ')') AS employees,
+        manager_id
+    from tmp
+    group by depth, manager_id
+    ) as subordinates
+group by depth
+order by depth;
 
 /* == 4 == */
 -- pnp_number - paid_not_paid_number

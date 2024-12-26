@@ -63,6 +63,20 @@ with recursive tmp(id, name, position, manager_id, depth) as (
 group by depth
 order by depth;
 
+with recursive tmp (id, name, position, manager_id, depth, hierarchy_path) as (
+    select e.*,
+           0,
+           CAST(id AS TEXT)
+    from employees e where e.manager_id is null
+    union all
+    select e.*,
+           depth + 1,
+           CAST(tmp.hierarchy_path || ' -> ' || e.id AS TEXT)
+    from tmp
+        inner join employees e on e.manager_id = tmp.id
+) select * from tmp
+order by hierarchy_path;
+
 /* == 4 == */
 -- pnp_number - paid_not_paid_number
 select c.id, paid_number, not_paid_number,

@@ -16,33 +16,33 @@ def insertEmployees(dbConnect):
         
         nameNumber = 0
         employees = []
-        for i in range(20):
+        for i in range(2):
             employees.append(("name" + str(nameNumber), 1, None))
             nameNumber += 1
         
         managerId = 1
-        for i in range(200):
+        for i in range(10):
             employees.append(("name" + str(nameNumber), 2, managerId))
             nameNumber += 1
             managerId += 1
-            if (managerId > 20):
+            if (managerId > 2):
                 managerId = 1
         
-        managerId = 21
-        for i in range(1000):
+        managerId = 3
+        for i in range(20):
             employees.append(("name" + str(nameNumber), 3, managerId))
             nameNumber += 1
             managerId += 1
-            if (managerId > 220):
-                managerId = 21
+            if (managerId > 3 + 10):
+                managerId = 3
         
-        managerId = 221
-        for i in range(4000):
+        managerId = 13
+        for i in range(80):
             employees.append(("name" + str(nameNumber), 4, managerId))
             nameNumber += 1
             managerId += 1
-            if (managerId > 1220):
-                managerId = 221
+            if (managerId > 13 + 20):
+                managerId = 13
 
         insertScript = "insert into employees (name, position_id, manager_id) values (%s, %s, %s)"
         cursor.executemany(insertScript, employees)
@@ -199,9 +199,9 @@ def insertBalancesAndPayments(dbConnect):
 
 def insert(dbConnect):
     insertEmployees(dbConnect)
-    insertClients(dbConnect)
-    insertCreditTariffs(dbConnect)
-    insertCredits(dbConnect)
+    # insertClients(dbConnect)
+    # insertCreditTariffs(dbConnect)
+    # insertCredits(dbConnect)
     # insertSchedule(dbConnect)
     # insertBalancesAndPayments(dbConnect)
     print("insert")

@@ -56,7 +56,7 @@ def insertClients(dbConnect):
         clients = []
         employment = ['t1', 't2', 't3', 't4']
         employmentIndex = 0
-        for i in range (150000):
+        for i in range (1000):
             clients.append(("name" + str(nameNumber), employment[employmentIndex]))
             employmentIndex = (employmentIndex + 1) % 4
             
@@ -103,25 +103,23 @@ def insertCredits(dbConnect):
 
         credits = []
         clientId = 1
-        for i in range(70000):
+        for i in range(1000):
             initialDebt = randint(1000000, 2000000)
             percent = randint(12, 19)
             creditTariffId = 0
-            if (clientId < 30001):
+            if (clientId < 250):
                 creditTariffId = randint(1, 2)
-            elif (30001 <= clientId and clientId < 60001):
+            elif (250 <= clientId and clientId < 500):
                 creditTariffId = randint(2, 3)
-            elif (60001 <= clientId and clientId < 90001):
+            elif (500 <= clientId and clientId < 750):
                 creditTariffId = randint(3, 4)
-            elif (90001 <= clientId and clientId < 120001):
+            elif (750 <= clientId and clientId < 1000):
                 creditTariffId = randint(4, 5)
-            else:
-                creditTariffId = randint(1, 5)
 
             creditPeriod = randint(12, 24)
 
             takingCreditData = datetime.today() - timedelta(days=(randint(1, 4) * 30))
-            if (i % 1000 == 1):
+            if (i % 87 == 1):
                 initialDebt = randint(100000, 200000)
                 creditPeriod = 2
                 takingCreditData = datetime.today() - timedelta(days=(4 * 30))

@@ -16,7 +16,7 @@ limit 100;
 select * from (
 select count(*), sum(initial_debt), avg(initial_debt),
        (select c2.client_id from credits c2 where c2.credit_tariff_id = c1.credit_tariff_id and
-        c2.initial_debt = (select max(c3.initial_debt) from credits c3 where c3.credit_tariff_id = c1.credit_tariff_id)) as client_with_max_debt
+        c2.initial_debt = (select max(c3.initial_debt) from credits c3 where c3.credit_tariff_id = c1.credit_tariff_id)) as client_with_max_debt, credit_tariff_id
 from credits c1
 where taking_date between current_timestamp - interval '3 month' and current_timestamp - interval '20 days'
 group by credit_tariff_id) inner join clients c on c.id = client_with_max_debt;
@@ -39,10 +39,10 @@ with recursive tmp(id, name, position, manager_id, path, depth) as (
 ) select * from tmp
 order by tmp.depth;
 
-with recursive tmp(id, name, position, manager_id, path, depth) as (
-    select e.*, cast (id as varchar (200)) as path, 1 from employees e where e.manager_id is null
+with recursive tmp(id, name, position, manager_id, depth) as (
+    select e.*, 1 from employees e where e.manager_id is null
     union
-    select e.*, cast (tmp.path || '->'|| e.id as varchar(200)), depth + 1 from employees e
+    select e.*, depth + 1 from employees e
         inner join tmp on e.manager_id = tmp.id
 ) select
       string_agg(tmp.id::varchar, '; ') as employees,
@@ -52,10 +52,10 @@ with recursive tmp(id, name, position, manager_id, path, depth) as (
   group by manager_id, depth
   order by depth, manager_id;
 
-with recursive tmp(id, name, position, manager_id, path, depth) as (
-    select e.*, cast (id as varchar (200)) as path, 1 from employees e where e.manager_id is null
+with recursive tmp(id, name, position, manager_id, depth) as (
+    select e.*, 1 from employees e where e.manager_id is null
     union
-    select e.*, cast (tmp.path || '->'|| e.id as varchar(200)), depth + 1 from employees e
+    select e.*, depth + 1 from employees e
         inner join tmp on e.manager_id = tmp.id
 ) select string_agg(case when emp.manager_id is null then 'null' else emp.manager_id::varchar end || ': ' || emp.employees, '; ') as emps_managers,
          emp.depth
@@ -110,11 +110,12 @@ with suppose_payments as (
     from payments p inner join credits c on p.credit_id = c.id
                     left join suppose_payments sp on sp.credit_id = c.id
         where (c.taking_date between current_timestamp - interval '1 year' and current_timestamp)
-    group by c.id) as pay_credit_sum;
+    group by c.id) as pay_credit_sum
+order by credit_id;
 
 select pay_credit_sum.*, pay_credit_sum.payment_sum::float4 / pay_credit_sum.initial_debt as profit from (
     select sum(p.amount) as payment_sum,
            c.initial_debt
     from payments p inner join credits c on c.id = p.credit_id
-    where p.date <= c.taking_date + interval '2 month'
+    where p.date <= c.taking_date + c.credit_period + interval '2 month'
     group by c.id) as pay_credit_sum;

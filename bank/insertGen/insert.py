@@ -145,12 +145,12 @@ def insertSchedule(dbConnect):
             for i in range (credit_period.days):
                 payment_day += timedelta(days=1)
                 if (taking_date.day == payment_day.day):
-                    shedules.append((credit_id, payment_day, True, month_amount))
+                    shedules.append((credit_id, payment_day, False, month_amount))
 
         insertScript = "insert into payments_schedule (credit_id, deadline, is_paid, amount) VALUES (%s, %s, %s, %s)"
         cursor.executemany(insertScript, shedules)
 
-def insertBalancesAndPayments(dbConnect):
+def insertBalances(dbConnect):
     credits = []
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table payments cascade")
@@ -184,26 +184,59 @@ def insertBalancesAndPayments(dbConnect):
                 break
             
             if (accruedByPercent > 1):
-                balances.append((creditId, accruedByPercent, curTakingDate))
+                balances.append((creditId, remainingDebt, accruedByPercent, curTakingDate))
             
         with dbConnect.cursor() as cursor:
-            cursor.execute("update credits set remaining_debt = %s where id = %s", (remainingDebt, creditId))
             if (creditIsClose):
-                cursor.execute("update credits set credit_status = %s, remaining_debt = %s where id = %s", ("close", 0, creditId))
+                cursor.execute("update credits set credit_status = %s where id = %s", ("close", creditId))
 
-    insertScriptPayment = "insert into payments (amount, credit_id, date) VALUES (%s, %s, %s)"
-    insertScriptBalance = "insert into balances (credit_id, accrued_by_percent, date) VALUES (%s, %s, %s)"
+    insertScriptBalance = "insert into balances (credit_id, remaining_debt, accrued_by_percent, date) VALUES (%s, %s, %s, %s)"
     with dbConnect.cursor() as cursor:
-        cursor.executemany(insertScriptPayment, payments)
         cursor.executemany(insertScriptBalance, balances)
+
+def insertPayments(dbConnect):
+    credits = []
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table payments cascade")
+
+        cursor.execute("SELECT id, initial_debt, percent, month_amount, taking_date FROM credits")
+        credits = cursor.fetchall()
+
+    payments = []
+    currentDate = datetime.now().date()
+    for creditId, initialDebt, percent, monthAmount, takingDate in credits:
+        creditIsClose = False
+        remainingDebt = initialDebt
+        curTakingDate = takingDate
+        ps = []
+        with dbConnect.cursor() as cursor:
+            cursor.execute("select id, credit_id, amoutn, deadline from payments_shedule where credit_id = %s", creditId)
+            ps = cursor.fetchall()
+
+        while (curTakingDate < currentDate):
+            curTakingDate += timedelta(days=1)
+            if (takingDate.day == curTakingDate.day):
+                paymentDayBefore = randint(1, 10)
+                payments.append((monthAmount, creditId, curTakingDate - timedelta(paymentDayBefore)))
+                remainingDebt -= (monthAmount - totalAccuredByPercentByMonth)
+                totalAccuredByPercentByMonth = 0
+
+            if (remainingDebt <= 0):
+                remainingDebt = 0
+                break
+
+    insertScriptPayment = "insert into payments (amount, credit_id, time) VALUES (%s, %s, %s)"
+    with dbConnect.cursor() as cursor:
+            cursor.executemany(insertScriptPayment, payments)
+
 
 def insert(dbConnect):
     insertEmployees(dbConnect)
-    # insertClients(dbConnect)
-    # insertCreditTariffs(dbConnect)
-    # insertCredits(dbConnect)
-    # insertSchedule(dbConnect)
-    # insertBalancesAndPayments(dbConnect)
+    insertClients(dbConnect)
+    insertCreditTariffs(dbConnect)
+    insertCredits(dbConnect)
+    insertSchedule(dbConnect)
+    insertBalances(dbConnect)
     print("insert")
 
 def update(dbConnect):

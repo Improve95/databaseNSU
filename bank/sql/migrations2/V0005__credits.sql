@@ -17,6 +17,6 @@ create table balances (
     credit_id bigint not null references credits("id") ,
     remaining_debt numeric(15, 2) not null check ( remaining_debt > 0 ) ,
     accrued_by_percent numeric(15, 2) not null check ( accrued_by_percent > 0 ) ,
-    penalties_amount numeric(15, 2) not null check ( accrued_by_percent > 0 ) ,
+    penalties_amount numeric(15, 2) not null check ( accrued_by_percent > 0 ) default 0,
     date date not null default current_date
 );

@@ -78,22 +78,11 @@ with recursive tmp (id, name, position, manager_id, depth, hierarchy_path) as (
 order by hierarchy_path;
 
 /* == 4 == */
--- pnp_number - paid_not_paid_number
-select c.id, paid_number, not_paid_number,
-       not_paid_number::float / (paid_number + not_paid_number) * 100.0 as not_paid_count_percent,
-       paid_sum, not_paid_sum,
-       not_paid_sum::float / (paid_sum + not_paid_sum) * 100.0 as not_paid_sum_percent
-from credits c inner join (
-    select sum(case when ps.is_paid = true then 1 else 0 end) as paid_number,
-           sum(case when ps.is_paid = false then 1 else 0 end) as not_paid_number,
-           sum(case when ps.is_paid = true then ps.amount else 0 end) as paid_sum,
-           sum(case when ps.is_paid = false then ps.amount else 0 end) as not_paid_sum,
-           credit_id
-    from payments_schedule ps
-    where ps.deadline <= current_timestamp
-    group by credit_id
-) as pnp_number on c.id = pnp_number.credit_id
-where not_paid_number > 0;
+select * from credits inner join (
+    select ps.id, sum(p.amount) as payed_sum from payments_schedule ps
+        inner join payments p on p.payments_schedule = ps.id
+        where p.time <= ps.deadline
+    group by ps.id) as tmp on tmp.id;
 
 /* == 5 == */
 select sum_pay_credit.*, payment_sum / initial_debt as profit from (
@@ -104,6 +93,12 @@ select sum_pay_credit.*, payment_sum / initial_debt as profit from (
     where c.taking_date + c.credit_period between current_timestamp - interval '1 year' and current_timestamp
     group by c.id
 ) as sum_pay_credit;
+
+select total_pay_sum::float4 / total_init_debt as profit from (
+    select sum(payments_sum) as total_pay_sum, sum(initial_debt) as total_init_debt from (
+        select sum(p.amount) as payments_sum, c.initial_debt from payments p
+            inner join credits c on c.id = p.credit_id
+        group by c.id));
 
 /* == 6 == */
 with suppose_payments as (
@@ -126,3 +121,10 @@ select pay_credit_sum.*, pay_credit_sum.payment_sum::float4 / pay_credit_sum.ini
     from payments p inner join credits c on c.id = p.credit_id
     where p.date <= c.taking_date + c.credit_period + interval '2 month'
     group by c.id) as pay_credit_sum;
+
+select total_pay_sum::float4 / total_init_debt as profit from (
+    select sum(payments_sum) as total_pay_sum, sum(initial_debt) as total_init_debt from (
+        select sum(p.amount) as payments_sum, c.initial_debt from payments p
+            inner join credits c on c.id = p.credit_id
+        where c.taking_date + c.credit_period <= current_timestamp + '2 month'
+        group by c.id));

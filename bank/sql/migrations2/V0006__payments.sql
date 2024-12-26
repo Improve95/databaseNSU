@@ -12,4 +12,4 @@ create table payments (
     way_of_payment payment_way not null ,
     date timestamp with time zone not null default current_timestamp ,
     credit_id bigint not null references credits("id") on delete set null
-)
+);

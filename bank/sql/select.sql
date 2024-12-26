@@ -21,6 +21,20 @@ from credits c1
 where taking_date between current_timestamp - interval '3 month' and current_timestamp - interval '20 days'
 group by credit_tariff_id) inner join clients c on c.id = client_with_max_debt;
 
+with client_with_biggest_credit as (
+    select cl.*, credit_tariff_id as tariff from clients cl
+        inner join credits cr on cl.id = cr.client_id
+            inner join (
+                select max(initial_debt) as max_credit from credits
+                group by credit_tariff_id
+            ) as max_credit_group_tariff on max_credit_group_tariff.max_credit = cr.initial_debt
+) select * from (
+    select count(*), sum(initial_debt), avg(initial_debt), c1.credit_tariff_id
+    from credits c1
+    where taking_date between current_timestamp - interval '3 month' and current_timestamp - interval '20 days'
+    group by credit_tariff_id) as credit_stats
+inner join client_with_biggest_credit on client_with_biggest_credit.tariff = credit_stats.credit_tariff_id ;
+
 /* == 2 == */
 select DATE_TRUNC('year', p.date) AS year,
        DATE_TRUNC('month', p.date) AS month,
@@ -31,27 +45,6 @@ group by rollup (year, month, day)
 order by year, month, day;
 
 /* == 3 == */
-with recursive tmp(id, name, position, manager_id, path, depth) as (
-    select e.*, cast (id as varchar (200)) as path, 1 from employees e where e.manager_id is null
-    union
-    select e.*, cast (tmp.path || '->'|| e.id as varchar(200)), depth + 1 from employees e
-        inner join tmp on e.manager_id = tmp.id
-) select * from tmp
-order by tmp.depth;
-
-with recursive tmp(id, name, position, manager_id, depth) as (
-    select e.*, 1 from employees e where e.manager_id is null
-    union
-    select e.*, depth + 1 from employees e
-        inner join tmp on e.manager_id = tmp.id
-) select
-      string_agg(tmp.id::varchar, '; ') as employees,
-      manager_id,
-      depth
-  from tmp
-  group by manager_id, depth
-  order by depth, manager_id;
-
 with recursive tmp(id, name, position, manager_id, depth) as (
     select e.*, 1 from employees e where e.manager_id is null
     union

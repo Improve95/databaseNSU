@@ -69,28 +69,23 @@ def insertCreditTariffs(dbConnect):
 
         creditTariffs = []
         clientId = 1
-        for i in range(30000):
+        for i in range(250):
             creditTariffs.append((clientId, 1))
             creditTariffs.append((clientId, 2))
             clientId += 1
         
-        for i in range(30000):
+        for i in range(250):
             creditTariffs.append((clientId, 2))
             creditTariffs.append((clientId, 3))
             clientId += 1
 
-        for i in range(30000):
+        for i in range(250):
             creditTariffs.append((clientId, 3))
             creditTariffs.append((clientId, 4))
             clientId += 1
 
-        for i in range(30000):
+        for i in range(250):
             creditTariffs.append((clientId, 4))
-            creditTariffs.append((clientId, 5))
-            clientId += 1
-
-        for i in range(30000):
-            creditTariffs.append((clientId, 1))
             creditTariffs.append((clientId, 5))
             clientId += 1
 
@@ -107,13 +102,13 @@ def insertCredits(dbConnect):
             initialDebt = randint(1000000, 2000000)
             percent = randint(12, 19)
             creditTariffId = 0
-            if (clientId < 250):
+            if (clientId <= 250):
                 creditTariffId = randint(1, 2)
-            elif (250 <= clientId and clientId < 500):
+            elif (250 < clientId and clientId <= 500):
                 creditTariffId = randint(2, 3)
-            elif (500 <= clientId and clientId < 750):
+            elif (500 < clientId and clientId <= 750):
                 creditTariffId = randint(3, 4)
-            elif (750 <= clientId and clientId < 1000):
+            elif (750 < clientId and clientId <= 1000):
                 creditTariffId = randint(4, 5)
 
             creditPeriod = randint(12, 24)
@@ -127,13 +122,13 @@ def insertCredits(dbConnect):
             percentDh = percent / 100
             monthAmount = initialDebt * (percentDh / 12.0 * (1.0 + percentDh / 12.0)**creditPeriod) / ((1.0 + percentDh / 12.0)**creditPeriod - 1.0)
 
-            credits.append((initialDebt, initialDebt, takingCreditData, creditPeriod, percent, monthAmount, clientId, creditTariffId))
+            credits.append((initialDebt, takingCreditData, creditPeriod, percent, monthAmount, clientId, creditTariffId))
 
             clientId += 1
 
         insertScript = """
-            insert into credits (initial_debt, remaining_debt, taking_date, credit_period, percent, month_amount, client_id, credit_tariff_id) 
-            VALUES (%s, %s, %s, make_interval(months => %s), %s, %s, %s, %s)
+            insert into credits (initial_debt, taking_date, credit_period, percent, month_amount, client_id, credit_tariff_id) 
+            VALUES (%s, %s, make_interval(months => %s), %s, %s, %s, %s)
             """
         cursor.executemany(insertScript, credits)
 
@@ -207,8 +202,8 @@ def insert(dbConnect):
     insertClients(dbConnect)
     insertCreditTariffs(dbConnect)
     insertCredits(dbConnect)
-    insertSchedule(dbConnect)
-    insertBalancesAndPayments(dbConnect)
+    # insertSchedule(dbConnect)
+    # insertBalancesAndPayments(dbConnect)
     print("insert")
 
 def update(dbConnect):

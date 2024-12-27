@@ -64,25 +64,47 @@ group by depth
 order by depth;
 
 with recursive tmp (id, name, position, manager_id, depth, hierarchy_path) as (
-    select e.*,
-           0,
-           CAST(id AS TEXT)
+    select e.*, 0, CAST(id AS TEXT)
     from employees e where e.manager_id is null
     union all
-    select e.*,
-           depth + 1,
-           CAST(tmp.hierarchy_path || ' -> ' || e.id AS TEXT)
-    from tmp
-        inner join employees e on e.manager_id = tmp.id
+    select e.*, depth + 1, CAST(tmp.hierarchy_path || ' -> ' || e.id AS TEXT)
+    from tmp inner join employees e on e.manager_id = tmp.id
 ) select * from tmp
 order by hierarchy_path;
 
 /* == 4 == */
-select * from credits inner join (
-    select ps.id, sum(p.amount) as payed_sum from payments_schedule ps
-        inner join payments p on p.payments_schedule = ps.id
-        where p.time <= ps.deadline
-    group by ps.id) as tmp on tmp.id;
+select
+    sum(case when ps.amount <= pnp.payed_sum then 1 else 0 end) as payed_shedule,
+    count(*)
+from payments_schedule ps inner join (
+    select ps.id, sum(case when p.amount is null then 0 else p.amount end) as payed_sum from payments_schedule ps
+        left join payments p on p.payments_schedule = ps.id
+        where p.time <= ps.deadline or time is null
+    group by ps.id) as pnp on ps.id = pnp.id
+group by ps.credit_id
+order by payed_shedule desc;
+
+select payed_shedule_count, total_shedule_count,
+       payed_shedule_count::float4 / (payed_shedule_count + total_shedule_count) * 100 as count_percent,
+       tps_on_credits, tmps_on_credits,
+       tps_on_credits::float4 / (tps_on_credits + tmps_on_credits) * 100 as sum_percent
+from (
+    select
+        ps.credit_id,
+        sum(case when ps.amount <= pnp.payed_sum then 1 else 0 end) as payed_shedule_count ,
+        count(*) total_shedule_count ,
+        sum(pnp.payed_sum) as tps_on_credits ,
+        sum(total_need_payed_sum) as tmps_on_credits
+    from payments_schedule ps inner join (
+        select ps.id,
+               sum(case when p.amount is null then 0 else p.amount end) as payed_sum,
+               sum(ps.amount) as total_need_payed_sum
+               from payments_schedule ps
+            left join payments p on p.payments_schedule = ps.id
+        where p.time <= ps.deadline or time is null
+        group by ps.id) as pnp on ps.id = pnp.id
+    group by ps.credit_id)
+order by payed_shedule_count desc;
 
 /* == 5 == */
 select sum_pay_credit.*, payment_sum / initial_debt as profit from (

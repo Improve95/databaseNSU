@@ -26,6 +26,11 @@ select id, animal_type, cage, name, weight, length, coming_time from (
 )
 where heaviest_weight = weight;
 
+select a.* from animal a inner join (
+    select cage, max(weight) as max_weight from animal
+    group by cage) as cage_max_weight on a.weight = cage_max_weight.max_weight
+order by cage;
+
 /* == 4 == */
 select animal.weight from animal where cage = (
     select cage as animal_count from animal

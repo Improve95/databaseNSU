@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: databaseNsu
+    container_name: database-nsu
     image: postgres:16.4
     hostname: database
     environment:
@@ -8,6 +8,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./pgdataDatabaseNsu:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
     ports:
       - 5430:5432

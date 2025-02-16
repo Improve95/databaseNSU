@@ -75,7 +75,9 @@ create table railroads_cars_booking (
     train int not null,
     railroad_car int not null,
     foreign key (train, railroad_car) references railroad_cars_train(train, railroad_car),
+    route_info int references routes_info not null,
     place int not null,
+    constraint booking_place unique (train, railroad_car, route_info, place),
 
     distance int not null default (random() * 100),
     booking_info int references booking(id) not null

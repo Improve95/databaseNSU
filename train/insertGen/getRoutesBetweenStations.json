@@ -1,0 +1,97 @@
+{
+    "search": {
+        "from": {
+            "type": "station",
+            "title": "Новосибирск-главный",
+            "short_title": "",
+            "popular_title": "",
+            "code": "s9610189",
+            "station_type": "station",
+            "station_type_name": "станция",
+            "transport_type": "train"
+        },
+        "to": {
+            "type": "station",
+            "title": "Москва (Ярославский вокзал)",
+            "short_title": "М-Ярославск.",
+            "popular_title": "Ярославский вокзал",
+            "code": "s2000002",
+            "station_type": "train_station",
+            "station_type_name": "вокзал",
+            "transport_type": "train"
+        },
+        "date": null
+    },
+    "segments": [
+        {
+            "thread": {
+                "number": "001Э",
+                "title": "Владивосток — Москва",
+                "short_title": "Владивосток — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    },
+                    "address": "Москва, ул. Новая Басманная , д. 2",
+                    "url": "http://www.rzd.ru/",
+                    "email": "info@rzd.ru",
+                    "contacts": "Единая телефонная линия: +7 (800) 775-00-00 (звонок бесплатный из всех регионов РФ).",
+                    "phone": "+7 (800) 775-00-00",
+                    "logo": "https://yastat.net/s3/rasp/media/data/company/logo/logo.gif",
+                    "logo_svg": null
+                },
+                "uid": "001YE_8_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                },
+                "thread_method_link": "api.rasp.yandex.net/v3/thread/?date=2025-04-30&uid=001YE_8_2"
+            },
+            "stops": "",
+            "from": {
+                "type": "station",
+                "title": "Новосибирск-главный",
+                "short_title": "",
+                "popular_title": "",
+                "code": "s9610189",
+                "station_type": "station",
+                "station_type_name": "станция",
+                "transport_type": "train"
+            },
+            "to": {
+                "type": "station",
+                "title": "Москва (Ярославский вокзал)",
+                "short_title": "М-Ярославск.",
+                "popular_title": "Ярославский вокзал",
+                "code": "s2000002",
+                "station_type": "train_station",
+                "station_type_name": "вокзал",
+                "transport_type": "train"
+            },
+            "departure_platform": "",
+            "arrival_platform": "",
+            "departure_terminal": null,
+            "arrival_terminal": null,
+            "duration": 189660.0,
+            "days": "только 5, 6, 8, 9, 11, 12 мая",
+            "except_days": "",
+            "departure": "10:29:00",
+            "arrival": "11:10:00",
+            "start_date": "2025-04-30"
+        }
+    ],
+    "interval_segments": [],
+    "pagination": {
+        "total": 103,
+        "limit": 1,
+        "offset": 50
+    }
+}

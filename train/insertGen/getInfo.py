@@ -14,7 +14,8 @@ def getRoutesBetweenStations():
         "from": "s9610189",
         "to": "s2000002",
         "transport_types": "train",
-        "limit": "10"
+        "limit": "1",
+        "offset": "50"
     }
     response = requests.get(url, headers=headers, params=params)
     data = response.json()
@@ -45,7 +46,8 @@ def followingStations():
     url = "https://api.rasp.yandex.net/v3.0/thread/"
     
     params = {
-        "uid": "059N_2_2",
+        "uid": "001YE_8_2",
+        "date": "2025-04-30",
         "limit": "100"
     }
 

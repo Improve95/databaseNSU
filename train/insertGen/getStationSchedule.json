@@ -1,0 +1,3322 @@
+{
+    "date": null,
+    "station": {
+        "type": "station",
+        "title": "Новосибирск-главный",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9610189",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+    },
+    "event": "departure",
+    "pagination": {
+        "total": 591,
+        "limit": 100,
+        "offset": 200
+    },
+    "schedule": [
+        {
+            "thread": {
+                "number": "081И",
+                "title": "Улан-Удэ — Москва",
+                "short_title": "Улан-Удэ — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "081I_15_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 17, 31 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:28"
+        },
+        {
+            "thread": {
+                "number": "117Н",
+                "title": "Новокузнецк — Москва",
+                "short_title": "Новокузнецк — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "117N_3_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 6, 8, 10, 12, 14 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:21"
+        },
+        {
+            "thread": {
+                "number": "081И",
+                "title": "Улан-Удэ — Москва",
+                "short_title": "Улан-Удэ — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "081I_20_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 5, 9, 11, 13 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:28"
+        },
+        {
+            "thread": {
+                "number": "081И",
+                "title": "Улан-Удэ — Москва",
+                "short_title": "Улан-Удэ — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "081I_21_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 7 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:28"
+        },
+        {
+            "thread": {
+                "number": "117Н",
+                "title": "Новокузнецк — Москва",
+                "short_title": "Новокузнецк — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "117N_7_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 20, 22, 24, 26, 28 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:21"
+        },
+        {
+            "thread": {
+                "number": "081И",
+                "title": "Улан-Удэ — Москва",
+                "short_title": "Улан-Удэ — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "081I_29_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 19, 23, 25, 27 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:28"
+        },
+        {
+            "thread": {
+                "number": "081И",
+                "title": "Улан-Удэ — Москва",
+                "short_title": "Улан-Удэ — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "081I_31_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 21 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:28"
+        },
+        {
+            "thread": {
+                "number": "081И",
+                "title": "Улан-Удэ — Москва",
+                "short_title": "Улан-Удэ — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "081I_3_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 2, 4, 6, 8, 10, 12 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:28"
+        },
+        {
+            "thread": {
+                "number": "117Н",
+                "title": "Новокузнецк — Москва",
+                "short_title": "Новокузнецк — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "117N_8_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 3, 5, 7, 9, 11 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:21"
+        },
+        {
+            "thread": {
+                "number": "117Н",
+                "title": "Новокузнецк — Москва",
+                "short_title": "Новокузнецк — Москва",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "117N_9_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 31 марта",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:18",
+            "arrival": "05:21"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_0_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "по нечётным",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_1_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "по чётным с 02.04",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_7_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 16, 18 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_8_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 20 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_9_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 22 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_10_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 26, 28, 30 апреля, 2, 4 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_11_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "29 июня, 3, 5, 7, 9, 11, 13, 17, 19, 21, 23, 25, 27, 29, 31 июля, 2, 4, 6, 8, 10 августа, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_2_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 24 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_6_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 1, 15 июля",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_20_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 6, 8, 12 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_21_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 10, 14 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_22_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 16, 30 мая, 1, 15 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_23_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 18 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_24_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 20, 26 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_25_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 22 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_26_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 24, 28 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_27_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 3, 5, 7, 9, 11 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_28_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 13 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_29_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 17, 27 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "068Ы",
+                "title": "Москва — Абакан",
+                "short_title": "Москва — Абакан",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "068QI_30_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 19, 21, 23, 25 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "06:48",
+            "arrival": "05:55"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_10_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "по чётным по 04.03",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_0_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 октября, 1, 3, 5, 7, 9, 11 ноября, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_16_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 29 апреля, 1 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116Э",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116YE_3_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 3, 17, 31 мая, 2, 4, 6, 8, 10, 12, 14 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116Э",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116YE_4_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "16, 18, 20, 22, 24, 26, 28, 30 июня, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24 июля, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_12_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "по чётным с 06.03 по 18.03",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_18_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "по чётным с 20.03, а ещё 01.04",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_28_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 3, 5, 7, 9 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_30_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 11, 13 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_32_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 15, 17 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_34_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 19, 21 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_36_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 23 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_38_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 25 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116С",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116S_40_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 27 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116Э",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116YE_0_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 5 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116Э",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116YE_1_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 7, 9, 11, 13 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116Э",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116YE_2_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 15 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116Э",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116YE_6_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 19 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116Э",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116YE_7_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 21, 23, 25, 27 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "116Э",
+                "title": "Адлер — Томск",
+                "short_title": "Адлер — Томск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "116YE_8_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 29 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:17",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "691Н",
+                "title": "Новосибирск — Барнаул",
+                "short_title": "Новосибирск — Барнаул",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "691N_0_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "16, 18, 20, 22, 24, 26, 28 февраля, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26 марта, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:20",
+            "arrival": null
+        },
+        {
+            "thread": {
+                "number": "216С",
+                "title": "Адлер — Барнаул",
+                "short_title": "Адлер — Барнаул",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "216S_0_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "17, 19, 21, 23, 25, 27, 29 июня, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25 июля, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:20",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "216С",
+                "title": "Адлер — Барнаул",
+                "short_title": "Адлер — Барнаул",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "216S_2_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 16, 18, 30 мая, 1, 3, 5, 7, 9, 11, 13, 15 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:20",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "216С",
+                "title": "Адлер — Барнаул",
+                "short_title": "Адлер — Барнаул",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "216S_3_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 6, 8, 10, 12, 14 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:20",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "216С",
+                "title": "Адлер — Барнаул",
+                "short_title": "Адлер — Барнаул",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "216S_4_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 20, 22, 24, 26, 28 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:20",
+            "arrival": "07:09"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_3_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 16, 20, 24, 28 февраля, 4, 8, 12, 16, 20, 24, 28 марта",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_6_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 25, 29 апреля, 3 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_0_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "1, 5, 9, 13 апреля, 16, 20, 24, 28 июня, 2, 6, 10, 14, 18, 22, 26, 30 июля, 3, 7, 11, 15 августа, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_1_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 17 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_2_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 21 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_4_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 15, 31 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_5_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 7 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_7_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 11 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_8_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 19, 23, 27 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_9_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 4 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "137Н",
+                "title": "Новокузнецк — Нижневартовск",
+                "short_title": "Новокузнецк — Нижневартовск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "137N_10_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 8, 12 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "08:48",
+            "arrival": "08:06"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_0_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "16, 18, 20, 22, 24, 26, 28 февраля, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26 марта, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_4_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "6, 10, 12, 24, 26, 28, 30 апреля, 4 мая, 1, 5, 7, 9, 11, 15, 19, 21, 23, 25, 29 июля, 2 августа, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_8_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "15, 17, 19, 21, 23, 25, 27 февраля, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25 марта, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_1_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 1 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_3_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 31 марта",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_6_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 2 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_1_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "29, 31 октября, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 ноября, 2, 4, 6, 8 декабря, …",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_2_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 15, 21, 23 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_3_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 17, 19 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_5_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 14, 16, 22 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_7_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 18, 20 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_4_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 7, 9 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_0_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 8 апреля",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_7_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 9, 11 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_8_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 25 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_13_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 2, 16, 30 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_9_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 5 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_10_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 7, 13 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_11_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 19, 21 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_9_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 6 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_6_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 2, 4, 6, 8, 10, 12 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_12_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 27 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_12_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 8 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_14_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 10 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_20_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 12 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_21_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 14 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_22_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 18 мая, 1, 13, 17, 21, 23, 25, 27 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_23_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 22 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_24_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 24 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_25_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 26 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_26_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 28 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_27_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 3, 7, 9, 11 июня",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        },
+        {
+            "thread": {
+                "number": "059Н",
+                "title": "Новокузнецк — Кисловодск",
+                "short_title": "Новокузнецк — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "059N_5_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 23 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "07:51"
+        },
+        {
+            "thread": {
+                "number": "097Э",
+                "title": "Тында — Кисловодск",
+                "short_title": "Тында — Кисловодск",
+                "express_type": null,
+                "transport_type": "train",
+                "carrier": {
+                    "code": 112,
+                    "title": "РЖД/ФПК",
+                    "codes": {
+                        "sirena": null,
+                        "iata": null,
+                        "icao": null
+                    }
+                },
+                "uid": "097YE_2_2",
+                "vehicle": null,
+                "transport_subtype": {
+                    "title": null,
+                    "code": null,
+                    "color": null
+                }
+            },
+            "is_fuzzy": false,
+            "platform": "",
+            "terminal": null,
+            "days": "только 20 мая",
+            "except_days": null,
+            "stops": "",
+            "departure": "09:18",
+            "arrival": "08:28"
+        }
+    ],
+    "interval_schedule": []
+}

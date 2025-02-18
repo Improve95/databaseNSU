@@ -1,5 +1,5 @@
 from random import randint
-from datetime import datetime, timedelta
+import datetime
 import psycopg
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -81,7 +81,39 @@ def insertPassengers(dbConnect):
 num_nodes = 30
 num_edges = 250
 seed = 123
+G = None
+routesSet = None
 num_routes = 435
+def createGraph():
+    global G
+    G = nx.gnm_random_graph(num_nodes, num_edges, seed)
+    adj_matrix = nx.to_numpy_array(G)
+    matrixLen = adj_matrix.shape
+    for i in range(matrixLen[0]):
+        for j in range(matrixLen[0]):
+            if (adj_matrix[i][j] == 0):
+                adj_matrix[i][j] = 2147483647
+            if (i == j):
+                adj_matrix[i][j] = 0
+    
+    random.seed(seed)
+    for u, v in G.edges():
+        G[u][v]['weight'] = random.randint(100, 1000)
+    
+    global routesSet
+    routesSet = set()
+    for i in range(num_nodes):
+        routesList = list(range(i + 1, num_nodes))
+        for j in range(i + 1, num_nodes):
+            randomIndex = random.randint(1, routesList.__len__()) - 1
+            popIndex = routesList.pop(randomIndex)
+            routesSet.add((i + 1, popIndex + 1))
+
+    global num_routes
+    num_routes = routesSet.__len__()
+    
+    
+
 def insertStations(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table stations cascade")
@@ -100,31 +132,6 @@ def insertRoutes(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table routes cascade")
         cursor.execute("alter sequence routes_id_seq restart with 1")
-
-        G = nx.gnm_random_graph(num_nodes, num_edges, seed)
-
-        adj_matrix = nx.to_numpy_array(G)
-        matrixLen = adj_matrix.shape
-        for i in range(matrixLen[0]):
-            for j in range(matrixLen[0]):
-                if (adj_matrix[i][j] == 0):
-                    adj_matrix[i][j] = 100000
-                if (i == j):
-                    adj_matrix[i][j] = 0
-        
-        random.seed(seed)
-        for u, v in G.edges():
-            G[u][v]['weight'] = random.randint(100, 1000)
-
-        routesSet = set()
-        for i in range(num_nodes):
-            routesList = list(range(i + 1, num_nodes))
-            for j in range(i + 1, num_nodes):
-                randomIndex = random.randint(1, routesList.__len__()) - 1
-                popIndex = routesList.pop(randomIndex)
-                routesSet.add((i + 1, popIndex + 1))
-    
-        num_routes = routesSet.__len__()
 
         nameNumber = 0
         routesInsert = []
@@ -165,15 +172,40 @@ def insertTrains(dbConnect):
         insertScript = "insert into railroad_cars(train, number, category, schema) values (%s, %s, %s, %s)"
         cursor.executemany(insertScript, railroadCars)
         
-def insertThreads(dbConnnect):
-    None
+def insertThreads(dbConnect):
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table threads cascade")
+        cursor.execute("alter sequence threads_id_seq restart with 1")
+
+        cursor.execute("select * from routes")
+        routes = cursor.fetchall()
+
+        threads = []
+        trainIndex = 1
+        somedate = datetime.date(2025, 2, 10)
+        for route in routes:
+            threads.append((route[0], trainIndex, somedate))
+            trainIndex += 1
+        
+        insertScript = "insert into threads (route, train, date) values (%s, %s, %s)"
+        cursor.executemany(insertScript, threads)
+
+def insertSchedule(dbConnect):
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table threads_info cascade")
+        cursor.execute("alter sequence threads_info_id_seq restart with 1")
+
+        cursor.execute("select * from threads")
+        threads = cursor.fetchall()
 
 def insert(dbConnect):
-    insertStaff(dbConnect)
-    insertPassengers(dbConnect)
-    insertStations(dbConnect)
-    insertTrains(dbConnect)
-    insertRoutes(dbConnect)
+    createGraph()
+    # insertStaff(dbConnect)
+    # insertPassengers(dbConnect)
+    # insertStations(dbConnect)
+    # insertTrains(dbConnect)
+    # insertRoutes(dbConnect)
+    insertThreads(dbConnect)
     print("insert")
 
 def main():

@@ -1,6 +1,9 @@
 from random import randint
 from datetime import datetime, timedelta
 import psycopg
+import matplotlib.pyplot as plt
+import networkx as nx
+import random
 
 hostname = 'localhost'
 database = 'databaseNsu'
@@ -57,12 +60,86 @@ def insertStaff(dbConnect):
         insertScript = "insert into staff (name, passport_series, passport_number, position, manager_id) values (%s, %s, %s, %s, %s)"
         cursor.executemany(insertScript, employees)
 
-def insert(dbConnect):
-    insertStaff(dbConnect)
-    print("insert")
+def insertPassengers(dbConnect):
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table passengers cascade")
+        cursor.execute("alter sequence passengers_id_seq restart with 1")
+        
+        nameNumber = 5221
+        passportNumber = 0
+        passportSeries = 0
+        passengers = []
+        for i in range(1000):
+            passengers.append(("name" + str(nameNumber), passportSeries, passportNumber))
+            nameNumber += 1
+            passportNumber += 1
+            passportSeries += 1
 
-def update(dbConnect):
-    print("update")
+        insertScript = "insert into passengers (name, passport_series, passport_number) values (%s, %s, %s)"
+        cursor.executemany(insertScript, passengers)
+
+def insertStationsRoutes(dbConnect):
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table stations cascade")
+        cursor.execute("alter sequence stations_id_seq restart with 1")
+
+        cursor.execute("truncate table stations cascade")
+        cursor.execute("alter sequence stations_id_seq restart with 1")
+
+        num_nodes = 30
+        num_edges = 250
+        seed = 123
+        G = nx.gnm_random_graph(num_nodes, num_edges, seed)
+
+        random.seed(seed)
+        for u, v in G.edges():
+            G[u][v]['weight'] = random.randint(100, 1000)
+
+        routesSet = set()
+        for i in range(num_nodes):
+            routesList = list(range(i + 1, num_nodes))
+            for j in range(i + 1, num_nodes):
+                randomIndex = random.randint(1, routesList.__len__()) - 1
+                popIndex = routesList.pop(randomIndex)
+                routesSet.add((i, popIndex))
+                
+        nameNumber = 0
+        stationsInsert = []
+        for i in range(num_nodes):
+            stationsInsert.append((i + 1, "station" + str(nameNumber)))
+            nameNumber += 1
+        
+        insertScript = "insert into stations (id, name) values (%s, %s)"
+        cursor.executemany(insertScript, stationsInsert)
+
+        nameNumber = 0
+        routesInsert = []
+        for a, b in routesSet:
+            routesInsert.append(("route" + str(nameNumber), a, b))
+            nameNumber += 1
+
+        insertScript = "insert into routes (name, departure_point, arrival_point) values (%s, %s, %s)"
+        cursor.executemany(insertScript, routesInsert)
+
+def insertRoutes(dbConnect):
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table stations cascade")
+        cursor.execute("alter sequence stations_id_seq restart with 1")
+
+        nameNumber = 0
+        routes = []
+        for i in range(50):
+            routes.append(("route" + str(nameNumber)))
+
+        insertScript = "insert into routes (name, departure_point, arrival_point) values (%s, %s, %s)"
+        cursor.executemany(insertScript, routes)
+
+def insert(dbConnect):
+    # insertStaff(dbConnect)
+    # insertPassengers(dbConnect)
+    insertStationsRoutes(dbConnect)
+    # insertRoutes(dbConnect)
+    print("insert")
 
 def main():
     try:
@@ -79,7 +156,6 @@ def main():
             cursor.execute("set search_path to trains")
 
         insert(dbConnect)
-        # update(dbConnect)
 
     except Exception as error:
         print(error)

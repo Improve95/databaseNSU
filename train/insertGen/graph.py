@@ -12,7 +12,15 @@ def main():
     for u, v in G.edges():
         G[u][v]['weight'] = random.randint(100, 1000)
 
-    # adj_matrix = nx.to_numpy_array(G)
+    adj_matrix = nx.to_numpy_array(G)
+    matrixLen = adj_matrix.shape
+    for i in range(matrixLen[0]):
+        for j in range(matrixLen[0]):
+            if (adj_matrix[i][j] == 0):
+                adj_matrix[i][j] = 100000
+            if (i == j):
+                adj_matrix[i][j] = 0
+
     # for node in adj_matrix:
         # print(node)
 

@@ -80,12 +80,12 @@ def insertPassengers(dbConnect):
         insertScript = "insert into passengers (name, passport_series, passport_number) values (%s, %s, %s)"
         cursor.executemany(insertScript, passengers)
 
-num_nodes = 6
-num_edges = 7
+num_nodes = 40
+num_edges = 74
 seed = 123
 G = None
 routesSet = None
-num_routes = 435
+num_routes = -1
 
 def dijsktra(matrix, size, start):
     minDist = [INTEGER_MAX] * size
@@ -134,7 +134,7 @@ def createGraph():
     routesSet = set()
     for i in range(num_nodes):
         routesList = list(range(i + 1, num_nodes))
-        for j in range(i + 1, num_nodes):
+        for j in range(i + 1, int(num_nodes)):
             randomIndex = random.randint(1, routesList.__len__()) - 1
             popIndex = routesList.pop(randomIndex)
             routesSet.add((i + 1, popIndex + 1))
@@ -142,13 +142,15 @@ def createGraph():
     global num_routes
     num_routes = routesSet.__len__()
     
+    print(num_routes)
     print(adj_matrix)
     for route in routesSet:
         minDist, minPath = dijsktra(adj_matrix, num_nodes, route[0] - 1)
-        print(route[0] - 1)
-        print(minDist)
-        print(minPath)
-        break
+        v = route[1] - 1
+        while (v != route[0] - 1):
+           v = minPath[v]
+           print(v, end=" ")
+        print("", end="\n")
 
 def insertStations(dbConnect):
     with dbConnect.cursor() as cursor:

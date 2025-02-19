@@ -30,8 +30,8 @@ create table threads_info (
     station int references stations(id),
     station_number_in_thread int not null,
     constraint route_station unique (thread, station),
-    arrival_time time,
-    departure_time time,
+    arrival_time timestamp,
+    departure_time timestamp,
     distance int not null default (random() * 100),
     arrival_delay int not null default 0,
     departure_delay int not null default 0

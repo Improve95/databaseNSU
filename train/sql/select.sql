@@ -11,4 +11,4 @@ select * from trains;
 select * from railroad_cars;
 select * from threads;
 
-truncate table threads_info
+insert into threads_info (thread, station, station_number_in_thread, arrival_time, departure_time, distance) values ()

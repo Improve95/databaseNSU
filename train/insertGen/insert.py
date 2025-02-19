@@ -1,5 +1,5 @@
 from random import randint
-import datetime
+import datetime, time
 import psycopg
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -80,12 +80,12 @@ def insertPassengers(dbConnect):
         insertScript = "insert into passengers (name, passport_series, passport_number) values (%s, %s, %s)"
         cursor.executemany(insertScript, passengers)
 
-num_nodes = 40
-num_edges = 74
+num_nodes = 80
+num_edges = 110
 seed = 123
 G = None
 routesSet = None
-num_routes = -1
+num_routes = 0
 
 def dijsktra(matrix, size, start):
     minDist = [INTEGER_MAX] * size
@@ -129,28 +129,6 @@ def createGraph():
                 adj_matrix[i][j] = -1
             if (i == j):
                 adj_matrix[i][j] = 0
-    
-    global routesSet
-    routesSet = set()
-    for i in range(num_nodes):
-        routesList = list(range(i + 1, num_nodes))
-        for j in range(i + 1, int(num_nodes)):
-            randomIndex = random.randint(1, routesList.__len__()) - 1
-            popIndex = routesList.pop(randomIndex)
-            routesSet.add((i + 1, popIndex + 1))
-
-    global num_routes
-    num_routes = routesSet.__len__()
-    
-    print(num_routes)
-    print(adj_matrix)
-    for route in routesSet:
-        minDist, minPath = dijsktra(adj_matrix, num_nodes, route[0] - 1)
-        v = route[1] - 1
-        while (v != route[0] - 1):
-           v = minPath[v]
-           print(v, end=" ")
-        print("", end="\n")
 
 def insertStations(dbConnect):
     with dbConnect.cursor() as cursor:
@@ -173,9 +151,14 @@ def insertRoutes(dbConnect):
 
         nameNumber = 0
         routesInsert = []
-        for a, b in routesSet:
-            routesInsert.append(("route" + str(nameNumber), a, b))
-            nameNumber += 1
+    
+        global num_routes
+        with open('allRoutes.txt', 'r') as file:
+            for line in file:
+                num_routes += 1
+                nameNumber += 1
+                route = list(map(int, line.strip().split()))
+                routesInsert.append(("route" + str(nameNumber), route[0] + 1, route[route.__len__() - 1] + 1))
 
         insertScript = "insert into routes (name, departure_point, arrival_point) values (%s, %s, %s)"
         cursor.executemany(insertScript, routesInsert)
@@ -207,7 +190,7 @@ def insertTrains(dbConnect):
                 categoryIndex += 1
                 categoryIndex %= 3
         
-        insertScript = "insert into railroad_cars(train, number, category, schema) values (%s, %s, %s, %s)"
+        insertScript = "insert into railroad_cars(train, number_in_train, category, schema) values (%s, %s, %s, %s)"
         cursor.executemany(insertScript, railroadCars)
         
 def insertThreads(dbConnect):
@@ -236,13 +219,32 @@ def insertSchedule(dbConnect):
         cursor.execute("select * from threads")
         threads = cursor.fetchall()
 
+        allStationsInRoutes = []
+        with open('allRoutes.txt', 'r') as file:
+            for line in file:
+                staionsInRoute = list(map(int, line.strip().split()))
+                allStationsInRoutes.append(staionsInRoute)
+
+        
+        schedule = []
+        for id, route, train, date in threads:
+            stationNumberInThread = 0
+            arrivalTime = None
+            departureTime = datetime.combine(date, time(12, 0, 0))
+            for station in allStationsInRoutes[route - 1]:
+                schedule.append(id, station, stationNumberInThread, arrivalTime)
+                stationNumberInThread += 1
+
+        insertScript = "insert into threads_info (thread, station, station_number_in_thread, arrival_time, departure_time, distance) values (%s, %s, %s, %s, %s, %s)"
+        cursor.executemane(insertScript, schedule)
+
 def insert(dbConnect):
     createGraph()
     # insertStaff(dbConnect)
     # insertPassengers(dbConnect)
     # insertStations(dbConnect)
-    # insertTrains(dbConnect)
     # insertRoutes(dbConnect)
+    # insertTrains(dbConnect)
     insertThreads(dbConnect)
     print("insert")
 

@@ -235,17 +235,51 @@ def insertSchedule(dbConnect):
         insertScript = "insert into schedule(route_structure_id, departure_time, arrival_time) values (%s, %s, %s)"
         cursor.executemany(insertScript, schedule)
 
+def insertBooking(dbConnect):
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table booking cascade")
+        cursor.execute("alter sequence booking_id_seq restart with 1")
+        
+        cursor.execute("select * from passengers")
+        passengers = cursor.fetchall()
+
+        booking = []
+        bookTime = datetime(2025, 1, 10)
+        for passenger in passengers:
+            booking.append((passenger[0], bookTime))
+
+        insertScript = "insert into booking(passenger_id, time) values (%s, %s)"
+        cursor.executemany(insertScript, booking)
+
+def insertRailroadBooking(dbConnect):
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table railroads_cars_booking cascade")
+        cursor.execute("alter sequence railroads_cars_booking_id_seq restart with 1")
+
+        railroadCarBook = []
+        
+        insertScript = "insert into railroads_cars_booking(railroad_car_id, place, departure_point, arrival_point, booking_record) values (%s, %s, %s, %s, %s)"
+        cursor.executemany(insertScript, railroadCarBook)
+
+def insertDelay(dbConnect):
+    with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table delay cascade")
+        cursor.execute("alter sequence delay_id_seq restart with 1")
+        
 def insert(dbConnect):
     createGraph()
     readRouteStructure()
 
-    insertStaff(dbConnect)
-    insertPassengers(dbConnect)
-    insertStations(dbConnect)
-    insertRoutes(dbConnect)
-    insertTrains(dbConnect)
-    insertRoutesStructure(dbConnect)
-    insertSchedule(dbConnect)
+    # insertStaff(dbConnect)
+    # insertPassengers(dbConnect)
+    # insertStations(dbConnect)
+    # insertRoutes(dbConnect)
+    # insertTrains(dbConnect)
+    # insertRoutesStructure(dbConnect)
+    # insertSchedule(dbConnect)
+    # insertBooking(dbConnect)
+    insertRailroadBooking(dbConnect)
+    # insertDelay(dbConnect)
     print("insert")
 
 def main():

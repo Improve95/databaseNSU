@@ -84,34 +84,9 @@ num_nodes = 80
 num_edges = 110
 seed = 123
 G = None
+matrix = None
 routesSet = None
 num_routes = 0
-
-def dijsktra(matrix, size, start):
-    minDist = [INTEGER_MAX] * size
-    minDist[start] = 0
-
-    minPath = [0] * size
-    used = [False] * size
-
-    for i in range(size):
-        nearest = -1
-        for v in range(size):
-            if ((not used[v]) and (nearest == -1 or minDist[nearest] > minDist[v])):
-                nearest = v
-        
-        if (minDist[nearest] == INTEGER_MAX):
-            continue
-        used[nearest] = True
-
-        for v in range(size):
-            len = minDist[nearest] + matrix[nearest][v]
-            if (minDist[v] > len):
-                if (matrix[nearest][v] != -1):
-                    minDist[v] = int(len)
-                    minPath[v] = int(nearest)
-
-    return minDist, minPath
 
 def createGraph():
     global G
@@ -129,6 +104,16 @@ def createGraph():
                 adj_matrix[i][j] = -1
             if (i == j):
                 adj_matrix[i][j] = 0
+
+    global matrix
+    matrix = adj_matrix
+
+allStationsInRoutes = []
+def readRouteStructure():
+    with open('allRoutes.txt', 'r') as file:
+        for line in file:
+            staionsInRoute = list(map(int, line.strip().split()))
+            allStationsInRoutes.append(staionsInRoute)
 
 def insertStations(dbConnect):
     with dbConnect.cursor() as cursor:
@@ -153,12 +138,10 @@ def insertRoutes(dbConnect):
         routesInsert = []
     
         global num_routes
-        with open('allRoutes.txt', 'r') as file:
-            for line in file:
-                num_routes += 1
-                nameNumber += 1
-                route = list(map(int, line.strip().split()))
-                routesInsert.append(("route" + str(nameNumber), route[0] + 1, route[route.__len__() - 1] + 1))
+        for route in allStationsInRoutes:
+            num_routes += 1
+            nameNumber += 1
+            routesInsert.append(("route" + str(nameNumber), route[0] + 1, route[route.__len__() - 1] + 1))
 
         insertScript = "insert into routes (name, departure_point, arrival_point) values (%s, %s, %s)"
         cursor.executemany(insertScript, routesInsert)
@@ -167,6 +150,9 @@ def insertTrains(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table trains cascade")
         cursor.execute("alter sequence trains_id_seq restart with 1")
+
+        cursor.execute("truncate table trains_on_route cascade")
+        # cursor.execute("alter sequence trains_on_route_id_seq restart with 1")
 
         cursor.execute("truncate table railroad_cars cascade")
         cursor.execute("alter sequence railroad_cars_id_seq restart with 1")
@@ -182,34 +168,50 @@ def insertTrains(dbConnect):
 
         insertScript = "insert into trains (category, header_station) values (%s, %s)"
         cursor.executemany(insertScript, trains)
-        
+
+        trainsOnRoute = []
+        id = 1
+        setupTime = datetime.date(2025, 2, 1)
+        for i in range(num_routes):
+            trainsOnRoute.append((id, id, setupTime, None))
+            id += 1
+
+        insertScript = "insert into trains_on_route (train_id, route_id, setup_time, remove_time) values (%s, %s, %s, %s)"
+        cursor.executemany(insertScript, trainsOnRoute)
+
         railroadCars = []
+        id = 1
+        categoryIndex = 0
         for i in range(num_routes):
             for j in range(5):
-                railroadCars.append((i + 1, j + 1, category[categoryIndex], None))
+                railroadCars.append((id, id, categoryIndex + 1, j))
                 categoryIndex += 1
-                categoryIndex %= 3
+                categoryIndex %= 2
         
-        insertScript = "insert into railroad_cars(train, number_in_train, category, schema) values (%s, %s, %s, %s)"
+        insertScript = "insert into railroad_cars(train_id, route_id, category_id, number_in_train) values (%s, %s, %s, %s)"
         cursor.executemany(insertScript, railroadCars)
         
-def insertThreads(dbConnect):
+def insertRoutesStructure(dbConnect):
     with dbConnect.cursor() as cursor:
-        cursor.execute("truncate table threads cascade")
-        cursor.execute("alter sequence threads_id_seq restart with 1")
+        cursor.execute("truncate table routes_structure cascade")
+        cursor.execute("alter sequence routes_structure_id_seq restart with 1")
 
         cursor.execute("select * from routes")
         routes = cursor.fetchall()
 
-        threads = []
-        trainIndex = 1
-        somedate = datetime.date(2025, 2, 10)
-        for route in routes:
-            threads.append((route[0], trainIndex, somedate))
-            trainIndex += 1
-        
-        insertScript = "insert into threads (route, train, date) values (%s, %s, %s)"
-        cursor.executemany(insertScript, threads)
+        structure = []
+        for routeId, name, departure, arrival in routes:
+            stationNumber = 0
+            distance = 0
+            stationInRoute = allStationsInRoutes[routeId - 1]
+            for i, station in enumerate(stationInRoute):
+                structure.append((routeId, station + 1, stationNumber, distance))
+                # distance += matrix[station][stationInRoute[i]]
+                distance += random.randint(200, 1000)
+                stationNumber += 1
+
+        insertScript = "insert into routes_structure (route_id, station_id, station_number_in_route, distance) values (%s, %s, %s, %s)"
+        cursor.executemany(insertScript, structure)
 
 def insertSchedule(dbConnect):
     with dbConnect.cursor() as cursor:
@@ -218,13 +220,6 @@ def insertSchedule(dbConnect):
 
         cursor.execute("select * from threads")
         threads = cursor.fetchall()
-
-        allStationsInRoutes = []
-        with open('allRoutes.txt', 'r') as file:
-            for line in file:
-                staionsInRoute = list(map(int, line.strip().split()))
-                allStationsInRoutes.append(staionsInRoute)
-
         
         schedule = []
         for id, route, train, date in threads:
@@ -240,12 +235,14 @@ def insertSchedule(dbConnect):
 
 def insert(dbConnect):
     createGraph()
-    # insertStaff(dbConnect)
-    # insertPassengers(dbConnect)
-    # insertStations(dbConnect)
-    # insertRoutes(dbConnect)
-    # insertTrains(dbConnect)
-    insertThreads(dbConnect)
+    readRouteStructure()
+
+    insertStaff(dbConnect)
+    insertPassengers(dbConnect)
+    insertStations(dbConnect)
+    insertRoutes(dbConnect)
+    insertTrains(dbConnect)
+    insertRoutesStructure(dbConnect)
     print("insert")
 
 def main():

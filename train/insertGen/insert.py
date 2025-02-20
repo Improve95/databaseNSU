@@ -1,5 +1,5 @@
 from random import randint
-import datetime, time
+from datetime import datetime, time, timedelta
 import psycopg
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -171,7 +171,7 @@ def insertTrains(dbConnect):
 
         trainsOnRoute = []
         id = 1
-        setupTime = datetime.date(2025, 2, 1)
+        setupTime = datetime(2025, 2, 1)
         for i in range(num_routes):
             trainsOnRoute.append((id, id, setupTime, None))
             id += 1
@@ -215,23 +215,25 @@ def insertRoutesStructure(dbConnect):
 
 def insertSchedule(dbConnect):
     with dbConnect.cursor() as cursor:
-        cursor.execute("truncate table threads_info cascade")
-        cursor.execute("alter sequence threads_info_id_seq restart with 1")
+        cursor.execute("truncate table schedule cascade")
+        cursor.execute("alter sequence schedule_id_seq restart with 1")
 
-        cursor.execute("select * from threads")
-        threads = cursor.fetchall()
-        
         schedule = []
-        for id, route, train, date in threads:
-            stationNumberInThread = 0
-            arrivalTime = None
-            departureTime = datetime.combine(date, time(12, 0, 0))
-            for station in allStationsInRoutes[route - 1]:
-                schedule.append(id, station, stationNumberInThread, arrivalTime)
-                stationNumberInThread += 1
+        cursor.execute("select * from routes")
+        routesList = cursor.fetchall()
+        for route in routesList:
+            cursor.execute("select * from routes_structure where route_id = %s order by station_number_in_route", (route[0],))
+            threads = cursor.fetchall()
 
-        insertScript = "insert into threads_info (thread, station, station_number_in_thread, arrival_time, departure_time, distance) values (%s, %s, %s, %s, %s, %s)"
-        cursor.executemane(insertScript, schedule)
+            departureTime = None
+            arrivalTime = datetime(2025, 2, 1, 12, 0, 0)
+            for structId, route, station, number, distance in threads:
+                schedule.append((structId, departureTime, arrivalTime))
+                departureTime = arrivalTime + timedelta(hours=1)
+                arrivalTime = departureTime + timedelta(minutes=10)
+
+        insertScript = "insert into schedule(route_structure_id, departure_time, arrival_time) values (%s, %s, %s)"
+        cursor.executemany(insertScript, schedule)
 
 def insert(dbConnect):
     createGraph()
@@ -243,6 +245,7 @@ def insert(dbConnect):
     insertRoutes(dbConnect)
     insertTrains(dbConnect)
     insertRoutesStructure(dbConnect)
+    insertSchedule(dbConnect)
     print("insert")
 
 def main():

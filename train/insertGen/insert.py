@@ -184,7 +184,7 @@ def insertTrains(dbConnect):
         categoryIndex = 0
         for i in range(num_routes):
             for j in range(5):
-                railroadCars.append((id, id, categoryIndex + 1, j))
+                railroadCars.append((i + 1, i + 1, categoryIndex + 1, j))
                 categoryIndex += 1
                 categoryIndex %= 2
         
@@ -221,16 +221,23 @@ def insertSchedule(dbConnect):
         schedule = []
         cursor.execute("select * from routes")
         routesList = cursor.fetchall()
+        monthNumber = 1
+        dayNumber = 1
         for route in routesList:
             cursor.execute("select * from routes_structure where route_id = %s order by station_number_in_route", (route[0],))
             threads = cursor.fetchall()
 
             departureTime = None
-            arrivalTime = datetime(2025, 2, 1, 12, 0, 0)
-            for structId, route, station, number, distance in threads:
+            arrivalTime = datetime(2025, monthNumber, dayNumber, 12, 0, 0)
+            for structId, routeId, station, number, distance in threads:
                 schedule.append((structId, departureTime, arrivalTime))
                 departureTime = arrivalTime + timedelta(hours=1)
                 arrivalTime = departureTime + timedelta(minutes=10)
+
+            monthNumber %= 7
+            monthNumber += 1
+            dayNumber %= 20
+            dayNumber += 1
 
         insertScript = "insert into schedule(route_structure_id, departure_time, arrival_time) values (%s, %s, %s)"
         cursor.executemany(insertScript, schedule)
@@ -253,11 +260,37 @@ def insertBooking(dbConnect):
 
 def insertRailroadBooking(dbConnect):
     with dbConnect.cursor() as cursor:
+        cursor.execute("truncate table booking cascade")
+        cursor.execute("alter sequence booking_id_seq restart with 1")
+
         cursor.execute("truncate table railroads_cars_booking cascade")
         cursor.execute("alter sequence railroads_cars_booking_id_seq restart with 1")
 
+        booking = []
         railroadCarBook = []
-        
+
+        passengerId = 1
+
+        selectScript = "select s.* from schedule s inner join routes_structure rs on s.route_structure_id = rs.id where rs.route_id = %s order by station_number_in_route"
+        cursor.execute("select * from routes")
+        routesList = cursor.fetchall()
+        for route in routesList:
+            cursor.execute(selectScript, (route[0],))
+            routeSchedule = cursor.fetchall()
+            cursor.execute("select * from railroad_cars rc where rc.route_id = %s", (route[0],))
+            routeRailcars = cursor.fetchall()
+
+            for railroad in routeRailcars:
+                for k in range(10):
+                    booking.append((passengerId, datetime(2025, 1, 10)))
+                    railroadCarBook.append((railroad[0], k, routeSchedule[0], routeSchedule[-1], ))
+
+                passengerId %= 1000
+                passengerId += 1
+
+        insertScript = "insert into booking(passenger_id, time) values (%s, %s)"
+        cursor.executemany(insertScript, booking)
+
         insertScript = "insert into railroads_cars_booking(railroad_car_id, place, departure_point, arrival_point, booking_record) values (%s, %s, %s, %s, %s)"
         cursor.executemany(insertScript, railroadCarBook)
 

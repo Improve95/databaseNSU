@@ -46,6 +46,7 @@ create table railroad_cars (
     train_id int not null,
     route_id int not null,
     foreign key (train_id, route_id) references trains_on_route(train_id, route_id),
+--     constraint railroad_car_on_route unique (train_id, route_id),
     number_in_train int not null default 0,
     category_id int references railroad_cars_category(id)
 );

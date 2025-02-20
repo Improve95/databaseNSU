@@ -4,30 +4,35 @@ select count(*) from trains;
 select count(*) from railroad_cars;
 select count(*) from routes;
 select count(*) from booking;
+select count(*) from railroads_cars_booking;
 
-select * from staff;
-select * from passengers;
-select * from booking;
-select * from routes;
-select * from trains;
-select * from railroad_cars;
+select rcb.*, s.* from railroads_cars_booking rcb
+    inner join schedule s on rcb.arrival_point = s.id
+        order by s.departure_time
+            limit 1;
+/* 01-01 || 07-20 */
 
-select * from trains_on_route;
+select count(*), DATE(s.arrival_time) as trip_date from railroads_cars_booking rcb
+    inner join schedule s on rcb.departure_point = s.id
+        inner join routes_structure rs on s.route_structure_id = rs.id
+            where rs.station_number_in_route = 0
+group by trip_date;
 
-select * from routes where id = 1;
-select * from routes_structure where route_id = 1
-order by station_number_in_route;
+select rcb.id, rcb.railroad_car_id, s.*, rs.station_number_in_route from railroads_cars_booking rcb
+inner join schedule s on (rcb.arrival_point = s.id or rcb.departure_point = s.id)
+inner join routes_structure rs on s.route_structure_id = rs.id
+inner join routes_structure rs on
+where rcb.id = 1
+order by rs.station_number_in_route;
 
-select s.* from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
-where rs.route_id = 1
-order by station_number_in_route;
+select rcb.id, rcb.railroad_car_id, s.*, rs2.id, rs2.route_id, rs2.station_number_in_route, rs2.distance
+from railroads_cars_booking rcb
+inner join schedule s on (rcb.arrival_point = s.id)
+inner join routes_structure rs on s.route_structure_id = rs.id
+inner join routes_structure rs2 on rs.route_id = rs2.route_id
+where rcb.id = 1
+order by rs2.station_number_in_route, s.id;
 
-select * from railroad_cars rc where rc.route_id = 1;
-
--- insert into routes_structure (route_id, station_id, station_number_in_route, distance)
--- insert into trains_on_route (train_id, route_id, setup_time, remove_time) values ()
--- insert into railroad_cars(train_id, route_id, category_id, number_in_train) values ()
--- insert into schedule(route_structure_id, arrival_time, departure_time) values ()
--- insert into booking(passenger_id, time) values
--- truncate table railroads_cars_booking
-insert into railroads_cars_booking(railroad_car_id, place, departure_point, arrival_point, booking_record) values ()
+select s.*, rs.* from schedule s
+inner join routes_structure rs on s.route_structure_id = rs.id
+where route_id = 1;

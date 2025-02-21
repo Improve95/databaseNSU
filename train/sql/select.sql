@@ -36,5 +36,3 @@ order by rs2.station_number_in_route, s.id;
 select s.*, rs.* from schedule s
 inner join routes_structure rs on s.route_structure_id = rs.id
 where route_id = 1;
-
-insert into threads(train_id, route_id, trip_date) values ()

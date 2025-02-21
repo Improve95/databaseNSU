@@ -151,8 +151,8 @@ def insertTrains(dbConnect):
         cursor.execute("truncate table trains cascade")
         cursor.execute("alter sequence trains_id_seq restart with 1")
 
-        cursor.execute("truncate table trains_on_route cascade")
-        # cursor.execute("alter sequence trains_on_route_id_seq restart with 1")
+        cursor.execute("truncate table threads cascade")
+        cursor.execute("alter sequence threads_id_seq restart with 1")
 
         cursor.execute("truncate table railroad_cars cascade")
         cursor.execute("alter sequence railroad_cars_id_seq restart with 1")
@@ -171,10 +171,17 @@ def insertTrains(dbConnect):
 
         threads = []
         id = 1
-        setupTime = datetime(2025, 2, 1)
+        monthNumber = 1
+        dayNumber = 1
+        tripDate = datetime(2025, monthNumber, dayNumber, 12, 0, 0)
         for i in range(num_routes):
-            threads.append((id, id, setupTime, None))
+            threads.append((id, id, tripDate))
             id += 1
+            monthNumber %= 7
+            monthNumber += 1
+            dayNumber %= 20
+            dayNumber += 1
+
 
         insertScript = "insert into threads(train_id, route_id, trip_date) values (%s, %s, %s)"
         cursor.executemany(insertScript, threads)
@@ -184,11 +191,11 @@ def insertTrains(dbConnect):
         categoryIndex = 0
         for i in range(num_routes):
             for j in range(5):
-                railroadCars.append((i + 1, i + 1, categoryIndex + 1, j))
+                railroadCars.append((i + 1, j, categoryIndex + 1))
                 categoryIndex += 1
                 categoryIndex %= 2
         
-        insertScript = "insert into railroad_cars(train_id, route_id, category_id, number_in_train) values (%s, %s, %s, %s)"
+        insertScript = "insert into railroad_cars(thread_id, number_in_train, category_id) values (%s, %s, %s)"
         cursor.executemany(insertScript, railroadCars)
         
 def insertRoutesStructure(dbConnect):
@@ -219,18 +226,18 @@ def insertSchedule(dbConnect):
         cursor.execute("alter sequence schedule_id_seq restart with 1")
 
         schedule = []
-        cursor.execute("select * from routes")
-        routesList = cursor.fetchall()
+        cursor.execute("select * from threads")
+        threadsList = cursor.fetchall()
         monthNumber = 1
         dayNumber = 1
-        for route in routesList:
-            cursor.execute("select * from routes_structure where route_id = %s order by station_number_in_route", (route[0],))
+        for thread in threadsList:
+            cursor.execute("select rs.* from threads t inner join routes_structure rs on t.route_id = rs.route_id where t.id = %s order by station_number_in_route", (thread[0],))
             threads = cursor.fetchall()
 
             departureTime = None
             arrivalTime = datetime(2025, monthNumber, dayNumber, 12, 0, 0)
             for structId, routeId, station, number, distance in threads:
-                schedule.append((structId, departureTime, arrivalTime))
+                schedule.append((structId, thread[0], departureTime, arrivalTime))
                 departureTime = arrivalTime + timedelta(hours=1)
                 arrivalTime = departureTime + timedelta(minutes=10)
 
@@ -239,7 +246,7 @@ def insertSchedule(dbConnect):
             dayNumber %= 20
             dayNumber += 1
 
-        insertScript = "insert into schedule(route_structure_id, departure_time, arrival_time) values (%s, %s, %s)"
+        insertScript = "insert into schedule (route_structure_id, thread_id, departure_time, arrival_time) values (%s, %s, %s, %s)"
         cursor.executemany(insertScript, schedule)
 
 def insertRailroadBooking(dbConnect):
@@ -256,18 +263,18 @@ def insertRailroadBooking(dbConnect):
         passanger = 1
         idIndex = 1
         selectScript = "select s.* from schedule s inner join routes_structure rs on s.route_structure_id = rs.id where rs.route_id = %s order by station_number_in_route"
-        cursor.execute("select * from routes")
-        routesList = cursor.fetchall()
-        for route in routesList:
-            cursor.execute(selectScript, (route[0],))
-            routeSchedule = cursor.fetchall()
-            cursor.execute("select * from railroad_cars rc where rc.route_id = %s", (route[0],))
-            routeRailcars = cursor.fetchall()
+        cursor.execute("select * from threads")
+        threadList = cursor.fetchall()
+        for thread in threadList:
+            cursor.execute(selectScript, (thread[0],))
+            threadSchedule = cursor.fetchall()
+            cursor.execute("select * from railroad_cars rc where rc.thread_id = %s", (thread[0],))
+            threadRailcars = cursor.fetchall()
 
-            for railroad in routeRailcars:
+            for railroad in threadRailcars:
                 for place in range(10):
                     booking.append((passanger, datetime(2025, 1, 10)))
-                    railroadCarBook.append((railroad[0], place, routeSchedule[0][0], routeSchedule[-1][0], idIndex))
+                    railroadCarBook.append((railroad[0], place, threadSchedule[0][0], threadSchedule[-1][0], idIndex))
 
                 passanger %= 1000
                 passanger += 1
@@ -285,16 +292,16 @@ def insertDelay(dbConnect):
         cursor.execute("alter sequence delay_id_seq restart with 1")
         
 def insert(dbConnect):
-    # createGraph()
-    # readRouteStructure()
+    createGraph()
+    readRouteStructure()
 
-    # insertStaff(dbConnect)
-    # insertPassengers(dbConnect)
-    # insertStations(dbConnect)
-    # insertRoutes(dbConnect)
-    # insertTrains(dbConnect)
-    # insertRoutesStructure(dbConnect)
-    # insertSchedule(dbConnect)
+    insertStaff(dbConnect)
+    insertPassengers(dbConnect)
+    insertStations(dbConnect)
+    insertRoutes(dbConnect)
+    insertTrains(dbConnect)
+    insertRoutesStructure(dbConnect)
+    insertSchedule(dbConnect)
     insertRailroadBooking(dbConnect)
     # insertDelay(dbConnect)
     print("insert")

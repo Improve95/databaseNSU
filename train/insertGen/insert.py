@@ -169,15 +169,15 @@ def insertTrains(dbConnect):
         insertScript = "insert into trains (category, header_station) values (%s, %s)"
         cursor.executemany(insertScript, trains)
 
-        trainsOnRoute = []
+        threads = []
         id = 1
         setupTime = datetime(2025, 2, 1)
         for i in range(num_routes):
-            trainsOnRoute.append((id, id, setupTime, None))
+            threads.append((id, id, setupTime, None))
             id += 1
 
-        insertScript = "insert into trains_on_route (train_id, route_id, setup_time, remove_time) values (%s, %s, %s, %s)"
-        cursor.executemany(insertScript, trainsOnRoute)
+        insertScript = "insert into threads(train_id, route_id, trip_date) values (%s, %s, %s)"
+        cursor.executemany(insertScript, threads)
 
         railroadCars = []
         id = 1

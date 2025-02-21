@@ -33,6 +33,25 @@ inner join routes_structure rs2 on rs.route_id = rs2.route_id
 where rcb.id = 1
 order by rs2.station_number_in_route, s.id;
 
-select s.*, rs.* from schedule s
+select rcb.id, s.*, (select s2.thread_id from schedule s2 where s2.id = rcb.arrival_point)
+from railroads_cars_booking rcb
+inner join schedule s on rcb.departure_point = s.id
+where rcb.id = 1;
+
+update railroads_cars_booking rcb set arrival_point = 5 where rcb.id = 1;
+
+
+select rcb.id, s.*, rs.station_number_in_route, rs.distance
+from railroads_cars_booking rcb
+inner join schedule s on (s.thread_id = (select s2.thread_id from schedule s2 where rcb.departure_point = s2.id) and true)
 inner join routes_structure rs on s.route_structure_id = rs.id
-where route_id = 1;
+where rcb.id = 1
+order by station_number_in_route;
+
+select rcb.id, src.*, row_number() over (partition by rcb.id order by station_number_in_route) as partition
+from railroads_cars_booking rcb
+inner join lateral (
+    select s.id as schedule_id, s.thread_id, s.departure_time, s.arrival_time, rs.*
+    from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
+    where s.thread_id = (select s2.thread_id from schedule s2 where s2.id = rcb.departure_point)
+) as src on src.schedule_id between rcb.departure_point and rcb.arrival_point;

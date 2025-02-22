@@ -213,8 +213,7 @@ def insertRoutesStructure(dbConnect):
             stationInRoute = allStationsInRoutes[routeId - 1]
             for i, station in enumerate(stationInRoute):
                 structure.append((routeId, station + 1, stationNumber, distance))
-                # distance += matrix[station][stationInRoute[i]]
-                distance += random.randint(200, 1000)
+                distance = random.randint(200, 1000)
                 stationNumber += 1
 
         insertScript = "insert into routes_structure (route_id, station_id, station_number_in_route, distance) values (%s, %s, %s, %s)"
@@ -232,14 +231,17 @@ def insertSchedule(dbConnect):
         dayNumber = 1
         for thread in threadsList:
             cursor.execute("select rs.* from threads t inner join routes_structure rs on t.route_id = rs.route_id where t.id = %s order by station_number_in_route", (thread[0],))
-            threads = cursor.fetchall()
+            rsList = cursor.fetchall()
 
             departureTime = None
             arrivalTime = datetime(2025, monthNumber, dayNumber, 12, 0, 0)
-            for structId, routeId, station, number, distance in threads:
+            for structId, routeId, station, number, distance in rsList:
+                if (number == rsList.__len__() - 1):
+                    arrivalTime = None
                 schedule.append((structId, thread[0], departureTime, arrivalTime))
-                departureTime = arrivalTime + timedelta(hours=1)
-                arrivalTime = departureTime + timedelta(minutes=10)
+                if (number != rsList.__len__() - 1):
+                    departureTime = arrivalTime + timedelta(hours=1)
+                    arrivalTime = departureTime + timedelta(minutes=10)
 
             monthNumber %= 7
             monthNumber += 1
@@ -295,11 +297,11 @@ def insert(dbConnect):
     createGraph()
     readRouteStructure()
 
-    insertStaff(dbConnect)
-    insertPassengers(dbConnect)
-    insertStations(dbConnect)
-    insertRoutes(dbConnect)
-    insertTrains(dbConnect)
+    # insertStaff(dbConnect)
+    # insertPassengers(dbConnect)
+    # insertStations(dbConnect)
+    # insertRoutes(dbConnect)
+    # insertTrains(dbConnect)
     insertRoutesStructure(dbConnect)
     insertSchedule(dbConnect)
     insertRailroadBooking(dbConnect)

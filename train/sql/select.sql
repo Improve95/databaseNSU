@@ -8,9 +8,17 @@ select count(*) from railroads_cars_booking;
 
 update railroads_cars_booking rcb set arrival_point = 5 where rcb.id = 1;
 
-select count(distinct thread_id) as thread_count, count(distinct rcb.id) as passanger_count, sum(distance) as distance_count,
+select rcb.id, rcb.railroad_car_id, s.*, rs2.id, rs2.route_id, rs2.station_number_in_route, rs2.distance
+from railroads_cars_booking rcb
+         inner join schedule s on (rcb.arrival_point = s.id)
+         inner join routes_structure rs on s.route_structure_id = rs.id
+         inner join routes_structure rs2 on rs.route_id = rs2.route_id
+where rcb.id = 1
+order by rs2.station_number_in_route, s.id;
+
+select count(distinct thread_id) as thread_count, count(distinct rcb.id) as passenger_count, sum(distance) as distance_sum,
        DATE(departure_time) as calc_date,
-       DATE_TRUNC('quarter', departure_time) as quarter_year,
+       DATE_TRUNC('quarter', departure_time) as quarter_calc,
        DATE_TRUNC('year', departure_time) as calc_year
 from railroads_cars_booking rcb
          inner join lateral (

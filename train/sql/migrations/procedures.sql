@@ -62,4 +62,18 @@ begin
 end;
 $$ LANGUAGE plpgsql;
 
-select get_trip_report()
+create or replace function fix_schedule_by_delay(from_time timestamp, to_time timestamp) returns void as $$
+declare
+    delay_list delay[];
+    delay delay%rowtype;
+begin
+    select d.* into delay_list from delay d;
+    foreach delay in array delay_list
+    loop
+        update schedule s set departure_time = s.departure_time + delay.departure_delay,
+                              arrival_time = s.arrival_time + delay.arrival_delay
+        where s.id = delay.schedule_record and
+              s.arrival_time between from_time and to_time;
+    end loop;
+end;
+$$ LANGUAGE plpgsql;

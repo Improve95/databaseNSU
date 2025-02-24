@@ -9,6 +9,7 @@ create or replace trigger check_timetable_on_insert
     before insert on schedule
     for each row execute function check_timetable();
 
+drop type schedule_ex;
 create type schedule_ex as (
     id int,
     route_struct int,
@@ -26,7 +27,7 @@ begin
 end;
 $$ language plpgsql;
 
-create or replace function find_correct_interval(cur_rs routes_structure%rowtype, check_s schedule_ex, newIsPrev bool)
+create or replace function find_correct_interval(cur_rs routes_structure, check_s schedule_ex)
     returns interval as $$
 declare
     correct_s schedule[];
@@ -43,12 +44,16 @@ begin
 end;
 $$ language plpgsql;
 
-create or replace function check_schedule(default_move_interval interval, default_stop_interval interval) returns trigger as $$
+create or replace function check_schedule() returns trigger as $$
 declare
+    default_move_interval constant interval := interval '1 hour';
+    default_stop_interval constant interval := interval '10 minutes';
+
     new_s schedule%rowtype;
     first_rs routes_structure%rowtype;
     cur_rs routes_structure%rowtype;
     last_rs routes_structure%rowtype;
+    tmp_rs routes_structure%rowtype;
 
     schedule_list schedule_ex[];
     prev_schedule schedule_ex := null;
@@ -81,6 +86,7 @@ begin
         if (new_s.arrival_time >= new_s.departure_time) then
             raise exception 'departure_time should be greater then arrival_time';
         end if;
+        stop_interval := new_s.arrival_time - new_s.departure_time;
     end if;
 
     select s.id, s.route_structure_id, s.thread_id, rs.station_number_in_route, s.departure_time, s.arrival_time into schedule_list
@@ -96,29 +102,25 @@ begin
     from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
     where s.thread_id = new_s.thread_id and rs.station_number_in_route = cur_rs.station_number_in_route - 1;
 
+    if (prev_schedule is not null and prev_schedule.departure_time is not null) then
+        if prev_schedule.departure_time >= new_s.arrival_time then
+            select * into correct_interval from find_correct_interval(cur_rs, prev_schedule);
+            if correct_interval is null then correct_interval = default_move_interval; end if;
+            new_s.arrival_time := prev_schedule.departure_time + correct_interval;
+            new_s.departure_time := new_s.arrival_time + stop_interval;
+        end if;
+    end if;
+
     select s.id, s.route_structure_id, s.thread_id, rs.station_number_in_route, s.departure_time, s.arrival_time into next_schedule
     from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
     where s.thread_id = new_s.thread_id and rs.station_number_in_route = cur_rs.station_number_in_route + 1;
 
-    if (prev_schedule is not null and prev_schedule.departure_time is not null) then
-        if prev_schedule.departure_time >= new_s.arrival_time then
-            select * into correct_interval from find_correct_interval(cur_rs, prev_schedule, false);
-            if (new_s.arrival_time is not null and new_s.departure_time is not null) then
-                stop_interval = new_s.arrival_time - new_s.departure_time;
-            end if;
-            new_s.arrival_time = prev_schedule.departure_time + correct_interval;
-            new_s.departure_time = new_s.arrival_time + stop_interval;
-        end if;
-    end if;
-
     if (next_schedule is not null and next_schedule.arrival_time is not null) then
         if new_s.departure_time >= next_schedule.arrival_time then
-            select * into correct_interval from find_correct_interval(cur_rs, prev_schedule, true);
-            if (new_s.arrival_time is not null and new_s.departure_time is not null) then
-                stop_interval = new_s.arrival_time - new_s.departure_time;
-            end if;
-            new_s.departure_time = prev_schedule.arrival_time - correct_interval;
-            new_s.arrival_time = new_s.departure_time - stop_interval;
+            select * into correct_interval from find_correct_interval(cur_rs, prev_schedule);
+            if correct_interval is null then correct_interval = default_move_interval; end if;
+            new_s.departure_time := prev_schedule.arrival_time - correct_interval;
+            new_s.arrival_time := new_s.departure_time - stop_interval;
         end if;
     end if;
 
@@ -128,4 +130,51 @@ $$ language plpgsql;
 
 create or replace trigger check_schedule_on_insert
     before insert on schedule
-    for each row execute function check_schedule(interval '1 hour');
+    for each row execute function check_schedule();
+
+create or replace function set_free_route_number() returns trigger as $$
+declare
+    new_s schedule%rowtype;
+    all_ids int[];
+    schedule_ids int[];
+begin
+    new_s := new;
+    if new_s.id is null then
+        select r.id into all_ids from routes r;
+        select s.id into schedule_ids from schedule s;
+        all_ids := array_cat(all_ids, schedule_ids);
+        select distinct id into all_ids from unnest(all_ids) as id order by id;
+        for i in 1..array_length(all_ids, 1) loop
+            if all_ids[i - 1] != i then
+                new_s.id := i;
+                return new_s;
+            end if;
+        end loop;
+        new_s.id := array_length(all_ids, 1) + 1;
+        return new_s;
+    end if;
+
+    return new_s;
+end;
+$$ language plpgsql;
+
+create or replace trigger set_free_route_number_on_insert
+    before insert on schedule
+    for each row execute function set_free_route_number();
+
+create or replace function log_train() returns trigger as $$
+declare
+    delete_t trains%rowtype;
+begin
+    delete_t := old;
+    select t.* from trains t
+
+    where t.id = delete_t.id;
+
+    return delete_t;
+end;
+$$ language plpgsql;
+
+create trigger log_train_on_delete
+    after delete on trains
+    for each row execute function log_train();

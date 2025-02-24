@@ -38,8 +38,7 @@ declare
     report_by_day report[];
 begin
     select rcb.* into rcb_table from railroads_cars_booking rcb;
-    foreach rcb_el in array rcb_table
-    loop
+    foreach rcb_el in array rcb_table loop
         select s.id, s.route_structure_id, s.thread_id into departure_schedule, departure_point_route, thread_id
                                                        from schedule s where s.id = rcb_el.departure_point;
         select s.id, s.route_structure_id into departure_schedule, arrival_point_route
@@ -68,8 +67,7 @@ declare
     delay delay%rowtype;
 begin
     select d.* into delay_list from delay d;
-    foreach delay in array delay_list
-    loop
+    foreach delay in array delay_list loop
         update schedule s set departure_time = s.departure_time + delay.departure_delay,
                               arrival_time = s.arrival_time + delay.arrival_delay
         where s.id = delay.schedule_record and

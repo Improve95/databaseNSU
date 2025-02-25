@@ -1,13 +1,29 @@
-create or replace function check_timetable() returns trigger as $$
+create or replace function check_train_on_route() returns trigger as $$
 declare
+    new_rcb railroads_cars_booking%rowtype;
+    trains_id int[];
+    train_id int;
+    t_id int;
 begin
---     new.
+    new_rcb := new;
+    select t.train_id into trains_id from schedule s
+        inner join threads t on s.thread_id = t.id
+    where s.id = new_rcb.departure_point or s.id = new_rcb.arrival_point;
+    select rc.train_id into train_id from railroad_cars rc
+    where rc.id = new_rcb.railroad_car_id;
+    trains_id := array_append(trains_id, train_id);
+    foreach t_id in array trains_id loop
+        if t_id != trains_id[0] then
+            raise exception 'trains_id incorrect';
+        end if;
+    end loop;
+    return new_rcb;
 end;
 $$ language plpgsql;
 
-create or replace trigger check_timetable_on_insert
-    before insert on schedule
-    for each row execute function check_timetable();
+create or replace trigger check_train_on_route_on_insert
+    before insert on railroads_cars_booking
+    for each row execute function check_train_on_route();
 
 drop type schedule_ex;
 create type schedule_ex as (
@@ -162,14 +178,21 @@ create or replace trigger set_free_route_number_on_insert
     before insert on schedule
     for each row execute function set_free_route_number();
 
+create table deleted_trains (like trains including all);
 create or replace function log_train() returns trigger as $$
 declare
     delete_t trains%rowtype;
+    booking_count int;
 begin
     delete_t := old;
-    select t.* from trains t
-
+    select count(*) into booking_count from trains t
+        inner join railroad_cars rc on t.id = rc.train_id
+        inner join railroads_cars_booking rcb on rc.id = rcb.railroad_car_id
     where t.id = delete_t.id;
+
+    if booking_count > 300 then
+        insert into deleted_trains select * from delete_t;
+    end if;
 
     return delete_t;
 end;

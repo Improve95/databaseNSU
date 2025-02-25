@@ -270,7 +270,7 @@ def insertRailroadBooking(dbConnect):
         for thread in threadList:
             cursor.execute(selectScript, (thread[0],))
             threadSchedule = cursor.fetchall()
-            cursor.execute("select * from railroad_cars rc where rc.thread_id = %s", (thread[0],))
+            cursor.execute("select rc.* from railroad_cars rc inner join trains t on rc.train_id = t.id inner join threads t2 on t.id = t2.train_id where t2.id = %s", (thread[0],))
             threadRailcars = cursor.fetchall()
 
             for railroad in threadRailcars:

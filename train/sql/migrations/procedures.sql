@@ -1,4 +1,4 @@
-drop type full_trip;
+drop type if exists full_trip cascade;
 create type full_trip as (
     id int,
     thread_id int,
@@ -6,22 +6,25 @@ create type full_trip as (
     station_in_number_route int,
     distance int
 );
-drop type report;
+drop type if exists report cascade;
 create type report as (
     thread_count int,
     passenger_count int,
     distance_sum int,
-    quarter_calc timestamp,
+    calc_day timestamp,
+    calc_quarter timestamp,
     calc_year timestamp
 );
-create or replace function get_trip_report() returns int as $$
+
+drop function get_trip_report();
+create or replace function get_trip_report() returns report[] as $$
 declare
     threads_count int;
     passenger_count int;
     distance_sum int;
 
     thread_id threads.id%TYPE;
-    rcb_table railroads_cars_booking[];
+--     rcb_table [];
     rcb_el railroads_cars_booking%rowtype;
 
     departure_schedule schedule.id%type;
@@ -33,33 +36,52 @@ declare
 
     trip_data full_trip[];
     full_trip_data full_trip[];
-    td full_trip;
 
     report_by_day report[];
 begin
-    select rcb.* into rcb_table from railroads_cars_booking rcb;
-    foreach rcb_el in array rcb_table loop
+    for rcb_el in
+        select rcb.* from railroads_cars_booking rcb
+    loop
         select s.id, s.route_structure_id, s.thread_id into departure_schedule, departure_point_route, thread_id
                                                        from schedule s where s.id = rcb_el.departure_point;
-        select s.id, s.route_structure_id into departure_schedule, arrival_point_route
+        select s.id, s.route_structure_id into arrival_schedule, arrival_point_route
                                           from schedule s where s.id = rcb_el.arrival_point;
 
         select rs.* into departure_rs from routes_structure rs where id = departure_point_route;
         select rs.* into arrival_rs from routes_structure rs where id = arrival_point_route;
 
-        select rcb_el.id, s.thread_id, s.departure_time, rs.station_number_in_route, rs.distance into trip_data from routes_structure rs
-        inner join schedule s on rs.id = s.route_structure_id
-        where rs.id between departure_rs and arrival_rs;
+        select array(
+            select row(rcb_el.id, s.thread_id, s.departure_time, rs.station_number_in_route, rs.distance) from routes_structure rs
+                inner join schedule s on rs.id = s.route_structure_id
+            where rs.id between departure_rs.id and arrival_rs.id)
+        into trip_data;
 
-        full_trip_data := array_cat(full_trip_data, td);
+        full_trip_data := array_cat(full_trip_data, trip_data);
     end loop;
 
-    full_trip_data := array_agg(x) from (select unnest(full_trip_data) as x order by x);
-    unique_trip_data select array(select distinct e from unnest(full_trip_data) as a(e) order by e);
+    select array (
+        select row(
+            count(distinct (ftd::full_trip).thread_id),
+            count(distinct (ftd::full_trip).id),
+            sum((ftd::full_trip).distance),
+            DATE_TRUNC('year', (ftd::full_trip).departure_time),
+            DATE_TRUNC('quarter', (ftd::full_trip).departure_time),
+            DATE((ftd::full_trip).departure_time)
+        )
+        from unnest(full_trip_data) as ftd
+        group by rollup (
+            DATE_TRUNC('year', (ftd::full_trip).departure_time),
+            DATE_TRUNC('quarter', (ftd::full_trip).departure_time),
+            DATE((ftd::full_trip).departure_time)
+            )
+        having DATE_TRUNC('year', (ftd::full_trip).departure_time) is not null
+    ) into report_by_day;
 
-    return 5;
+    return report_by_day;
 end;
 $$ LANGUAGE plpgsql;
+
+select * from unnest(get_trip_report());
 
 create or replace function fix_schedule_by_delay(from_time timestamp, to_time timestamp) returns void as $$
 declare

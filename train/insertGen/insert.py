@@ -195,7 +195,7 @@ def insertTrains(dbConnect):
                 categoryIndex += 1
                 categoryIndex %= 2
         
-        insertScript = "insert into railroad_cars(thread_id, number_in_train, category_id) values (%s, %s, %s)"
+        insertScript = "insert into railroad_cars(train_id, number_in_train, category_id) values (%s, %s, %s)"
         cursor.executemany(insertScript, railroadCars)
         
 def insertRoutesStructure(dbConnect):

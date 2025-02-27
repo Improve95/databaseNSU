@@ -12,8 +12,7 @@ inner join lateral (
     select s.id as schedule_id, s.thread_id, s.departure_time, s.arrival_time, rs.*
     from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
     where s.thread_id = (select s2.thread_id from schedule s2 where s2.id = rcb.departure_point)
-    ) as src on src.schedule_id between rcb.departure_point and rcb.arrival_point
-where rcb.id = 1;
+    ) as src on ((src.schedule_id between rcb.departure_point and rcb.arrival_point) and departure_time is not null);
 
 update railroads_cars_booking rcb set arrival_point = 5 where rcb.id = 1;
 
@@ -28,7 +27,7 @@ from railroads_cars_booking rcb
         select s.id as schedule_id, s.thread_id, s.departure_time, s.arrival_time, rs.*
         from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
         where s.thread_id = (select s2.thread_id from schedule s2 where s2.id = rcb.departure_point)
-    ) as src on src.schedule_id between rcb.departure_point and rcb.arrival_point
+    ) as src on ((src.schedule_id between rcb.departure_point and rcb.arrival_point) and departure_time is not null)
 group by rollup (
     DATE_TRUNC('year', departure_time),
     DATE_TRUNC('quarter', departure_time),

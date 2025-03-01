@@ -12,8 +12,11 @@ create type report as (
     passenger_count int,
     distance_sum int,
     calc_day date
-    /*calc_quarter timestamp,
-    calc_year timestamp*/
+);
+drop type uniq_arr;
+create type uniq_arr as (
+    thread_arr integer[],
+    passanger_arr integer[]
 );
 create or replace function get_trip_report() returns report[] as $$
 declare
@@ -36,8 +39,7 @@ declare
     rep_2 report;
     day date;
     day_list date[];
-    passengers_list int[][];
-    threads_list int[][];
+    uniq_arr uniq_arr[];
     add int := 0;
 
     rbd report[];
@@ -68,15 +70,9 @@ begin
                 day_list := array_append(day_list, day);
                 if (len is null or len = 0) then
                     rep_2 := (1, 1, td.distance, day);
-
-                    passengers_list[index] := array_append(passengers_list[index], td.id);
-                    rbd := array_append(rbd, rep_2);
                 else
                     rep_1 := rbd[len];
                     rep_2 := (rep_1.thread_count + 1, rep_1.passenger_count + 1, rep_1.distance_sum + td.distance, day);
-
-                    passengers_list[index] := array_append(passengers_list[index], td.id);
-                    rbd := array_append(rbd, rep_2);
                 end if;
             else
                 for i in index..len loop

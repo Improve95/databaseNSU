@@ -138,7 +138,7 @@ def insertRoutes(dbConnect):
         routesInsert = []
     
         global num_routes
-        for route in allStationsInRoutes[:5]:
+        for route in allStationsInRoutes:
             num_routes += 1
             nameNumber += 1
             routesInsert.append(("route" + str(nameNumber), route[0] + 1, route[route.__len__() - 1] + 1))
@@ -274,7 +274,7 @@ def insertRailroadBooking(dbConnect):
             threadRailcars = cursor.fetchall()
 
             for railroad in threadRailcars:
-                for place in range(1):
+                for place in range(10):
                     booking.append((passanger, datetime(2025, 1, 10)))
                     railroadCarBook.append((railroad[0], place, threadSchedule[0][0], threadSchedule[-1][0], idIndex))
 

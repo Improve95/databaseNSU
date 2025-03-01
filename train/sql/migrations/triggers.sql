@@ -6,9 +6,11 @@ declare
     t_id int;
 begin
     new_rcb := new;
-    select t.train_id into trains_id from schedule s
+    select array(
+        select row(t.train_id) from schedule s
         inner join threads t on s.thread_id = t.id
-    where s.id = new_rcb.departure_point or s.id = new_rcb.arrival_point;
+        where s.id = new_rcb.departure_point or s.id = new_rcb.arrival_point
+    ) into trains_id;
     select rc.train_id into train_id from railroad_cars rc
     where rc.id = new_rcb.railroad_car_id;
     trains_id := array_append(trains_id, train_id);
@@ -25,7 +27,7 @@ create or replace trigger check_train_on_route_on_insert
     before insert on railroads_cars_booking
     for each row execute function check_train_on_route();
 
-drop type schedule_ex;
+drop type if exists schedule_ex;
 create type schedule_ex as (
     id int,
     route_struct int,
@@ -34,14 +36,6 @@ create type schedule_ex as (
     departure_time timestamp,
     arrival_time timestamp
 );
-
-create or replace procedure shift_schedule(new_s schedule%rowtype, check_s schedule_ex, move_time interval, stop_time interval)
-    returns null on null input as $$
-declare
-begin
-
-end;
-$$ language plpgsql;
 
 create or replace function find_correct_interval(cur_rs routes_structure, check_s schedule_ex)
     returns interval as $$
@@ -57,6 +51,53 @@ begin
     end if;
 
     return (correct_s[1]::schedule).arrival_time - (correct_s[0]::schedule).departure_time;
+end;
+$$ language plpgsql;
+
+create or replace procedure shift_schedule(sched schedule_ex, default_move_interval interval, default_stop_time interval, direction int) as $$
+declare
+    move_interval interval := default_move_interval;
+    stop_interval interval := default_stop_time;
+
+    cur_schedule schedule_ex := sched;
+    next_schedule schedule_ex := null;
+    cur_rs routes_structure%rowtype;
+    correct_interval interval;
+begin
+    while cur_schedule is not null loop
+        select row(s.id, s.route_structure_id, s.thread_id, rs.station_number_in_route, s.departure_time, s.arrival_time) into next_schedule
+        from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
+        where s.thread_id = cur_schedule.thread_id and rs.station_number_in_route = cur_schedule.number + direction;
+
+        select rs.* into cur_rs from routes_structure rs
+        where rs.id = cur_schedule.route_struct;
+        if next_schedule is not null then
+            if direction = 1 then
+
+                if cur_schedule.departure_time >= next_schedule.arrival_time then
+                    select * into correct_interval from find_correct_interval(cur_rs, next_schedule);
+                    if correct_interval is null then correct_interval = move_interval; end if;
+                    update schedule s set
+                                          arrival_time = cur_schedule.arrival_time + correct_interval,
+                                          departure_time = cur_schedule.arrival_time + correct_interval + stop_interval
+                    where s.id = next_schedule.id;
+                end if;
+
+            elseif direction = -1 then
+
+                if next_schedule.departure_time >= cur_schedule.arrival_time then
+                    select * into correct_interval from find_correct_interval(cur_rs, next_schedule);
+                    if correct_interval is null then correct_interval = move_interval; end if;
+                    update schedule s set
+                                          arrival_time = cur_schedule.arrival_time + correct_interval,
+                                          departure_time = cur_schedule.arrival_time + correct_interval + stop_interval
+                    where s.id = next_schedule.id;
+                end if;
+
+            end if;
+        end if;
+        cur_schedule := next_schedule;
+    end loop;
 end;
 $$ language plpgsql;
 
@@ -105,7 +146,7 @@ begin
         stop_interval := new_s.arrival_time - new_s.departure_time;
     end if;
 
-    select s.id, s.route_structure_id, s.thread_id, rs.station_number_in_route, s.departure_time, s.arrival_time into schedule_list
+    select row(s.id, s.route_structure_id, s.thread_id, rs.station_number_in_route, s.departure_time, s.arrival_time) into schedule_list
     from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
     where s.thread_id = new.thread_id
     order by rs.station_number_in_route;
@@ -123,7 +164,8 @@ begin
             select * into correct_interval from find_correct_interval(cur_rs, prev_schedule);
             if correct_interval is null then correct_interval = default_move_interval; end if;
             new_s.arrival_time := prev_schedule.departure_time + correct_interval;
-            new_s.departure_time := new_s.arrival_time + stop_interval;
+            new_s.departure_time := prev_schedule.departure_time + correct_interval + stop_interval;
+            select shift_schedule(new_s, default_move_interval, default_stop_interval, 1);
         end if;
     end if;
 
@@ -133,10 +175,7 @@ begin
 
     if (next_schedule is not null and next_schedule.arrival_time is not null) then
         if new_s.departure_time >= next_schedule.arrival_time then
-            select * into correct_interval from find_correct_interval(cur_rs, prev_schedule);
-            if correct_interval is null then correct_interval = default_move_interval; end if;
-            new_s.departure_time := prev_schedule.arrival_time - correct_interval;
-            new_s.arrival_time := new_s.departure_time - stop_interval;
+            select shift_schedule(next_schedule, default_move_interval, default_stop_interval, -1);
         end if;
     end if;
 
@@ -156,8 +195,12 @@ declare
 begin
     new_s := new;
     if new_s.id is null then
-        select r.id into all_ids from routes r;
-        select s.id into schedule_ids from schedule s;
+        select array(
+            select row(r.id) from routes r
+        ) into all_ids;
+        select array (
+            select row(s.id) from schedule s
+        ) into schedule_ids;
         all_ids := array_cat(all_ids, schedule_ids);
         select distinct id into all_ids from unnest(all_ids) as id order by id;
         for i in 1..array_length(all_ids, 1) loop

@@ -13,10 +13,21 @@ create type report as (
     distance_sum int,
     calc_day date
 );
-drop type uniq_arr;
-create type uniq_arr as (
-    thread_arr integer[],
-    passanger_arr integer[]
+drop type if exists pass_arr;
+create type pass_arr as (
+    passenger_arr integer[]
+);
+drop type if exists thread_arr;
+create type thread_arr as (
+    threads_arr integer[]
+);
+drop type if exists rep_final;
+create type rep_final as (
+    id int,
+    thread_id int,
+    station_in_number_route int,
+    distance int,
+    time varchar(10)
 );
 create or replace function get_trip_report() returns report[] as $$
 declare
@@ -39,10 +50,14 @@ declare
     rep_2 report;
     day date;
     day_list date[];
-    uniq_arr uniq_arr[];
-    add int := 0;
+    append int := 0;
+    uniq_pass_list pass_arr[];
 
-    rbd report[];
+    r_day report[];
+    r_quarter report[];
+    r_year report[];
+
+    r_final rep_final[];
 begin
     for rcb_el in
         select rcb.* from railroads_cars_booking rcb
@@ -66,26 +81,40 @@ begin
             day := DATE(td.departure_time);
             index := array_position(day_list, day);
             len := array_length(day_list, 1);
+            append := 0;
+
+
+
             if index is null then
                 day_list := array_append(day_list, day);
                 if (len is null or len = 0) then
                     rep_2 := (1, 1, td.distance, day);
+                    r_day := array_append(r_day, rep_2);
+                    uniq_pass_list := array_append(uniq_pass_list, row(array[1])::pass_arr);
                 else
-                    rep_1 := rbd[len];
-                    rep_2 := (rep_1.thread_count + 1, rep_1.passenger_count + 1, rep_1.distance_sum + td.distance, day);
+                    rep_1 := r_day[len];
+                    if array_position((uniq_pass_list[len]::pass_arr).passenger_arr, td.id) is null then
+                        append := 1;
+                        uniq_pass_list := array_append(uniq_pass_list, row(array_append((uniq_pass_list[len]::pass_arr).passenger_arr, td.id))::pass_arr);
+                    end if;
+                    rep_2 := (rep_1.thread_count + append, rep_1.passenger_count + append, rep_1.distance_sum + td.distance, day);
+                    r_day := array_append(r_day, rep_2);
                 end if;
             else
                 for i in index..len loop
-                    rep_1 := rbd[i];
-
-                    rep_2 := (rep_1.thread_count + add, rep_1.passenger_count + add, rep_1.distance_sum + td.distance, rep_1.calc_day);
-                    rbd[i] := rep_2;
+                    rep_1 := r_day[i];
+                    if array_position((uniq_pass_list[len]::pass_arr).passenger_arr, td.id) is null then
+                        append := 1;
+                        uniq_pass_list := array_append(uniq_pass_list, row(array_append((uniq_pass_list[len]::pass_arr).passenger_arr, td.id))::pass_arr);
+                    end if;
+                    rep_2 := (rep_1.thread_count + append, rep_1.passenger_count + append, rep_1.distance_sum + td.distance, rep_1.calc_day);
+                    r_day[i] := rep_2;
                 end loop;
             end if;
         end loop;
     end loop;
 
-    return rbd;
+    return r_day;
 end;
 $$ LANGUAGE plpgsql;
 
@@ -95,13 +124,38 @@ create or replace function fix_schedule_by_delay(from_time timestamp, to_time ti
 declare
     delay_list delay[];
     delay delay%rowtype;
+    cur_schedule schedule%rowtype;
+    s_list schedule[];
+    cur_number int;
 begin
-    select d.* into delay_list from delay d;
+    select array (
+        select row(d.*) from delay d
+    ) into delay_list;
     foreach delay in array delay_list loop
-        update schedule s set departure_time = s.departure_time + delay.departure_delay,
-                              arrival_time = s.arrival_time + delay.arrival_delay
-        where s.id = delay.schedule_record and
-              s.arrival_time between from_time and to_time;
+        select ((s.*)::schedule) into cur_schedule from schedule s
+            inner join routes_structure rs on s.route_structure_id = rs.id
+        where s.id = delay.schedule_record;
+
+        select rs.station_number_in_route into cur_number from schedule s
+            inner join routes_structure rs on s.route_structure_id = rs.id
+        where s.id = delay.schedule_record;
+
+        select array (
+            select row(s.*) from schedule s
+                inner join routes_structure rs on s.route_structure_id = rs.id
+            where s.thread_id = cur_schedule.thread_id
+            order by rs.station_number_in_route
+        ) into s_list;
+
+        for i in cur_number..array_length(s_list, 1) loop
+            update schedule s set
+                departure_time = s.departure_time + delay.departure_delay,
+                arrival_time = s.arrival_time + delay.arrival_delay
+            where s.id = (s_list[i]::schedule).id and
+                  s.arrival_time between from_time and to_time;
+        end loop;
     end loop;
 end;
 $$ LANGUAGE plpgsql;
+
+select fix_schedule_by_delay('01-01-25'::timestamp, '01-08-25'::timestamp);

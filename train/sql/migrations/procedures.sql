@@ -13,13 +13,10 @@ create type report as (
     distance_sum int,
     calc_day date
 );
-drop type if exists pass_arr;
-create type pass_arr as (
-    passenger_arr integer[]
-);
-drop type if exists thread_arr;
-create type thread_arr as (
-    threads_arr integer[]
+drop type if exists uniq_arr;
+create type uniq_arr as (
+    passenger_arr integer[],
+    thread_arr integer[]
 );
 drop type if exists rep_final;
 create type rep_final as (
@@ -50,10 +47,9 @@ declare
     rep_2 report;
     day date;
     day_list date[];
-    append int := 0;
-    uniq_pass_list pass_arr[];
-    uniq_thread_list pass_arr[];
-    test_pos int := null;
+    pass_append int := 0;
+    thread_append int := 0;
+    uniq_list uniq_arr[];
 
     r_day report[];
     r_quarter report[];
@@ -83,32 +79,40 @@ begin
             day := DATE(td.departure_time);
             index := array_position(day_list, day);
             len := array_length(day_list, 1);
-            append := 0;
+            pass_append := 0;
+            thread_append := 0;
 
             if index is null then
                 day_list := array_append(day_list, day);
                 if (len is null or len = 0) then
                     rep_2 := (1, 1, td.distance, day);
                     r_day := array_append(r_day, rep_2);
-                    uniq_pass_list := array_append(uniq_pass_list, row(array[td.id])::pass_arr);
-                    uniq_thread_list := array_append(uniq_thread_list, row(array[td.thread_id])::pass_arr);
+                    uniq_list := array_append(uniq_list, row(array[td.id], array[td.id])::uniq_arr);
                 else
-                    if array_position((uniq_pass_list[len]::pass_arr).passenger_arr, td.id) is null then
-                        append := 1;
-                        uniq_pass_list[len + 1] := row(array_append((uniq_pass_list[len]::pass_arr).passenger_arr, td.id))::pass_arr;
+                    if array_position((uniq_list[len]::uniq_arr).passenger_arr, td.id) is null then
+                        uniq_list[len + 1] := row(array_append((uniq_list[len]::uniq_arr).passenger_arr, td.id), (uniq_list[len]::uniq_arr).thread_arr)::uniq_arr;
+                        pass_append := 1;
+                    end if;
+                    if array_position((uniq_list[len + pass_append]::uniq_arr).thread_arr, td.thread_id) is null then
+                        uniq_list[len + pass_append] := row((uniq_list[len + pass_append]::uniq_arr).passenger_arr, array_append((uniq_list[len + pass_append]::uniq_arr).thread_arr, td.thread_id))::uniq_arr;
+                        thread_append := 1;
                     end if;
                     rep_1 := r_day[len];
-                    rep_2 := (rep_1.thread_count + append, rep_1.passenger_count + append, rep_1.distance_sum + td.distance, day);
+                    rep_2 := (rep_1.thread_count + thread_append, rep_1.passenger_count + pass_append, rep_1.distance_sum + td.distance, day);
                     r_day := array_append(r_day, rep_2);
                 end if;
             else
                 for i in index..len loop
                     rep_1 := r_day[i];
-                    if array_position((uniq_pass_list[len]::pass_arr).passenger_arr, td.id) is null then
-                        append := 1;
-                        uniq_pass_list[len] := row(array_append((uniq_pass_list[len]::pass_arr).passenger_arr, td.id))::pass_arr;
+                    if array_position((uniq_list[i]::uniq_arr).passenger_arr, td.id) is null then
+                        uniq_list[i] := row(array_append((uniq_list[i]::uniq_arr).passenger_arr, td.id), (uniq_list[i]::uniq_arr).thread_arr)::uniq_arr;
+                        pass_append := 1;
                     end if;
-                    rep_2 := (rep_1.thread_count + append, rep_1.passenger_count + append, rep_1.distance_sum + td.distance, rep_1.calc_day);
+                    if array_position((uniq_list[i]::uniq_arr).thread_arr, td.thread_id) is null then
+                        uniq_list[i] := row((uniq_list[i]::uniq_arr).passenger_arr, array_append((uniq_list[i]::uniq_arr).thread_arr, td.thread_id))::uniq_arr;
+                        thread_append := 1;
+                    end if;
+                    rep_2 := (rep_1.thread_count + thread_append, rep_1.passenger_count + pass_append, rep_1.distance_sum + td.distance, rep_1.calc_day);
                     r_day[i] := rep_2;
                 end loop;
             end if;

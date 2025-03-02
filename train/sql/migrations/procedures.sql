@@ -162,5 +162,3 @@ begin
     end loop;
 end;
 $$ LANGUAGE plpgsql;
-
-call fix_schedule_by_delay('01-01-25'::timestamp, '01-08-25'::timestamp);

@@ -1,7 +1,12 @@
+/* report */
+-- select * from unnest(get_trip_report());
+
 /* delay insert */
 truncate table delay;
 insert into delay (schedule_record, arrival_delay, departure_delay)
 values (2, interval '10 minutes', interval '0 minutes');
+
+call fix_schedule_by_delay('01-01-25'::timestamp, '01-08-25'::timestamp);
 
 /* second trigger */
 truncate table schedule cascade;

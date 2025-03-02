@@ -1,3 +1,4 @@
+/* -- 1 -- */
 create or replace function check_train_on_route() returns trigger as $$
 declare
     new_rcb railroads_cars_booking%rowtype;
@@ -27,7 +28,9 @@ create or replace trigger check_train_on_route_on_insert
     before insert on railroads_cars_booking
     for each row execute function check_train_on_route();
 
+/* -- 2 -- */
 drop type if exists schedule_ex cascade;
+
 create type schedule_ex as (
     id int,
     route_struct int,
@@ -36,6 +39,7 @@ create type schedule_ex as (
     departure_time timestamp,
     arrival_time timestamp
 );
+
 create or replace function find_correct_interval(cur_rs routes_structure, check_s schedule_ex)
     returns interval as $$
 declare
@@ -44,6 +48,7 @@ begin
     select array (
         select row(s.*) from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
         where rs.route_id = cur_rs.route_id and (rs.station_number_in_route = cur_rs.station_number_in_route or rs.station_number_in_route = check_s.number)
+                                            and s.thread_id != check_s.thread_id
         order by rs.station_number_in_route
     ) into correct_s;
 
@@ -51,7 +56,7 @@ begin
         return null;
     end if;
 
-    return (correct_s[1]::schedule).arrival_time - (correct_s[0]::schedule).departure_time;
+    return (correct_s[2]::schedule).arrival_time - (correct_s[1]::schedule).departure_time;
 end;
 $$ language plpgsql;
 
@@ -60,13 +65,12 @@ declare
     move_interval interval := default_move_interval;
     stop_interval interval := default_stop_time;
 
-    cur_schedule schedule_ex := null;
+    cur_schedule schedule_ex := check_schedule;
     next_schedule schedule_ex := null;
     cur_rs routes_structure%rowtype;
     correct_interval interval;
 begin
-    cur_schedule := check_schedule;
-    while true loop
+    while cur_schedule.id is not null loop
         select s.id, s.route_structure_id, s.thread_id, rs.station_number_in_route,
                s.departure_time, s.arrival_time into next_schedule
         from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
@@ -75,9 +79,7 @@ begin
         select rs.* into cur_rs from routes_structure rs
         where rs.id = cur_schedule.route_struct;
         if next_schedule is not null and next_schedule.arrival_time is not null then
-            raise notice 'here3 % %', cur_schedule, next_schedule;
             if cur_schedule.departure_time >= next_schedule.arrival_time then
-                raise notice 'here4';
                 select * into correct_interval from find_correct_interval(cur_rs, next_schedule);
                 if correct_interval is null then correct_interval = move_interval; end if;
                 update schedule s set
@@ -87,8 +89,6 @@ begin
                 next_schedule.arrival_time := cur_schedule.departure_time + correct_interval;
                 next_schedule.departure_time := cur_schedule.departure_time + correct_interval + stop_interval;
             end if;
-        else
-            exit;
         end if;
         cur_schedule := next_schedule;
     end loop;
@@ -152,11 +152,11 @@ begin
     end if;
 
     select s.id, s.route_structure_id, s.thread_id, rs.station_number_in_route,
-            s.departure_time, current_timestamp into prev_schedule
+            s.departure_time, s.arrival_time into prev_schedule
     from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
     where s.thread_id = new_s.thread_id and rs.station_number_in_route = cur_rs.station_number_in_route - 1;
 
-    if (prev_schedule is not null and prev_schedule.departure_time is not null) then
+    if prev_schedule.departure_time is not null then
         if prev_schedule.departure_time >= new_s.arrival_time then
             select * into correct_interval from find_correct_interval(cur_rs, prev_schedule);
             if correct_interval is null then correct_interval = default_move_interval; end if;
@@ -175,9 +175,8 @@ begin
     from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
     where s.thread_id = new_s.thread_id and rs.station_number_in_route = cur_rs.station_number_in_route + 1;
 
-    if (next_schedule is not null and next_schedule.arrival_time is not null) then
+    if next_schedule.arrival_time is not null then
         if new_s.departure_time >= next_schedule.arrival_time then
-            raise notice 'here2 %', new_s;
             call shift_schedule_forward(
                 (new_s.id, new_s.route_structure_id, new_s.thread_id, cur_rs.station_number_in_route, new_s.departure_time, new_s.arrival_time),
                 default_move_interval,
@@ -194,6 +193,7 @@ create or replace trigger check_schedule_on_insert
     before insert on schedule
     for each row execute function check_schedule();
 
+/* -- 3 -- */
 create or replace function set_free_route_number() returns trigger as $$
 declare
     new_s schedule%rowtype;
@@ -228,6 +228,7 @@ create or replace trigger set_free_route_number_on_insert
     before insert on schedule
     for each row execute function set_free_route_number();
 
+/* -- 4 -- */
 create table deleted_trains (like trains including all);
 create or replace function log_train() returns trigger as $$
 declare

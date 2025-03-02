@@ -132,7 +132,7 @@ begin
         select row(d.*) from delay d
     ) into delay_list;
     foreach delay in array delay_list loop
-        select ((s.*)::schedule) into cur_schedule from schedule s
+        select s.* into cur_schedule from schedule s
             inner join routes_structure rs on s.route_structure_id = rs.id
         where s.id = delay.schedule_record;
 

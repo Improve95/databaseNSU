@@ -3,7 +3,6 @@ select count(*) from passengers;
 select count(*) from trains;
 select count(*) from railroad_cars;
 select count(*) from routes;
-select count(*) from booking;
 select count(*) from railroads_cars_booking;
 
 select rcb.id, src.*, row_number() over (partition by rcb.id order by station_number_in_route) as partition

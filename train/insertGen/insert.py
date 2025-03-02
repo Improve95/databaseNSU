@@ -303,8 +303,8 @@ def insert(dbConnect):
     insertRoutes(dbConnect)
     insertTrains(dbConnect)
     insertRoutesStructure(dbConnect)
-    insertSchedule(dbConnect)
-    insertRailroadBooking(dbConnect)
+    # insertSchedule(dbConnect)
+    # insertRailroadBooking(dbConnect)
     # insertDelay(dbConnect)
     print("insert")
 

@@ -1,3 +1,8 @@
+/* delay insert */
+truncate table delay;
+insert into delay (schedule_record, arrival_delay, departure_delay)
+values (2, interval '10 minutes', interval '0 minutes');
+
 /* second trigger */
 truncate table schedule cascade;
 insert into schedule (route_structure_id, thread_id, arrival_time, departure_time)

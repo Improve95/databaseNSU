@@ -120,42 +120,47 @@ $$ LANGUAGE plpgsql;
 
 select * from unnest(get_trip_report());
 
-create or replace function fix_schedule_by_delay(from_time timestamp, to_time timestamp) returns void as $$
+create or replace procedure fix_schedule_by_delay(from_time timestamp, to_time timestamp) as $$
 declare
-    delay_list delay[];
-    delay delay%rowtype;
+    delay_cursor cursor for select * from delay;
+    i_delay delay%rowtype;
+
     cur_schedule schedule%rowtype;
+    i_schedule schedule%rowtype;
     s_list schedule[];
     cur_number int;
 begin
-    select array (
-        select row(d.*) from delay d
-    ) into delay_list;
-    foreach delay in array delay_list loop
+    for i_delay in delay_cursor loop
         select s.* into cur_schedule from schedule s
-            inner join routes_structure rs on s.route_structure_id = rs.id
-        where s.id = delay.schedule_record;
+        where s.id = i_delay.schedule_record;
+
+        if cur_schedule.departure_time not between from_time and to_time then
+            return;
+        end if;
 
         select rs.station_number_in_route into cur_number from schedule s
             inner join routes_structure rs on s.route_structure_id = rs.id
-        where s.id = delay.schedule_record;
+        where s.id = i_delay.schedule_record;
 
         select array (
             select row(s.*) from schedule s
                 inner join routes_structure rs on s.route_structure_id = rs.id
-            where s.thread_id = cur_schedule.thread_id
+            where s.thread_id = cur_schedule.thread_id and
+                  rs.station_number_in_route >= cur_number
             order by rs.station_number_in_route
         ) into s_list;
 
-        for i in cur_number..array_length(s_list, 1) loop
-            update schedule s set
-                departure_time = s.departure_time + delay.departure_delay,
-                arrival_time = s.arrival_time + delay.arrival_delay
-            where s.id = (s_list[i]::schedule).id and
-                  s.arrival_time between from_time and to_time;
+        foreach i_schedule in array s_list loop
+            update schedule s set arrival_time = s.arrival_time + i_delay.arrival_delay,
+                                  departure_time = s.departure_time + i_delay.arrival_delay + i_delay.departure_delay
+            where s.id = i_schedule.id;
         end loop;
+
+        update delay set arrival_delay = interval '0 second',
+                         departure_delay = interval '0 second'
+        where current of delay_cursor;
     end loop;
 end;
 $$ LANGUAGE plpgsql;
 
-select fix_schedule_by_delay('01-01-25'::timestamp, '01-08-25'::timestamp);
+call fix_schedule_by_delay('01-01-25'::timestamp, '01-08-25'::timestamp);

@@ -238,7 +238,7 @@ def insertSchedule(dbConnect):
             for structId, routeId, station, number, distance in rsList:
                 if (number == rsList.__len__() - 1):
                     arrivalTime = None
-                schedule.append((structId, thread[0], departureTime, arrivalTime))
+                schedule.append((structId, thread[0], arrivalTime, departureTime))
                 if (number != rsList.__len__() - 1):
                     departureTime = arrivalTime + timedelta(hours=1)
                     arrivalTime = departureTime + timedelta(minutes=10)
@@ -274,7 +274,7 @@ def insertRailroadBooking(dbConnect):
             threadRailcars = cursor.fetchall()
 
             for railroad in threadRailcars:
-                for place in range(1):
+                for place in range(61):
                     booking.append((passanger, datetime(2025, 1, 10)))
                     railroadCarBook.append((railroad[0], place, threadSchedule[0][0], threadSchedule[-1][0], idIndex))
 
@@ -303,8 +303,8 @@ def insert(dbConnect):
     insertRoutes(dbConnect)
     insertTrains(dbConnect)
     insertRoutesStructure(dbConnect)
-    # insertSchedule(dbConnect)
-    # insertRailroadBooking(dbConnect)
+    insertSchedule(dbConnect)
+    insertRailroadBooking(dbConnect)
     # insertDelay(dbConnect)
     print("insert")
 

@@ -31,50 +31,44 @@ create type accumulated_report as (
     dist_sum int,
     date varchar(100)
 );
+create index idx_schedule_thread ON schedule(thread_id);
+create index idx_routes_structure_route ON routes_structure(route_id);
+create index idx_railroads_cars_booking_departure_arrival ON railroads_cars_booking(departure_point, arrival_point);
 create or replace function get_trip_report() returns accumulated_report[] as $$
 declare
-    departure_rs routes_structure%rowtype;
-    arrival_rs routes_structure%rowtype;
-
     len int;
     index int;
     day date;
     day_list date[];
     sum_by_days aggregation_report[];
-    rep aggregation_report;
     pass_append int := 0;
     thread_append int := 0;
-    uniq_list uniq_arr[];
+--     uniq_list uniq_arr[];
+    uniq_list jsonb := '{}';
 
-    rcb_cursor cursor for select rcb.* from railroads_cars_booking rcb;
-    i_rcb railroads_cars_booking%rowtype;
     trip_list full_trip[];
     i_trip full_trip;
     i_report aggregation_report;
 
     prev_report aggregation_report := null;
-    tpd_day_sum tpd;
-    tpd_quarter_sum tpd;
-    tpd_year_sum tpd;
+    tpd_day_sum tpd := (0, 0, 0, null);
+    tpd_quarter_sum tpd := (0, 0, 0, null);
+    tpd_year_sum tpd := (0, 0, 0, null);
 
     final_report accumulated_report[];
 begin
-    for i_rcb in rcb_cursor loop
-        select rs.* into departure_rs from schedule s
-                                        inner join routes_structure rs on s.route_structure_id = rs.id
-                                    where s.id = i_rcb.departure_point;
-        select rs.* into arrival_rs from schedule s
-                                        inner join routes_structure rs on s.route_structure_id = rs.id
-                                    where s.id = i_rcb.arrival_point;
-
-        select array (
-            select row(i_rcb.passenger_id, s.thread_id, s.departure_time, rs.station_number_in_route, rs.distance)::full_trip
-            from routes_structure rs
-                inner join schedule s on rs.id = s.route_structure_id
-            where ((rs.id between departure_rs.id and arrival_rs.id) and s.departure_time is not null)
-            order by s.departure_time, rs.station_number_in_route
-        ) into trip_list;
-
+--     for i_rcb in rcb_cursor loop
+    for trip_list in
+        select array_agg(row(rcb.passenger_id, src.thread_id, src.departure_time, src.station_number_in_route, src.distance)::full_trip)
+        from railroads_cars_booking rcb
+            inner join lateral (
+                select s.id as schedule_id, s.thread_id, s.departure_time, s.arrival_time, rs.*
+                from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
+                where s.thread_id = (select s2.thread_id from schedule s2 where s2.id = rcb.departure_point)
+            ) as src on ((src.schedule_id between rcb.departure_point and rcb.arrival_point) and departure_time is not null)
+        group by rcb.passenger_id, src.thread_id, src.departure_time, src.station_number_in_route, src.distance
+    loop
+        raise notice '%', trip_list;
         foreach i_trip in array trip_list loop
             day := DATE(i_trip.departure_time);
             index := array_position(day_list, day);
@@ -82,7 +76,29 @@ begin
             pass_append := 0;
             thread_append := 0;
 
-            if index is null then
+            if not (i_trip.departure_time::date = any(day_list)) then
+                day_list := array_append(day_list, i_trip.departure_time::date);
+                sum_by_days := array_append(sum_by_days, (1, 1, i_trip.distance, i_trip.departure_time::date)::aggregation_report);
+                uniq_list := uniq_list || jsonb_build_object(i_trip.departure_time::date::text, jsonb_build_object('passengers', jsonb_build_array(i_trip.pass_id), 'threads', jsonb_build_array(i_trip.thread_id)));
+            else
+                if not (i_trip.pass_id::text = any(uniq_list->i_trip.departure_time::date::text->'passengers')) then
+                    uniq_list := jsonb_set(uniq_list, array[i_trip.departure_time::date::text, 'passengers'], (uniq_list->i_trip.departure_time::date::text->'passengers') || jsonb_build_array(i_trip.pass_id), true);
+                end if;
+                if not (i_trip.thread_id::text = any(uniq_list->i_trip.departure_time::date::text->'threads')) then
+                    uniq_list := jsonb_set(uniq_list, array[i_trip.departure_time::date::text, 'threads'], (uniq_list->i_trip.departure_time::date::text->'threads') || jsonb_build_array(i_trip.thread_id), true);
+                end if;
+
+                for i_report in select * from unnest(sum_by_days) loop
+                    if i_report.calc_day = i_trip.departure_time::date then
+                        i_report.thread_count := i_report.thread_count + 1;
+                        i_report.pass_count := i_report.pass_count + 1;
+                        i_report.distance_sum := i_report.distance_sum + i_trip.distance;
+                    end if;
+                end loop;
+            end if;
+
+
+            /*if index is null then
                 day_list := array_append(day_list, day);
                 uniq_list := array_append(uniq_list, row(array[I_trip.pass_id], array[I_trip.thread_id])::uniq_arr);
                 sum_by_days := array_append(sum_by_days, (1, 1, i_trip.distance, day)::aggregation_report);
@@ -98,30 +114,23 @@ begin
 
                 rep := sum_by_days[index];
                 sum_by_days[index] := (rep.thread_count + thread_append, rep.pass_count + pass_append, rep.distance_sum + i_trip.distance, rep.calc_day)::aggregation_report;
-            end if;
+            end if;*/
         end loop;
     end loop;
 
-    tpd_day_sum.thread_count := 0; tpd_day_sum.pass_count := 0; tpd_day_sum.dist_sum := 0;
-    tpd_quarter_sum.thread_count := 0; tpd_quarter_sum.pass_count := 0; tpd_quarter_sum.dist_sum := 0;
-    tpd_year_sum.thread_count := 0; tpd_year_sum.pass_count := 0; tpd_year_sum.dist_sum := 0;
     foreach i_report in array sum_by_days loop
-        if (prev_report is not null and (extract(quarter from prev_report.calc_day) != extract(quarter from i_report.calc_day))) then
+        if extract(quarter from prev_report.calc_day) != extract(quarter from i_report.calc_day) then
             final_report := array_append(final_report, row(tpd_day_sum.thread_count, tpd_day_sum.pass_count, tpd_day_sum.dist_sum,
                 extract(quarter from prev_report.calc_day)::text || '-' || extract(year from prev_report.calc_day)::text)::accumulated_report
             );
-            tpd_day_sum.thread_count := 0;
-            tpd_day_sum.pass_count := 0;
-            tpd_day_sum.dist_sum := 0;
+            tpd_day_sum := (0, 0, 0, null);
         end if;
 
-        if (prev_report is not null and (extract(year from prev_report.calc_day) != extract(year from i_report.calc_day))) then
+        if extract(year from prev_report.calc_day) != extract(year from i_report.calc_day) then
             final_report := array_append(final_report, row(tpd_quarter_sum.thread_count, tpd_day_sum.pass_count,
                 tpd_day_sum.dist_sum, extract(year from i_report.calc_day))::accumulated_report
             );
-            tpd_quarter_sum.thread_count := 0;
-            tpd_quarter_sum.pass_count := 0;
-            tpd_quarter_sum.dist_sum := 0;
+            tpd_quarter_sum := (0, 0, 0, null);
         end if;
 
         tpd_day_sum.thread_count := tpd_day_sum.thread_count + i_report.thread_count;
@@ -153,6 +162,8 @@ begin
     return final_report;
 end;
 $$ LANGUAGE plpgsql;
+
+select * from unnest(get_trip_report());
 
 create or replace procedure fix_schedule_by_delay(from_time timestamp, to_time timestamp) as $$
 declare

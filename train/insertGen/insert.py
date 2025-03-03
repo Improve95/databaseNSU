@@ -243,9 +243,9 @@ def insertSchedule(dbConnect):
                     departureTime = arrivalTime + timedelta(hours=1)
                     arrivalTime = departureTime + timedelta(minutes=10)
 
-            monthNumber %= 7
+            monthNumber %= 12
             monthNumber += 1
-            dayNumber %= 20
+            dayNumber %= 28
             dayNumber += 1
 
         insertScript = "insert into schedule (route_structure_id, thread_id, departure_time, arrival_time) values (%s, %s, %s, %s)"
@@ -271,7 +271,7 @@ def insertRailroadBooking(dbConnect):
             threadRailcars = cursor.fetchall()
 
             for railroad in threadRailcars:
-                for place in range(100):
+                for place in range(210):
                     railroadCarBook.append((railroad[0], place, threadSchedule[0][0], threadSchedule[-1][0], passanger))
 
                 passanger %= 1000

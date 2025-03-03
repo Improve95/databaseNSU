@@ -40,12 +40,15 @@ declare
     index int;
     day date;
     day_list date[];
+    sum_by_days aggregation_report[];
+    rep aggregation_report;
     pass_append int := 0;
     thread_append int := 0;
     uniq_list uniq_arr[];
 
     rcb_cursor cursor for select rcb.* from railroads_cars_booking rcb;
     i_rcb railroads_cars_booking%rowtype;
+    trip_list full_trip[];
     i_trip full_trip;
     i_report aggregation_report;
 
@@ -56,9 +59,6 @@ declare
 
     final_report accumulated_report[];
 begin
-    drop table if exists sum_by_days;
-    create temp table sum_by_days of aggregation_report;
-
     for i_rcb in rcb_cursor loop
         select rs.* into departure_rs from schedule s
                                         inner join routes_structure rs on s.route_structure_id = rs.id
@@ -67,13 +67,15 @@ begin
                                         inner join routes_structure rs on s.route_structure_id = rs.id
                                     where s.id = i_rcb.arrival_point;
 
-        for i_trip in (
-            select i_rcb.passenger_id, s.thread_id, s.departure_time, rs.station_number_in_route, rs.distance
+        select array (
+            select row(i_rcb.passenger_id, s.thread_id, s.departure_time, rs.station_number_in_route, rs.distance)::full_trip
             from routes_structure rs
                 inner join schedule s on rs.id = s.route_structure_id
             where ((rs.id between departure_rs.id and arrival_rs.id) and s.departure_time is not null)
             order by s.departure_time, rs.station_number_in_route
-        ) loop
+        ) into trip_list;
+
+        foreach i_trip in array trip_list loop
             day := DATE(i_trip.departure_time);
             index := array_position(day_list, day);
             len := array_length(day_list, 1);
@@ -83,7 +85,8 @@ begin
             if index is null then
                 day_list := array_append(day_list, day);
                 uniq_list := array_append(uniq_list, row(array[I_trip.pass_id], array[I_trip.thread_id])::uniq_arr);
-                insert into sum_by_days values (1, 1, i_trip.distance, day);
+--                 insert into sum_by_days values (1, 1, i_trip.distance, day);
+                sum_by_days := array_append(sum_by_days, (1, 1, i_trip.distance, day)::aggregation_report);
             else
                 if array_position((uniq_list[index]::uniq_arr).passenger_arr, i_trip.pass_id) is null then
                     uniq_list[index] := row(array_append((uniq_list[index]::uniq_arr).passenger_arr, i_trip.pass_id), (uniq_list[index]::uniq_arr).thread_arr)::uniq_arr;
@@ -93,27 +96,17 @@ begin
                     uniq_list[index] := row((uniq_list[index]::uniq_arr).passenger_arr, array_append((uniq_list[index]::uniq_arr).thread_arr, i_trip.thread_id))::uniq_arr;
                     thread_append := 1;
                 end if;
-                update sum_by_days set
-                                       thread_count = thread_count + thread_append,
-                                       pass_count = pass_count + pass_append,
-                                       distance_sum = distance_sum + i_trip.distance
-                where calc_day = day;
+
+                rep := sum_by_days[index];
+                sum_by_days[index] := (rep.thread_count + thread_append, rep.pass_count + pass_append, rep.distance_sum + i_trip.distance, rep.calc_day)::aggregation_report;
             end if;
         end loop;
     end loop;
 
-    tpd_day_sum.thread_count := 0;
-    tpd_day_sum.pass_count := 0;
-    tpd_day_sum.dist_sum := 0;
-    tpd_quarter_sum.thread_count := 0;
-    tpd_quarter_sum.pass_count := 0;
-    tpd_quarter_sum.dist_sum := 0;
-    tpd_year_sum.thread_count := 0;
-    tpd_year_sum.pass_count := 0;
-    tpd_year_sum.dist_sum := 0;
-    for i_report in (
-        select sbd.* from sum_by_days sbd order by sbd.calc_day
-    ) loop
+    tpd_day_sum.thread_count := 0; tpd_day_sum.pass_count := 0; tpd_day_sum.dist_sum := 0;
+    tpd_quarter_sum.thread_count := 0; tpd_quarter_sum.pass_count := 0; tpd_quarter_sum.dist_sum := 0;
+    tpd_year_sum.thread_count := 0; tpd_year_sum.pass_count := 0; tpd_year_sum.dist_sum := 0;
+    foreach i_report in array sum_by_days loop
         if (prev_report is not null and (extract(quarter from prev_report.calc_day) != extract(quarter from i_report.calc_day))) then
             final_report := array_append(final_report, row(tpd_day_sum.thread_count, tpd_day_sum.pass_count, tpd_day_sum.dist_sum,
                 extract(quarter from prev_report.calc_day)::text || '-' || extract(year from prev_report.calc_day)::text)::accumulated_report
@@ -204,3 +197,106 @@ begin
     end loop;
 end;
 $$ LANGUAGE plpgsql;
+
+DO $$
+DECLARE
+BEGIN
+    CREATE TEMP TABLE report (report_date DATE PRIMARY KEY, count_trips INTEGER, passenger_count INTEGER, distation_sum INTEGER);
+    <<count_trips>>
+    DECLARE
+        row RECORD;
+        cur CURSOR FOR (
+            SELECT DATE(generate_series(DATE(MIN(timestamp_departure)), DATE(MAX(timestamp_arrival)), INTERVAL '1 day')) AS day
+            FROM timetable
+            GROUP BY train_route_id
+        );
+    BEGIN
+        OPEN cur;
+        LOOP
+            FETCH cur INTO row;
+            EXIT WHEN NOT FOUND;
+            INSERT INTO report (report_date, count_trips, passenger_count, distation_sum)
+            VALUES (row.day, 1, 0, 0)
+            ON CONFLICT (report_date)
+            DO UPDATE SET
+                count_trips = report.count_trips + 1;
+        END LOOP;
+        CLOSE cur;
+    END;
+    <<passenger_count_distation>>
+    DECLARE
+        row RECORD;
+        cur CURSOR FOR (
+            SELECT DATE(generate_series(DATE(td.timestamp_departure), DATE(ta.timestamp_arrival), INTERVAL '1 day')) AS day, (tars.distation - tdrs.distation) / ((DATE(ta.timestamp_arrival) - DATE(td.timestamp_departure)) + 1) AS distation
+            FROM tickets JOIN timetable AS ta
+            ON tickets.timetable_arrival_id = ta.id
+            JOIN timetable AS td
+            ON tickets.timetable_departure_id = td.id
+            JOIN routes_stations AS tars
+            ON ta.route_station = tars.id
+            JOIN routes_stations AS tdrs
+            ON td.route_station = tdrs.id
+        );
+    BEGIN
+        OPEN cur;
+        LOOP
+            FETCH cur INTO row;
+            EXIT WHEN NOT FOUND;
+            INSERT INTO report (report_date, count_trips, passenger_count, distation_sum)
+            VALUES (row.day, 0, 1, row.distation)
+            ON CONFLICT (report_date)
+            DO UPDATE SET
+                passenger_count = report.passenger_count + 1,
+                distation_sum = report.distation_sum + EXCLUDED.distation_sum;
+        END LOOP;
+        CLOSE cur;
+    END;
+    <<output>>
+    DECLARE
+    row RECORD;
+        current_quarter INTEGER := NULL;
+        current_year INTEGER := NULL;
+        prev_quarter INTEGER := NULL;
+        prev_year INTEGER := NULL;
+        count_trips INTEGER := 0;
+        passenger_count INTEGER := 0;
+        distation_sum INTEGER := 0;
+        count_trips_year INTEGER := 0;
+        passenger_count_year INTEGER := 0;
+        distation_sum_year INTEGER := 0;
+        cur CURSOR FOR (SELECT * FROM report ORDER BY report_date);
+    BEGIN
+        OPEN cur;
+        LOOP
+            FETCH cur INTO row;
+            EXIT WHEN NOT FOUND;
+            current_year := EXTRACT(YEAR FROM row.report_date);
+            current_quarter := EXTRACT(QUARTER FROM row.report_date);
+            IF current_quarter != prev_quarter THEN
+                RAISE NOTICE 'Year: %, Quarter: %, Trips Count: %, Passenger Count: %, Passenger Distance Sum: %',
+                    prev_year, prev_quarter, output.count_trips, output.passenger_count, output.distation_sum;
+                count_trips_year := count_trips_year + count_trips;
+                passenger_count_year := passenger_count_year + passenger_count;
+                distation_sum_year := distation_sum_year + distation_sum;
+                count_trips := 0;
+                passenger_count := 0;
+                distation_sum := 0;
+                IF current_year != prev_year THEN
+                    RAISE NOTICE 'Year: %, Trips Count: %, Passenger Count: %, Passenger Distance Sum: %',
+                        prev_year, output.count_trips_year, output.passenger_count_year, output.distation_sum_year;
+                    count_trips_year := 0;
+                    passenger_count_year := 0;
+                    distation_sum_year := 0;
+                END IF;
+            END IF;
+            prev_year := current_year;
+            prev_quarter := current_quarter;
+            output.count_trips = output.count_trips + row.count_trips;
+            output.passenger_count = output.passenger_count + row.passenger_count;
+            output.distation_sum = output.distation_sum + row.distation_sum;
+            RAISE NOTICE 'Date: %, Trips Count: %, Passenger Count: %, Passenger Distation Sum: %', row.report_date, output.count_trips, output.passenger_count, output.distation_sum;
+        END LOOP;
+        CLOSE cur;
+    END;
+    DROP TABLE IF EXISTS report;
+END $$;

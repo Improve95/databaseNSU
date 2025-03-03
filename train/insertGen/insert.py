@@ -190,7 +190,7 @@ def insertTrains(dbConnect):
         id = 1
         categoryIndex = 0
         for i in range(num_routes):
-            for j in range(10):
+            for j in range(1):
                 railroadCars.append((i + 1, j, categoryIndex + 1))
                 categoryIndex += 1
                 categoryIndex %= 2
@@ -271,7 +271,7 @@ def insertRailroadBooking(dbConnect):
             threadRailcars = cursor.fetchall()
 
             for railroad in threadRailcars:
-                for place in range(5):
+                for place in range(100):
                     railroadCarBook.append((railroad[0], place, threadSchedule[0][0], threadSchedule[-1][0], passanger))
 
                 passanger %= 1000

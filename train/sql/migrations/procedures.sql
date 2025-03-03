@@ -26,6 +26,10 @@ create type rep_final as (
     distance int,
     time varchar(10)
 );
+create type quarter_year as (
+    quarter int,
+    year int
+);
 create or replace function get_trip_report() returns report[] as $$
 declare
     thread_id threads.id%TYPE;
@@ -51,15 +55,12 @@ declare
     thread_append int := 0;
     uniq_list uniq_arr[];
 
-    r_day report[];
-    r_quarter report[];
-    r_year report[];
+    qy_list quarter_year[];
+    qy_prev quarter_year := null;
 
-    r_final rep_final[];
+    r_day report[];
 begin
-    for rcb_el in
-        select rcb.* from railroads_cars_booking rcb
-    loop
+    for rcb_el in (select rcb.* from railroads_cars_booking rcb) loop
         select s.id, s.route_structure_id, s.thread_id into departure_schedule, departure_point_route, thread_id
                                                        from schedule s where s.id = rcb_el.departure_point;
         select s.id, s.route_structure_id into arrival_schedule, arrival_point_route
@@ -85,8 +86,7 @@ begin
             if index is null then
                 day_list := array_append(day_list, day);
                 if (len is null or len = 0) then
-                    rep_2 := (1, 1, td.distance, day);
-                    r_day := array_append(r_day, rep_2);
+                    r_day := array_append(r_day, (1, 1, td.distance, day)::report);
                     uniq_list := array_append(uniq_list, row(array[td.id], array[td.id])::uniq_arr);
                 else
                     if array_position((uniq_list[len]::uniq_arr).passenger_arr, td.id) is null then
@@ -107,7 +107,7 @@ begin
                     if array_position((uniq_list[i]::uniq_arr).passenger_arr, td.id) is null then
                         uniq_list[i] := row(array_append((uniq_list[i]::uniq_arr).passenger_arr, td.id), (uniq_list[i]::uniq_arr).thread_arr)::uniq_arr;
                         pass_append := 1;
-                    end if;
+                    end if
                     if array_position((uniq_list[i]::uniq_arr).thread_arr, td.thread_id) is null then
                         uniq_list[i] := row((uniq_list[i]::uniq_arr).passenger_arr, array_append((uniq_list[i]::uniq_arr).thread_arr, td.thread_id))::uniq_arr;
                         thread_append := 1;
@@ -116,6 +116,8 @@ begin
                     r_day[i] := rep_2;
                 end loop;
             end if;
+
+            qy_prev := row(extract(quarter from td.departure_time), extract(year from td.departure_time));
         end loop;
     end loop;
 

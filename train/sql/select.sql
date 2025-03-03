@@ -53,5 +53,5 @@ aggregated_data as (
     (case when day is null and quarter is null then tc_year else case when day is null and quarter is not null then tc_quarter else tc_day end end) as thread_count,
     (case when day is null and quarter is null then p_year else case when day is null and quarter is not null then p_quarter else p_day end end) as passenger_count,
     (case when day is null and quarter is null then d_year else case when day is null and quarter is not null then d_quarter else d_day end end) as distance_sum,
-    (case when day is null and quarter is null then year::text else case when day is null and quarter is not null then quarter::text || '-' || year::text else day::text end end) as time_group
+    (case when day is null and quarter is null then year::text else case when day is null and quarter is not null then quarter::text || '-' || year::text else day::text end end) as date
 from aggregated_data;

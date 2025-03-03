@@ -6,10 +6,10 @@ create type full_trip as (
     station_in_number_route int,
     distance int
 );
-drop type if exists report cascade;
-create type report as (
+drop type if exists aggregation_report cascade;
+create type aggregation_report as (
     thread_count int,
-    passenger_count int,
+    pass_count int,
     distance_sum int,
     calc_day date
 );
@@ -18,19 +18,20 @@ create type uniq_arr as (
     passenger_arr integer[],
     thread_arr integer[]
 );
-drop type if exists rep_final;
-create type rep_final as (
-    id int,
-    thread_id int,
-    station_in_number_route int,
-    distance int,
-    time varchar(10)
+drop type if exists tpd cascade;
+create type tpd as (
+    thread_count int,
+    pass_count int,
+    dist_sum int
 );
-create type quarter_year as (
-    quarter int,
-    year int
+drop type if exists accumulated_report;
+create type accumulated_report as (
+    thread_count int,
+    pass_count int,
+    dist_sum int,
+    date varchar(100)
 );
-create or replace function get_trip_report() returns report[] as $$
+create or replace function get_trip_report() returns accumulated_report[] as $$
 declare
     departure_rs routes_structure%rowtype;
     arrival_rs routes_structure%rowtype;
@@ -46,14 +47,17 @@ declare
     rcb_cursor cursor for select rcb.* from railroads_cars_booking rcb;
     i_rcb railroads_cars_booking%rowtype;
     i_trip full_trip;
+    i_report aggregation_report;
+
+    prev_report aggregation_report := null;
+    tpd_day_sum tpd;
+    tpd_quarter_sum tpd;
+    tpd_year_sum tpd;
+
+    final_report accumulated_report[];
 begin
     drop table if exists sum_by_days;
-    create temp table sum_by_days (
-        thread_count int,
-        passenger_count int,
-        distance_sum int,
-        calc_day date
-    );
+    create temp table sum_by_days of aggregation_report;
 
     for i_rcb in rcb_cursor loop
         select rs.* into departure_rs from schedule s
@@ -89,20 +93,72 @@ begin
                     uniq_list[index] := row((uniq_list[index]::uniq_arr).passenger_arr, array_append((uniq_list[index]::uniq_arr).thread_arr, i_trip.thread_id))::uniq_arr;
                     thread_append := 1;
                 end if;
-                update sum_by_days sbd set
+                update sum_by_days set
                                            thread_count = thread_count + thread_append,
-                                           passenger_count = passenger_count + pass_append,
+                                           pass_count = pass_count + pass_append,
                                            distance_sum = distance_sum + i_trip.distance
-                where sbd.calc_day = day;
+                where calc_day = day;
             end if;
         end loop;
     end loop;
 
+    tpd_day_sum.thread_count := 0;
+    tpd_day_sum.pass_count := 0;
+    tpd_day_sum.dist_sum := 0;
+    tpd_quarter_sum.thread_count := 0;
+    tpd_quarter_sum.pass_count := 0;
+    tpd_quarter_sum.dist_sum := 0;
+    tpd_year_sum.thread_count := 0;
+    tpd_year_sum.pass_count := 0;
+    tpd_year_sum.dist_sum := 0;
+    for i_report in (
+        select sbd.* from sum_by_days sbd order by sbd.calc_day
+    ) loop
+        if (prev_report is not null and (extract(quarter from prev_report.calc_day) != extract(quarter from i_report.calc_day))) then
+            final_report := array_append(final_report, row(tpd_day_sum.thread_count, tpd_day_sum.pass_count, tpd_day_sum.dist_sum,
+                extract(quarter from prev_report.calc_day)::text || '-' || extract(year from prev_report.calc_day)::text)::accumulated_report
+            );
+            tpd_day_sum.thread_count := 0;
+            tpd_day_sum.pass_count := 0;
+            tpd_day_sum.dist_sum := 0;
+        end if;
 
+        if (prev_report is not null and (extract(year from prev_report.calc_day) != extract(year from i_report.calc_day))) then
+            final_report := array_append(final_report, row(tpd_quarter_sum.thread_count, tpd_day_sum.pass_count,
+                tpd_day_sum.dist_sum, extract(year from i_report.calc_day))::accumulated_report
+            );
+            tpd_quarter_sum.thread_count := 0;
+            tpd_quarter_sum.pass_count := 0;
+            tpd_quarter_sum.dist_sum := 0;
+        end if;
 
-    return array (
-        select row(sbd.*)::report from sum_by_days sbd
+        tpd_day_sum.thread_count := tpd_day_sum.thread_count + i_report.thread_count;
+        tpd_day_sum.pass_count := tpd_day_sum.pass_count + i_report.pass_count;
+        tpd_day_sum.dist_sum := tpd_day_sum.dist_sum + i_report.distance_sum;
+
+        tpd_quarter_sum.thread_count := tpd_quarter_sum.thread_count + i_report.thread_count;
+        tpd_quarter_sum.pass_count := tpd_quarter_sum.pass_count + i_report.pass_count;
+        tpd_quarter_sum.dist_sum := tpd_quarter_sum.dist_sum + i_report.distance_sum;
+
+        tpd_year_sum.thread_count := tpd_year_sum.thread_count + i_report.thread_count;
+        tpd_year_sum.pass_count := tpd_year_sum.pass_count + i_report.pass_count;
+        tpd_year_sum.dist_sum := tpd_year_sum.dist_sum + i_report.distance_sum;
+
+        final_report := array_append(final_report, row(tpd_day_sum.thread_count, tpd_day_sum.pass_count,
+            tpd_day_sum.dist_sum, i_report.calc_day::text)::accumulated_report
+        );
+
+        prev_report := i_report;
+    end loop;
+
+    final_report := array_append(final_report, row(tpd_quarter_sum.thread_count, tpd_quarter_sum.pass_count, tpd_quarter_sum.dist_sum,
+        extract(quarter from prev_report.calc_day)::text || '-' || extract(year from prev_report.calc_day)::text)::accumulated_report
     );
+    final_report := array_append(final_report, row(tpd_year_sum.thread_count, tpd_year_sum.pass_count, tpd_year_sum.dist_sum,
+        extract(year from i_report.calc_day))::accumulated_report
+    );
+
+    return final_report;
 end;
 $$ LANGUAGE plpgsql;
 

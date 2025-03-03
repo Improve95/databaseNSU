@@ -94,9 +94,9 @@ begin
                     thread_append := 1;
                 end if;
                 update sum_by_days set
-                                           thread_count = thread_count + thread_append,
-                                           pass_count = pass_count + pass_append,
-                                           distance_sum = distance_sum + i_trip.distance
+                                       thread_count = thread_count + thread_append,
+                                       pass_count = pass_count + pass_append,
+                                       distance_sum = distance_sum + i_trip.distance
                 where calc_day = day;
             end if;
         end loop;
@@ -161,8 +161,6 @@ begin
     return final_report;
 end;
 $$ LANGUAGE plpgsql;
-
-select * from unnest(get_trip_report());
 
 create or replace procedure fix_schedule_by_delay(from_time timestamp, to_time timestamp) as $$
 declare

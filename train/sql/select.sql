@@ -4,6 +4,7 @@ select count(*) from trains;
 select count(*) from railroad_cars;
 select count(*) from routes;
 select count(*) from railroads_cars_booking;
+select count(*) from schedule;
 
 select rcb.id, src.*, row_number() over (partition by rcb.id order by station_number_in_route) as partition
 from railroads_cars_booking rcb
@@ -17,7 +18,7 @@ with default_report as (
     select count(distinct thread_id) as thread_count,
            count(distinct rcb.id) as passenger_count,
            sum(distance) as distance_sum,
-           extract(day from departure_time) as day,
+           DATE(departure_time) as day,
            extract(quarter from departure_time) as quarter,
            extract(year from departure_time) as year
     from railroads_cars_booking rcb
@@ -29,7 +30,7 @@ with default_report as (
     group by rollup (
         extract(year from departure_time),
         extract(quarter from departure_time),
-        extract(day from departure_time)
+        DATE(departure_time)
     )
     having extract(year from departure_time) is not null
 ),

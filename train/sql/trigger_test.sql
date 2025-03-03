@@ -1,5 +1,5 @@
 /* report */
--- select * from unnest(get_trip_report());
+select * from unnest(get_trip_report());
 
 /* delay insert */
 truncate table delay;

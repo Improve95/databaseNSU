@@ -32,7 +32,26 @@ with default_report as (
         extract(DAY from departure_time)
     )
     having extract(YEAR from departure_time) is not null
-) select
+),
+aggregated_data as (
+    select
+        sum(passenger_count) over (partition by quarter, year order by day) as p_day,
+        sum(case when day is null then passenger_count else 0 end) over (partition by year order by quarter) as p_quarter,
+        sum(case when day is null AND quarter is null then passenger_count else 0 end) over (order by year) as p_year,
+
+        sum(thread_count) over (partition by quarter, year order by day) as tc_day,
+        sum(case when day is null then thread_count else 0 end) over (partition by year order by quarter) as tc_quarter,
+        sum(case when day is null AND quarter is null then thread_count else 0 end) over (order by year) as tc_year,
+
+        sum(distance_sum) over (partition by quarter, year order by day) as d_day,
+        sum(case when day is null then distance_sum else 0 end) over (partition by year order by quarter) as d_quarter,
+        sum(case when day is null AND quarter is null then distance_sum else 0 end) over (order by year) as d_year,
+
+        day, quarter, year
+    from default_report
+) select * from aggregated_data;
+
+/*select
     (case when day is null and quarter is null then tc_year else case when day is null and quarter is not null then tc_quarter else tc_day end end),
     (case when day is null and quarter is null then p_year else case when day is null and quarter is not null then p_quarter else p_day end end),
     (case when day is null and quarter is null then d_year else case when day is null and quarter is not null then d_quarter else d_day end end),
@@ -54,7 +73,7 @@ with default_report as (
       dr.quarter,
       dr.year
   from default_report dr
-);
+);*/
 
 with default_report as (
     select count(distinct thread_id) as thread_count,

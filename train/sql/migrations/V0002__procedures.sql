@@ -54,50 +54,39 @@ declare
     tpd_year_sum tpd := (0, 0, 0, null);
 
     final_report accumulated_report[];
-    i_rcb railroads_cars_booking%rowtype;
-    departure_rs routes_structure%rowtype;
-    arrival_rs routes_structure%rowtype;
 begin
-    for i_rcb in
-        select * from railroads_cars_booking
+    for i_trip in
+        select rcb.passenger_id, src.thread_id, src.departure_time, src.station_number_in_route, src.distance
+        from railroads_cars_booking rcb
+        inner join lateral (
+            select s.id as schedule_id, s.thread_id, s.departure_time, s.arrival_time, rs.*
+            from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
+            where s.thread_id = (select s2.thread_id from schedule s2 where s2.id = rcb.departure_point)
+            ) as src on ((src.schedule_id between rcb.departure_point and rcb.arrival_point) and departure_time is not null)
+        order by rcb.id, station_number_in_route
     loop
-        select rs.* into departure_rs from schedule s
-                                        inner join routes_structure rs on s.route_structure_id = rs.id
-                                    where s.id = i_rcb.departure_point;
-        select rs.* into arrival_rs from schedule s
-                                        inner join routes_structure rs on s.route_structure_id = rs.id
-                                    where s.id = i_rcb.arrival_point;
+        day := DATE(i_trip.departure_time);
+        index := array_position(day_list, day);
+        pass_append := 0;
+        thread_append := 0;
 
-        for i_trip in
-            select i_rcb.passenger_id, s.thread_id, s.departure_time, rs.station_number_in_route, rs.distance
-            from routes_structure rs
-                inner join schedule s on rs.id = s.route_structure_id
-            where ((rs.id between departure_rs.id and arrival_rs.id) and s.departure_time is not null)
-            order by i_rcb.passenger_id, s.departure_time, rs.station_number_in_route
-        loop
-            day := DATE(i_trip.departure_time);
-            index := array_position(day_list, day);
-            pass_append := 0;
-            thread_append := 0;
-
-            if index is null then
-                day_list := array_append(day_list, day);
-                uniq_list := array_append(uniq_list, row(array[i_trip.pass_id], array[i_trip.thread_id])::uniq_arr);
-                sum_by_days := array_append(sum_by_days, (1, 1, i_trip.distance, day)::aggregation_report);
-            else
-                if array_position((uniq_list[index]::uniq_arr).passenger_arr, i_trip.pass_id) is null then
-                    uniq_list[index] := row(array_append((uniq_list[index]::uniq_arr).passenger_arr, i_trip.pass_id), (uniq_list[index]::uniq_arr).thread_arr)::uniq_arr;
-                    pass_append := 1;
-                end if;
-                if array_position((uniq_list[index]::uniq_arr).thread_arr, i_trip.thread_id) is null then
-                    uniq_list[index] := row((uniq_list[index]::uniq_arr).passenger_arr, array_append((uniq_list[index]::uniq_arr).thread_arr, i_trip.thread_id))::uniq_arr;
-                    thread_append := 1;
-                end if;
-
-                rep := sum_by_days[index];
-                sum_by_days[index] := (rep.thread_count + thread_append, rep.pass_count + pass_append, rep.distance_sum + i_trip.distance, rep.calc_day)::aggregation_report;
+        if index is null then
+            day_list := array_append(day_list, day);
+            uniq_list := array_append(uniq_list, row(array[i_trip.pass_id], array[i_trip.thread_id])::uniq_arr);
+            sum_by_days := array_append(sum_by_days, (1, 1, i_trip.distance, day)::aggregation_report);
+        else
+            if array_position((uniq_list[index]::uniq_arr).passenger_arr, i_trip.pass_id) is null then
+                uniq_list[index] := row(array_append((uniq_list[index]::uniq_arr).passenger_arr, i_trip.pass_id), (uniq_list[index]::uniq_arr).thread_arr)::uniq_arr;
+                pass_append := 1;
             end if;
-        end loop;
+            if array_position((uniq_list[index]::uniq_arr).thread_arr, i_trip.thread_id) is null then
+                uniq_list[index] := row((uniq_list[index]::uniq_arr).passenger_arr, array_append((uniq_list[index]::uniq_arr).thread_arr, i_trip.thread_id))::uniq_arr;
+                thread_append := 1;
+            end if;
+
+            rep := sum_by_days[index];
+            sum_by_days[index] := (rep.thread_count + thread_append, rep.pass_count + pass_append, rep.distance_sum + i_trip.distance, rep.calc_day)::aggregation_report;
+        end if;
     end loop;
 
     foreach i_report in array sum_by_days loop

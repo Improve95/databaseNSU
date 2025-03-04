@@ -54,16 +54,26 @@ declare
     tpd_year_sum tpd := (0, 0, 0, null);
 
     final_report accumulated_report[];
+    i_rcb railroads_cars_booking%rowtype;
+    departure_rs routes_structure%rowtype;
+    arrival_rs routes_structure%rowtype;
 begin
-    for i_trip in
-        select rcb.passenger_id, src.thread_id, src.departure_time, src.station_number_in_route, src.distance
-        from railroads_cars_booking rcb
-        inner join lateral (
-            select s.id as schedule_id, s.thread_id, s.departure_time, s.arrival_time, rs.*
-            from schedule s inner join routes_structure rs on s.route_structure_id = rs.id
-            where s.thread_id = (select s2.thread_id from schedule s2 where s2.id = rcb.departure_point)
-            ) as src on ((src.schedule_id between rcb.departure_point and rcb.arrival_point) and departure_time is not null)
-        order by rcb.id, station_number_in_route
+    for i_rcb in
+        select * from railroads_cars_booking
+    loop
+        select rs.* into departure_rs from schedule s
+                                        inner join routes_structure rs on s.route_structure_id = rs.id
+                                    where s.id = i_rcb.departure_point;
+        select rs.* into arrival_rs from schedule s
+                                        inner join routes_structure rs on s.route_structure_id = rs.id
+                                    where s.id = i_rcb.arrival_point;
+
+        for i_trip in
+            select i_rcb.passenger_id, s.thread_id, s.departure_time, rs.station_number_in_route, rs.distance
+            from routes_structure rs
+                inner join schedule s on rs.id = s.route_structure_id
+            where ((rs.id between departure_rs.id and arrival_rs.id) and s.departure_time is not null)
+            order by i_rcb.passenger_id, s.departure_time, rs.station_number_in_route
         loop
             day := DATE(i_trip.departure_time);
             index := array_position(day_list, day);
@@ -87,6 +97,7 @@ begin
                 rep := sum_by_days[index];
                 sum_by_days[index] := (rep.thread_count + thread_append, rep.pass_count + pass_append, rep.distance_sum + i_trip.distance, rep.calc_day)::aggregation_report;
             end if;
+        end loop;
     end loop;
 
     foreach i_report in array sum_by_days loop

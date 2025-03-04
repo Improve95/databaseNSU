@@ -40,11 +40,12 @@ declare
     index int;
     day date;
     day_list date[];
+    rep aggregation_report;
     sum_by_days aggregation_report[];
     pass_append int := 0;
     thread_append int := 0;
 --     uniq_list uniq_arr[];
-    uniq_list jsonb := '{}';
+    uniq_list jsonb;
 
     trip_list full_trip[];
     i_trip full_trip;
@@ -57,7 +58,6 @@ declare
 
     final_report accumulated_report[];
 begin
---     for i_rcb in rcb_cursor loop
     for trip_list in
         select array_agg(row(rcb.passenger_id, src.thread_id, src.departure_time, src.station_number_in_route, src.distance)::full_trip)
         from railroads_cars_booking rcb
@@ -68,7 +68,6 @@ begin
             ) as src on ((src.schedule_id between rcb.departure_point and rcb.arrival_point) and departure_time is not null)
         group by rcb.passenger_id, src.thread_id, src.departure_time, src.station_number_in_route, src.distance
     loop
-        raise notice '%', trip_list;
         foreach i_trip in array trip_list loop
             day := DATE(i_trip.departure_time);
             index := array_position(day_list, day);
@@ -76,31 +75,38 @@ begin
             pass_append := 0;
             thread_append := 0;
 
-            if not (i_trip.departure_time::date = any(day_list)) then
-                day_list := array_append(day_list, i_trip.departure_time::date);
-                sum_by_days := array_append(sum_by_days, (1, 1, i_trip.distance, i_trip.departure_time::date)::aggregation_report);
-                uniq_list := uniq_list || jsonb_build_object(i_trip.departure_time::date::text, jsonb_build_object('passengers', jsonb_build_array(i_trip.pass_id), 'threads', jsonb_build_array(i_trip.thread_id)));
+            raise notice 'here1';
+            if not uniq_list ? day::text then
+                raise notice 'here2';
+                sum_by_days := array_append(sum_by_days, (1, 1, i_trip.distance, day)::aggregation_report);
+                uniq_list := uniq_list || json_build_object(
+                        DATE(day)::text,
+                        json_build_object('passengers', json_build_array(i_trip.pass_id),
+                                          'threads', json_build_array(i_trip.thread_id)
+                        ));
+                raise notice '%', uniq_list;
             else
-                if not (i_trip.pass_id::text = any(uniq_list->i_trip.departure_time::date::text->'passengers')) then
+                /*if not (i_trip.pass_id::text = any(uniq_list->i_trip.departure_time::date::text->'passengers')) then
                     uniq_list := jsonb_set(uniq_list, array[i_trip.departure_time::date::text, 'passengers'], (uniq_list->i_trip.departure_time::date::text->'passengers') || jsonb_build_array(i_trip.pass_id), true);
                 end if;
                 if not (i_trip.thread_id::text = any(uniq_list->i_trip.departure_time::date::text->'threads')) then
                     uniq_list := jsonb_set(uniq_list, array[i_trip.departure_time::date::text, 'threads'], (uniq_list->i_trip.departure_time::date::text->'threads') || jsonb_build_array(i_trip.thread_id), true);
-                end if;
+                end if;*/
+--                 if i_trip.pass_id::text ? uniq_list->DATE(i_trip.departure_time)::text->'passengers' then
 
-                for i_report in select * from unnest(sum_by_days) loop
+--                 end if;
+                /*for i_report in select * from unnest(sum_by_days) loop
                     if i_report.calc_day = i_trip.departure_time::date then
                         i_report.thread_count := i_report.thread_count + 1;
                         i_report.pass_count := i_report.pass_count + 1;
                         i_report.distance_sum := i_report.distance_sum + i_trip.distance;
                     end if;
-                end loop;
+                end loop;*/
             end if;
-
 
             /*if index is null then
                 day_list := array_append(day_list, day);
-                uniq_list := array_append(uniq_list, row(array[I_trip.pass_id], array[I_trip.thread_id])::uniq_arr);
+                uniq_list := array_append(uniq_list, row(array[i_trip.pass_id], array[i_trip.thread_id])::uniq_arr);
                 sum_by_days := array_append(sum_by_days, (1, 1, i_trip.distance, day)::aggregation_report);
             else
                 if array_position((uniq_list[index]::uniq_arr).passenger_arr, i_trip.pass_id) is null then

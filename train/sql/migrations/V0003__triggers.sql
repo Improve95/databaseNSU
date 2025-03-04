@@ -16,7 +16,6 @@ begin
     where rc.id = new_rcb.railroad_car_id;
     trains_id := array_append(trains_id, train_id);
     foreach t_id in array trains_id loop
-        raise notice '%', t_id;
         if t_id != trains_id[0] then
             raise exception 'trains_id incorrect';
         end if;
@@ -212,7 +211,6 @@ begin
         select array(
             select distinct id from unnest(all_ids) as id order by id
         ) into all_ids;
-        raise notice '%', all_ids;
         for i in 1..array_length(all_ids, 1) loop
             if all_ids[i] != i then
                 new_s.id := i;
@@ -251,7 +249,6 @@ begin
         inner join railroads_cars_booking rcb on rc.id = rcb.railroad_car_id
     where t.id = delete_t.id;
 
-    raise notice '% %', delete_t, booking_count;
     if booking_count > 300 then
         insert into deleted_trains select *, booking_count from (select delete_t.*);
     end if;

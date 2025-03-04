@@ -44,7 +44,6 @@ declare
     pass_append int := 0;
     thread_append int := 0;
     uniq_list uniq_arr[];
---     uniq_list jsonb = '{}';
 
     i_trip full_trip;
     i_report aggregation_report;
@@ -88,31 +87,6 @@ begin
                 rep := sum_by_days[index];
                 sum_by_days[index] := (rep.thread_count + thread_append, rep.pass_count + pass_append, rep.distance_sum + i_trip.distance, rep.calc_day)::aggregation_report;
             end if;
-
-            /*if not uniq_list ? day::text then
-                sum_by_days := array_append(sum_by_days, (1, 1, i_trip.distance, day)::aggregation_report);
-                day_list := array_append(day_list, day);
-                uniq_list := uniq_list || json_build_object(
-                        DATE(day)::text,
-                        json_build_object('passengers', json_build_array(i_trip.pass_id::text),
-                                          'threads', json_build_array(i_trip.thread_id::text)
-                        ))::jsonb;
-            else
-                if not (uniq_list->i_trip.departure_time::date::text->'passengers' ? i_trip.pass_id::text) then
-                    uniq_list := jsonb_set(uniq_list, array[i_trip.departure_time::date::text, 'passengers'],
-                        (uniq_list->i_trip.departure_time::date::text->'passengers') || jsonb_build_array(i_trip.pass_id), true
-                    );
-                    pass_append := 1;
-                end if;
-                if not (uniq_list->i_trip.departure_time::date::text->'threads' ? i_trip.thread_id::text) then
-                    uniq_list := jsonb_set(uniq_list, array[i_trip.departure_time::date::text, 'threads'],
-                        (uniq_list->i_trip.departure_time::date::text->'threads') || jsonb_build_array(i_trip.thread_id), true
-                    );
-                    thread_append := 1;
-                end if;
-                rep := sum_by_days[index];
-                sum_by_days[index] := (rep.thread_count + thread_append, rep.pass_count + pass_append, rep.distance_sum + i_trip.distance, rep.calc_day)::aggregation_report;
-            end if;*/
     end loop;
 
     foreach i_report in array sum_by_days loop

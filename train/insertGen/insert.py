@@ -271,7 +271,7 @@ def insertRailroadBooking(dbConnect):
             threadRailcars = cursor.fetchall()
 
             for railroad in threadRailcars:
-                for place in range(100):
+                for place in range(250):
                     railroadCarBook.append((railroad[0], place, threadSchedule[0][0], threadSchedule[-1][0], passanger))
 
                 passanger %= 1000

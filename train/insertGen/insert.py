@@ -132,13 +132,13 @@ def insertStations(dbConnect):
 def insertRoutes(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table routes cascade")
-        cursor.execute("alter sequence routes_id_seq restart with 1")
+        # cursor.execute("alter sequence routes_id_seq restart with 1")
 
         nameNumber = 0
         routesInsert = []
     
         global num_routes
-        for route in allStationsInRoutes:
+        for route in allStationsInRoutes[:5]:
             num_routes += 1
             nameNumber += 1
             routesInsert.append(("route" + str(nameNumber), route[0] + 1, route[route.__len__() - 1] + 1))
@@ -222,7 +222,7 @@ def insertRoutesStructure(dbConnect):
 def insertSchedule(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table schedule cascade")
-        cursor.execute("alter sequence schedule_id_seq restart with 1")
+        # cursor.execute("alter sequence schedule_id_seq restart with 1")
 
         schedule = []
         cursor.execute("select * from threads")

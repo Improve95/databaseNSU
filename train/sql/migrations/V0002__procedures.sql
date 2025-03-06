@@ -37,6 +37,7 @@ create index idx_railroads_cars_booking_departure_arrival ON railroads_cars_book
 create or replace function get_trip_report() returns accumulated_report[] as $$
 declare
     index int;
+    index2 int;
     day date;
     day_list date[];
     rep aggregation_report;
@@ -47,6 +48,7 @@ declare
 
     i_trip full_trip;
     i_report aggregation_report;
+    test_report aggregation_report;
 
     prev_report aggregation_report := null;
     tpd_day_sum tpd := (0, 0, 0, null);
@@ -89,7 +91,10 @@ begin
         end if;
     end loop;
 
-    foreach i_report in array sum_by_days loop
+    foreach i_report in array
+        (select array_agg(elem order by (elem::aggregation_report).calc_day) as sorted_array
+         from unnest(sum_by_days) AS elem)
+    loop
         if extract(quarter from prev_report.calc_day) != extract(quarter from i_report.calc_day) then
             final_report := array_append(final_report, row(tpd_day_sum.thread_count, tpd_day_sum.pass_count, tpd_day_sum.dist_sum,
                 extract(quarter from prev_report.calc_day)::text || '-' || extract(year from prev_report.calc_day)::text)::accumulated_report

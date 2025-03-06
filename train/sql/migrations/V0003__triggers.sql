@@ -1,25 +1,34 @@
 /* -- 1 -- */
+drop type if exists trr cascade;
+create type trr as (
+    t_train_id int,
+    t_route_id int,
+    s_route_id int
+);
 create or replace function check_train_on_route() returns trigger as $$
 declare
     new_rcb railroads_cars_booking%rowtype;
-    trains_id int[];
     train_id int;
-    t_id int;
+    trr_list trr[];
+    i_trr trr;
 begin
     new_rcb := new;
-    select array(
-        select t.train_id from schedule s
-        inner join threads t on s.thread_id = t.id
-        where s.id = new_rcb.departure_point or s.id = new_rcb.arrival_point
-    ) into trains_id;
     select rc.train_id into train_id from railroad_cars rc
     where rc.id = new_rcb.railroad_car_id;
-    trains_id := array_append(trains_id, train_id);
-    foreach t_id in array trains_id loop
-        if t_id != trains_id[0] then
-            raise exception 'trains_id incorrect';
+    select array (
+        select row(t.train_id, t.route_id, rs.route_id)::trr from schedule s
+            inner join threads t on s.thread_id = t.id
+            inner join routes_structure rs on s.route_structure_id = rs.id
+        where s.id = new_rcb.departure_point or s.id = new_rcb.arrival_point
+    ) into trr_list;
+    foreach i_trr in array trr_list loop
+        if (i_trr.t_train_id != train_id or
+            i_trr.t_route_id != (trr_list[0]::trr).t_route_id or
+            i_trr.t_route_id != i_trr.s_route_id) then
+            raise exception 'trains_id or route_id incorrect';
         end if;
     end loop;
+
     return new_rcb;
 end;
 $$ language plpgsql;
@@ -103,7 +112,6 @@ declare
     first_rs routes_structure%rowtype;
     cur_rs routes_structure%rowtype;
     last_rs routes_structure%rowtype;
-    tmp_rs routes_structure%rowtype;
 
     schedule_list schedule_ex[];
     prev_schedule schedule_ex;
@@ -196,29 +204,25 @@ create or replace trigger check_schedule_on_insert
 create or replace function set_free_route_number() returns trigger as $$
 declare
     new_s schedule%rowtype;
-    all_ids int[];
-    schedule_ids int[];
+    new_id int;
+    cur_max_id int;
 begin
     new_s := new;
     if new_s.id is null then
-        select array(
-            select r.id from routes r
-        ) into all_ids;
-        select array (
-            select s.id from schedule s
-        ) into schedule_ids;
-        all_ids := array_cat(all_ids, schedule_ids);
-        select array(
-            select distinct id from unnest(all_ids) as id order by id
-        ) into all_ids;
-        for i in 1..array_length(all_ids, 1) loop
-            if all_ids[i] != i then
-                new_s.id := i;
-                return new_s;
-            end if;
-        end loop;
-        new_s.id := array_length(all_ids, 1) + 1;
-        return new_s;
+        select rown from (
+            select id, row_number() over (order by id) as rown from (
+                select s.id as id from schedule s
+                    union
+                select r.id as id from routes r
+            ) as id_rown
+        order by rown
+        limit 1
+        ) where rown != id;
+
+        if new_id is null then
+--             new_id := ;
+        end if;
+        new_s.id = new_id;
     end if;
 
     return new_s;
@@ -241,16 +245,23 @@ create table deleted_trains (
 create or replace function log_train() returns trigger as $$
 declare
     delete_t trains%rowtype;
-    booking_count int;
+    i_rc railroad_cars%rowtype;
+    total_booking_count int;
+    current_booking_count int;
 begin
     delete_t := old;
-    select count(*) into booking_count from trains t
+    /*select count(*) into total_booking_count from trains t
         inner join railroad_cars rc on t.id = rc.train_id
         inner join railroads_cars_booking rcb on rc.id = rcb.railroad_car_id
-    where t.id = delete_t.id;
+    where t.id = delete_t.id;*/
 
-    if booking_count > 300 then
-        insert into deleted_trains select *, booking_count from (select delete_t.*);
+    for i_rc in (select * from railroad_cars rc where rc.train_id = delete_t.id) loop
+        select count(*) into current_booking_count from railroads_cars_booking rcb where rcb.railroad_car_id = i_rc.id;
+        total_booking_count := total_booking_count + current_booking_count;
+    end loop;
+
+    if total_booking_count > 300 then
+        insert into deleted_trains select *, total_booking_count from (select delete_t.*);
     end if;
 
     return delete_t;

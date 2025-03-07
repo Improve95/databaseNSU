@@ -132,7 +132,7 @@ def insertStations(dbConnect):
 def insertRoutes(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table routes cascade")
-        # cursor.execute("alter sequence routes_id_seq restart with 1")
+        cursor.execute("alter sequence routes_id_seq restart with 1")
 
         nameNumber = 0
         routesInsert = []
@@ -222,7 +222,7 @@ def insertRoutesStructure(dbConnect):
 def insertSchedule(dbConnect):
     with dbConnect.cursor() as cursor:
         cursor.execute("truncate table schedule cascade")
-        # cursor.execute("alter sequence schedule_id_seq restart with 1")
+        cursor.execute("alter sequence schedule_id_seq restart with 1")
 
         schedule = []
         cursor.execute("select * from threads")

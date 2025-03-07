@@ -205,22 +205,23 @@ create or replace function set_free_route_number() returns trigger as $$
 declare
     new_s schedule%rowtype;
     new_id int;
-    cur_max_id int;
 begin
     new_s := new;
     if new_s.id is null then
-        select rown from (
+        select rown into new_id from (
             select id, row_number() over (order by id) as rown from (
                 select s.id as id from schedule s
                     union
                 select r.id as id from routes r
             ) as id_rown
+        ) where rown != id
         order by rown
-        limit 1
-        ) where rown != id;
+        limit 1;
+
+        raise notice '%', new_id;
 
         if new_id is null then
---             new_id := ;
+            new_id := nextval('"trains"."schedule_id_seq"');
         end if;
         new_s.id = new_id;
     end if;

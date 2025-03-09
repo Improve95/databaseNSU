@@ -1,8 +1,8 @@
 services:
   postgres:
+    container_name: ${DB_COMPOSE_PROJECT_NAME}
     env_file:
       - .env
-    container_name: ${COMPOSE_PROJECT_NAME}
     image: 'postgres:16.4'
     environment:
       POSTGRES_USER: ${PG_USER}
@@ -12,3 +12,28 @@ services:
       - ./pgdata:/var/lib/postgresql/data
     ports:
       - "${PG_PORT}:5432"
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+#      start_period: 5s
+#      interval: 5s
+#      timeout: 10s
+#      retries: 5
+
+  flyway:
+    container_name: ${FLYWAY_COMPOSE_PROJECT_NAME}
+    env_file:
+      - .env
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/${PG_DATABASE}
+      FLYWAY_USER: ${PG_USER}
+      FLYWAY_PASSWORD: ${PG_PASSWORD}
+      FLYWAY_CONNECT_RETRIES: 5
+    command:
+      - migrate
+    volumes:
+      - ./database/migrations:/flyway/sql
+    image: 'flyway/flyway:11.3.4'
+    depends_on:
+      postgres:
+        condition: service_started
+        restart: true

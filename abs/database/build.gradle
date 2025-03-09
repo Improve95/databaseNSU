@@ -7,6 +7,6 @@ flyway {
     user = env.fetch('PG_USER')
     password = env.fetch('PG_PASSWORD')
     locations = ['filesystem:sql/migrations']
-    schemas = ['trains']
-    cleanDisabled = false
+    schemas = ['public']
+    cleanDisabled = true
 }

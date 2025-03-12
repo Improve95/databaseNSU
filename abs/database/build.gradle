@@ -1,3 +1,9 @@
+buildscript {
+    dependencies {
+        classpath 'org.postgresql:postgresql:42.6.0'
+    }
+}
+
 plugins {
     id 'org.flywaydb.flyway' version '9.21.0'
 }
@@ -6,7 +12,7 @@ flyway {
     url = "jdbc:postgresql://${env.fetch('PG_HOST')}:${env.fetch('PG_PORT')}/${env.fetch('PG_DATABASE')}"
     user = env.fetch('PG_USER')
     password = env.fetch('PG_PASSWORD')
-    locations = ['filesystem:sql/migrations']
+    locations = ['filesystem:migrations']
     schemas = ['public']
-    cleanDisabled = true
+    cleanDisabled = false
 }

@@ -1,4 +1,4 @@
-package ru.improve.abs.core.configuration;
+package ru.improve.abs.core.configuration.security;
 
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;

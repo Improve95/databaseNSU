@@ -1,4 +1,4 @@
-package ru.improve.abs.api.dto.login;
+package ru.improve.abs.api.dto.auth;
 
 import lombok.Builder;
 import lombok.Data;

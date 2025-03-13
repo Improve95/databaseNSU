@@ -7,7 +7,9 @@ public class ApiPaths {
 
     public static final String USERS = "/users";
 
-    public static final String SESSIONS = "/sessions";
+    public static final String AUTH = "/auth";
+
+    public static final String SIGN_IN = "/sign-in";
 
     public static final String LOGIN = "/login";
 

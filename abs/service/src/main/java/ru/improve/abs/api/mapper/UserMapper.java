@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import ru.improve.abs.api.dto.user.GetUserResponse;
-import ru.improve.abs.api.dto.user.PostUserRequest;
-import ru.improve.abs.api.dto.user.PostUserResponse;
+import ru.improve.abs.api.dto.auth.SignInRequest;
+import ru.improve.abs.api.dto.auth.SignInResponse;
 import ru.improve.abs.core.model.User;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
@@ -14,9 +14,9 @@ import ru.improve.abs.core.model.User;
 )
 public interface UserMapper {
 
-    User toUser(PostUserRequest postUserRequest);
+    User toUser(SignInRequest signInRequest);
 
-    PostUserResponse toPostUserResponse(User user);
+    SignInResponse toSignInUserResponse(User user);
 
     GetUserResponse toGetUserResponse(User user);
 }

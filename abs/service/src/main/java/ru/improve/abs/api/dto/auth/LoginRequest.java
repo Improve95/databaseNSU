@@ -1,4 +1,4 @@
-package ru.improve.abs.api.dto.login;
+package ru.improve.abs.api.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

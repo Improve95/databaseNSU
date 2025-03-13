@@ -1,4 +1,4 @@
-package ru.improve.abs.api.dto.user;
+package ru.improve.abs.api.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +8,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @Data
 @Jacksonized
-public class PostUserRequest {
+public class SignInRequest {
 
     @NotNull
     @NotBlank

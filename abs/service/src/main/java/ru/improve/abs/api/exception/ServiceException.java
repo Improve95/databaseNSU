@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class ServiceException extends RuntimeException {
 
-    private ErrorCode code;
+    private final ErrorCode code;
 
     private String[] params = null;
 
@@ -26,5 +26,11 @@ public class ServiceException extends RuntimeException {
         this.code = errorCode;
         this.message = message;
         this.params = params;
+    }
+
+    public ServiceException(ErrorCode errorCode, String message, Throwable cause) {
+        this.code = errorCode;
+        this.message = message;
+        this.cause = cause;
     }
 }

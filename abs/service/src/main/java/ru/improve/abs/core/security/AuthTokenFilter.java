@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.improve.abs.core.security.service.AuthService;
 
 import java.io.IOException;
 
@@ -19,7 +20,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        if (authService.authenticate(request, response)) {
+        if (authService.setAuthentication(request, response)) {
             filterChain.doFilter(request, response);
         }
     }

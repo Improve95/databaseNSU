@@ -209,7 +209,7 @@ begin
     new_s := new;
     if new_s.id is null then
         select rown into new_id from (
-            select id, row_number() over (order by id) as rown from (
+            select id, rank() over (order by id desc) as rown from (
                 select s.id as id from schedule s
                     union
                 select r.id as id from routes r
@@ -246,29 +246,17 @@ create table deleted_trains (
 create or replace function log_train() returns trigger as $$
 declare
     delete_t trains%rowtype;
-    i_rc railroad_cars%rowtype;
     total_booking_count int;
     current_booking_count int;
 begin
     delete_t := old;
-    /*select count(*) into total_booking_count from trains t
-        inner join railroad_cars rc on t.id = rc.train_id
-        inner join railroads_cars_booking rcb on rc.id = rcb.railroad_car_id
-    where t.id = delete_t.id;*/
-
-    for i_rc in (select * from railroad_cars rc where rc.train_id = delete_t.id) loop
-        select count(*) into current_booking_count from railroads_cars_booking rcb where rcb.railroad_car_id = i_rc.id;
-        total_booking_count := total_booking_count + current_booking_count;
-    end loop;
-
+    select count(*) into current_booking_count from
+        (select t.id from trains t where t.id = delete_t.id) as tid
+    inner join railroad_cars rc on tid = rc.train_id
+    inner join railroads_cars_booking rcb on rc.id = rcb.railroad_car_id;
     if total_booking_count > 300 then
-        insert into deleted_trains select *, total_booking_count from (select delete_t.*);
+        insert into deleted_trains select *, total_booking_count from delete_t;
     end if;
-
     return delete_t;
 end;
 $$ language plpgsql;
-
-create or replace trigger log_train_on_delete
-    before delete on trains
-    for each row execute function log_train();

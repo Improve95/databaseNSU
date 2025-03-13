@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,9 @@ import ru.improve.abs.api.dto.auth.LoginResponse;
 import ru.improve.abs.api.dto.auth.SignInRequest;
 import ru.improve.abs.api.dto.auth.SignInResponse;
 import ru.improve.abs.api.exception.ServiceException;
+import ru.improve.abs.api.mapper.AuthMapper;
 import ru.improve.abs.api.mapper.UserMapper;
+import ru.improve.abs.core.model.Session;
 import ru.improve.abs.core.model.User;
 import ru.improve.abs.core.repository.UserRepository;
 import ru.improve.abs.core.security.UserDetailService;
@@ -52,6 +55,8 @@ public class AuthServiceImp implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserMapper userMapper;
+
+    private final AuthMapper authMapper;
 
     @Override
     public boolean setAuthentication(HttpServletRequest request, HttpServletResponse response) {
@@ -108,7 +113,26 @@ public class AuthServiceImp implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
+        Authentication authentication;
+        try {
+            authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getLogin(), loginRequest.getPassword())
+            );
+        } catch (AuthenticationException ex) {
+            throw new ServiceException(UNAUTHORIZED);
+        }
 
-        return null;
+        User user = (User) authentication.getPrincipal();
+        if (user == null) {
+            throw new ServiceException(UNAUTHORIZED);
+        }
+
+        Session session = sessionService.create(user);
+        Jwt accessTokenJwt = tokenService.generateToken(user, session);
+
+        LoginResponse loginResponse = authMapper.toLoginResponse(session);
+        loginResponse.setAccessToken(accessTokenJwt.getTokenValue());
+
+        return loginResponse;
     }
 }

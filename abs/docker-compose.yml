@@ -27,7 +27,6 @@ services:
       FLYWAY_URL: jdbc:postgresql://postgres:5432/${PG_DATABASE}
       FLYWAY_USER: ${PG_USER}
       FLYWAY_PASSWORD: ${PG_PASSWORD}
-      FLYWAY_CONNECT_RETRIES: 5
     command:
       - migrate
     volumes:

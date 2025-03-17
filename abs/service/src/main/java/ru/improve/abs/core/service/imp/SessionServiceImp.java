@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.improve.abs.api.exception.ServiceException;
-import ru.improve.abs.core.configuration.security.SessionConfig;
+import ru.improve.abs.configuration.security.SessionConfig;
 import ru.improve.abs.core.model.Session;
 import ru.improve.abs.core.model.User;
 import ru.improve.abs.core.repository.SessionRepository;

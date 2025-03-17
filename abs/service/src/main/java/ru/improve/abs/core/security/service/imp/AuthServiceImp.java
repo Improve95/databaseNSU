@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import ru.improve.abs.api.dto.auth.LoginRequest;
 import ru.improve.abs.api.dto.auth.LoginResponse;
@@ -27,6 +27,7 @@ import ru.improve.abs.api.mapper.AuthMapper;
 import ru.improve.abs.api.mapper.UserMapper;
 import ru.improve.abs.core.model.Session;
 import ru.improve.abs.core.model.User;
+import ru.improve.abs.core.repository.SessionRepository;
 import ru.improve.abs.core.repository.UserRepository;
 import ru.improve.abs.core.security.UserDetailService;
 import ru.improve.abs.core.security.service.AuthService;
@@ -34,6 +35,7 @@ import ru.improve.abs.core.security.service.TokenService;
 import ru.improve.abs.core.service.SessionService;
 import ru.improve.abs.util.database.DatabaseUtil;
 
+import static ru.improve.abs.api.exception.ErrorCode.NOT_FOUND;
 import static ru.improve.abs.api.exception.ErrorCode.SESSION_IS_OVER;
 import static ru.improve.abs.api.exception.ErrorCode.UNAUTHORIZED;
 
@@ -50,6 +52,8 @@ public class AuthServiceImp implements AuthService {
 
     private final SessionService sessionService;
 
+    private final SessionRepository sessionRepository;
+
     private final TokenService tokenService;
 
     private final PasswordEncoder passwordEncoder;
@@ -64,13 +68,14 @@ public class AuthServiceImp implements AuthService {
         Authentication auth = securityContext.getAuthentication();
         if (!(auth instanceof JwtAuthenticationToken)) {
             log.info("Not authenticated request: {}: {}", request.getMethod(), request.getRequestURL());
-            return false;
+            return true;
         }
 
         try {
             Jwt jwtToken = (Jwt) auth.getPrincipal();
 
-            if (!sessionService.checkSessionEnableById(tokenService.getSessionId(jwtToken))) {
+            long sessionId = tokenService.getSessionId(jwtToken);
+            if (!sessionService.checkSessionEnableById(sessionId)) {
                 throw new ServiceException(SESSION_IS_OVER);
             }
 
@@ -78,7 +83,7 @@ public class AuthServiceImp implements AuthService {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
             );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            authentication.setDetails(new WebAuthenticationDetails(request.getRemoteAddr(), String.valueOf(sessionId)));
             securityContext.setAuthentication(authentication);
             return true;
         } catch (ServiceException ex) {
@@ -134,5 +139,17 @@ public class AuthServiceImp implements AuthService {
         loginResponse.setAccessToken(accessTokenJwt.getTokenValue());
 
         return loginResponse;
+    }
+
+    @Transactional
+    @Override
+    public void logout() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication auth = securityContext.getAuthentication();
+        WebAuthenticationDetails details = (WebAuthenticationDetails) auth.getDetails();
+        long sessionId = Long.parseLong(details.getSessionId());
+        Session session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new ServiceException(NOT_FOUND, "session", "id"));
+        session.setEnable(false);
     }
 }

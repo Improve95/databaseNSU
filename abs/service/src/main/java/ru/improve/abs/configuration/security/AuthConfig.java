@@ -1,8 +1,9 @@
-package ru.improve.abs.core.configuration.security;
+package ru.improve.abs.configuration.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -18,6 +19,9 @@ import org.springframework.security.oauth2.server.resource.web.authentication.Be
 import org.springframework.security.web.SecurityFilterChain;
 import ru.improve.abs.core.security.service.AuthService;
 import ru.improve.abs.core.security.AuthTokenFilter;
+
+import static ru.improve.abs.api.ApiPaths.AUTH;
+import static ru.improve.abs.api.ApiPaths.LOGOUT;
 
 @RequiredArgsConstructor
 @Configuration
@@ -50,6 +54,11 @@ public class AuthConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         auth -> auth
+                                .requestMatchers(HttpMethod.POST, AUTH + LOGOUT).authenticated()
+                                .requestMatchers(HttpMethod.GET, "/swagger-ui/index.html").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/swagger.html").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/stat/api-docs/**").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(conf -> conf.jwt(Customizer.withDefaults()))

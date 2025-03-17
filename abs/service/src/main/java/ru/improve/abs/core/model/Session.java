@@ -40,5 +40,6 @@ public class Session {
     private Instant expiredAt;
 
     @Column(name = "is_enable")
-    private boolean isEnable;
+    @Builder.Default
+    private boolean isEnable = true;
 }

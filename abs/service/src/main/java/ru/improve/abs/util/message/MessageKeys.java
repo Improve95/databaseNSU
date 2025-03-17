@@ -5,12 +5,14 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class MessageKeys {
 
-    public static String TITLE_INTERNAL_SERVER_ERROR = "title.internal_server_error";
-    public static String TITLE_ILLEGAL_DTO_VALUE = "title.illegal_dto_value";
-    public static String TITLE_NOT_FOUND = "title.not_found";
-    public static String TITLE_ALREADY_EXIST = "title.already_exist";
+    public static final String TITLE_INTERNAL_SERVER_ERROR = "title.internal_server_error";
+    public static final String TITLE_ILLEGAL_DTO_VALUE = "title.illegal_dto_value";
+    public static final String TITLE_NOT_FOUND = "title.not_found";
+    public static final String TITLE_ALREADY_EXIST = "title.already_exist";
 
-    public static String TITLE_UNAUTHORIZED = "title.unauthorized";
-    public static String SESSION_IS_OVER = "session.is_over";
-    public static String SESSION_TOKEN_INVALID = "session.token_invalid";
+    public static final String TITLE_UNAUTHORIZED = "title.unauthorized";
+    public static final String SESSION_IS_OVER = "session.is_over";
+    public static final String SESSION_TOKEN_INVALID = "session.token_invalid";
+
+    public static final String SWAGGER_SECURITY_SCHEME_NAME = "swagger.security_scheme_name";
 }

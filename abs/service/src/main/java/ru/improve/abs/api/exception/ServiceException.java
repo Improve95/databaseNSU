@@ -22,10 +22,9 @@ public class ServiceException extends RuntimeException {
         this.params = params;
     }
 
-    public ServiceException(ErrorCode errorCode, String message, String[] params) {
+    public ServiceException(ErrorCode errorCode, Throwable cause) {
         this.code = errorCode;
-        this.message = message;
-        this.params = params;
+        this.cause = cause;
     }
 
     public ServiceException(ErrorCode errorCode, String message, Throwable cause) {

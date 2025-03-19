@@ -35,6 +35,8 @@ import ru.improve.abs.core.security.service.TokenService;
 import ru.improve.abs.core.service.SessionService;
 import ru.improve.abs.util.database.DatabaseUtil;
 
+import static ru.improve.abs.api.exception.ErrorCode.ALREADY_EXIST;
+import static ru.improve.abs.api.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 import static ru.improve.abs.api.exception.ErrorCode.NOT_FOUND;
 import static ru.improve.abs.api.exception.ErrorCode.SESSION_IS_OVER;
 import static ru.improve.abs.api.exception.ErrorCode.UNAUTHORIZED;
@@ -110,7 +112,10 @@ public class AuthServiceImp implements AuthService {
         try {
             userRepository.save(user);
         } catch (DataIntegrityViolationException ex) {
-            DatabaseUtil.parseDatabaseException(ex);
+            if (DatabaseUtil.isUniqueConstraintException(ex)) {
+                throw new ServiceException(ALREADY_EXIST, "user", "id");
+            }
+            throw new ServiceException(INTERNAL_SERVER_ERROR, ex);
         }
 
         return userMapper.toSignInUserResponse(user);

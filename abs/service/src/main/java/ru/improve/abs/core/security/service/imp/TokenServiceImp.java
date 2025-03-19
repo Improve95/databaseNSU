@@ -17,7 +17,7 @@ import ru.improve.abs.core.security.service.TokenService;
 import ru.improve.abs.util.message.MessageKeys;
 
 import static ru.improve.abs.api.exception.ErrorCode.ILLEGAL_VALUE;
-import static ru.improve.abs.util.Constants.SESSION_ID_CLAIM;
+import static ru.improve.abs.configuration.security.SecurityConstants.SESSION_ID_CLAIM;
 
 @RequiredArgsConstructor
 @Service

@@ -11,7 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
-import ru.improve.abs.util.message.MessageKeys;
 
 import static ru.improve.abs.api.exception.ErrorCode.ALREADY_EXIST;
 import static ru.improve.abs.api.exception.ErrorCode.ILLEGAL_DTO_VALUE;
@@ -23,6 +22,7 @@ import static ru.improve.abs.util.message.MessageKeys.TITLE_ALREADY_EXIST;
 import static ru.improve.abs.util.message.MessageKeys.TITLE_ILLEGAL_DTO_VALUE;
 import static ru.improve.abs.util.message.MessageKeys.TITLE_INTERNAL_SERVER_ERROR;
 import static ru.improve.abs.util.message.MessageKeys.TITLE_NOT_FOUND;
+import static ru.improve.abs.util.message.MessageKeys.TITLE_SESSION_IS_OVER;
 import static ru.improve.abs.util.message.MessageKeys.TITLE_UNAUTHORIZED;
 
 @Slf4j
@@ -30,15 +30,13 @@ import static ru.improve.abs.util.message.MessageKeys.TITLE_UNAUTHORIZED;
 @RestControllerAdvice
 public class ExceptionResolver {
 
-    private final MessageSource messageSource;
-
     private static ImmutableMap<ErrorCode, String> messageKeyMap = ImmutableMap.of(
             INTERNAL_SERVER_ERROR, TITLE_INTERNAL_SERVER_ERROR,
             ALREADY_EXIST, TITLE_ALREADY_EXIST,
             ILLEGAL_DTO_VALUE,  TITLE_ILLEGAL_DTO_VALUE,
             NOT_FOUND, TITLE_NOT_FOUND,
             UNAUTHORIZED, TITLE_UNAUTHORIZED,
-            SESSION_IS_OVER, MessageKeys.SESSION_IS_OVER
+            SESSION_IS_OVER, TITLE_SESSION_IS_OVER
     );
 
     private static ImmutableMap<ErrorCode, HttpStatus> httpStatusMap = ImmutableMap.of(
@@ -49,6 +47,8 @@ public class ExceptionResolver {
             UNAUTHORIZED, HttpStatus.UNAUTHORIZED,
             SESSION_IS_OVER, HttpStatus.UNAUTHORIZED
     );
+
+    private final MessageSource messageSource;
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> resolveHandleException(Exception ex) {
@@ -81,6 +81,10 @@ public class ExceptionResolver {
 
         if (ex.getMessage() != null) {
             message.append(": " + resolveMessage(ex.getMessage(), ex.getParams()));
+        }
+
+        if (ex.getCause() != null) {
+            message.append(", cause " + ex.getCause().getMessage());
         }
         return ErrorCodeMessagePair.of(code, message.toString());
     }

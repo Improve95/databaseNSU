@@ -70,7 +70,7 @@ public class ExceptionResolver {
         }
         return ErrorCodeMessagePair.of(
                 INTERNAL_SERVER_ERROR,
-                resolveMessage(messageKeyMap.get(INTERNAL_SERVER_ERROR.getCode()), null)
+                resolveMessage(messageKeyMap.get(INTERNAL_SERVER_ERROR), null)
         );
     }
 

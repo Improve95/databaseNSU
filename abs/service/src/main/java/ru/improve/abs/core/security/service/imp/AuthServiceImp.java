@@ -113,7 +113,7 @@ public class AuthServiceImp implements AuthService {
             userRepository.save(user);
         } catch (DataIntegrityViolationException ex) {
             if (DatabaseUtil.isUniqueConstraintException(ex)) {
-                throw new ServiceException(ALREADY_EXIST, "user", "id");
+                throw new ServiceException(ALREADY_EXIST, "user", "email");
             }
             throw new ServiceException(INTERNAL_SERVER_ERROR, ex);
         }

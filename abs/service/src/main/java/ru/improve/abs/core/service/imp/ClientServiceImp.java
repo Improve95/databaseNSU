@@ -42,7 +42,7 @@ public class ClientServiceImp implements ClientService {
             clientRepository.save(client);
         } catch (DataIntegrityViolationException ex) {
             if (DatabaseUtil.isUniqueConstraintException(ex)) {
-                throw new ServiceException(ALREADY_EXIST, "user", "id");
+                throw new ServiceException(ALREADY_EXIST, "client", "email");
             }
             throw new ServiceException(INTERNAL_SERVER_ERROR, ex);
         }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.improve.abs.api.controller.spec.RoleControllerSpec;
 import ru.improve.abs.api.dto.client.PostClientResponse;
 import ru.improve.abs.api.dto.client.PostClientRequest;
 import ru.improve.abs.core.service.ClientService;
@@ -18,7 +19,7 @@ import static ru.improve.abs.api.ApiPaths.ROLES;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(ROLES)
-public class RoleController {
+public class RoleController implements RoleControllerSpec {
 
     private final ClientService clientServiceImp;
 

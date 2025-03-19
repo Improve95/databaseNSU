@@ -17,11 +17,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.improve.abs.core.security.service.AuthService;
 import ru.improve.abs.core.security.AuthTokenFilter;
+import ru.improve.abs.core.security.service.AuthService;
 
 import static ru.improve.abs.api.ApiPaths.AUTH;
-import static ru.improve.abs.api.ApiPaths.LOGOUT;
+import static ru.improve.abs.api.ApiPaths.LOGIN;
+import static ru.improve.abs.api.ApiPaths.SIGN_IN;
 
 @RequiredArgsConstructor
 @Configuration
@@ -54,11 +55,15 @@ public class AuthConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers(HttpMethod.POST, AUTH + LOGOUT).authenticated()
-                                .requestMatchers(HttpMethod.GET, "/swagger-ui/index.html").permitAll()
+
                                 .requestMatchers(HttpMethod.GET, "/swagger.html").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/stat/api-docs/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+
+                                .requestMatchers(HttpMethod.POST, AUTH + SIGN_IN).permitAll()
+                                .requestMatchers(HttpMethod.POST, AUTH + LOGIN).permitAll()
+
                                 .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(conf -> conf.jwt(Customizer.withDefaults()))

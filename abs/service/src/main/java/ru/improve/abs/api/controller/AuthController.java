@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.improve.abs.api.controller.spec.AuthControllerSpec;
 import ru.improve.abs.api.dto.auth.LoginRequest;
 import ru.improve.abs.api.dto.auth.LoginResponse;
-import ru.improve.abs.api.dto.auth.SignInRequest;
-import ru.improve.abs.api.dto.auth.SignInResponse;
+import ru.improve.abs.api.dto.user.SignInRequest;
+import ru.improve.abs.api.dto.user.SignInResponse;
 import ru.improve.abs.core.security.service.AuthService;
 
 import static ru.improve.abs.api.ApiPaths.AUTH;

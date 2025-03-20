@@ -4,17 +4,24 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.improve.abs.api.dto.user.GetUserResponse;
+import ru.improve.abs.api.dto.user.UserResponse;
 import ru.improve.abs.api.exception.ServiceException;
-import ru.improve.abs.api.mapper.UserMapper;
 import ru.improve.abs.core.repository.UserRepository;
+import ru.improve.abs.core.security.service.RoleService;
 import ru.improve.abs.core.service.UserService;
+import ru.improve.abs.mapper.UserMapper;
+import ru.improve.abs.model.Role;
 import ru.improve.abs.model.User;
 
 import static ru.improve.abs.api.exception.ErrorCode.NOT_FOUND;
+import static ru.improve.abs.core.security.SecurityUtil.CLIENT_ROLE;
+import static ru.improve.abs.core.security.SecurityUtil.getUserFromAuthentication;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImp implements UserService {
+
+    private final RoleService roleService;
 
     private final UserRepository userRepository;
 
@@ -31,6 +38,20 @@ public class UserServiceImp implements UserService {
     @Override
     public GetUserResponse getUserByAuth() {
         return null;
+    }
+
+    @Transactional
+    @Override
+    public UserResponse becomeUserClient() {
+        User user = getUserFromAuthentication();
+
+        Role clientRole = roleService.findRoleByName(CLIENT_ROLE);
+        if (user.getRoles().contains(clientRole)) {
+            return userMapper.toUserResponse(user);
+        }
+        user.getRoles().add(clientRole);
+
+        return userMapper.toUserResponse(user);
     }
 
     @Transactional

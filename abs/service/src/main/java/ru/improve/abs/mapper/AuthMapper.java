@@ -1,4 +1,4 @@
-package ru.improve.abs.api.mapper;
+package ru.improve.abs.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

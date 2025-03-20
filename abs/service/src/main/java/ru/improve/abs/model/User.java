@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,9 +41,7 @@ public class User implements UserDetails {
 
     private String name;
 
-    @ToString.Exclude
-    @OneToOne(mappedBy = "user")
-    private Client client;
+    private String employment;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

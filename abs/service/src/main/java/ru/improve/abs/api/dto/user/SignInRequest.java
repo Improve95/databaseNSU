@@ -1,4 +1,4 @@
-package ru.improve.abs.api.dto.auth;
+package ru.improve.abs.api.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -36,4 +36,12 @@ public class SignInRequest {
     @NotBlank
     @Size(min = 8, max = 50)
     private String password;
+
+    @Schema(
+            example = "employment1"
+    )
+    @NotNull
+    @NotBlank
+    @Size(min = 8, max = 50)
+    private String employment;
 }

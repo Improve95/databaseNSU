@@ -3,21 +3,23 @@ package ru.improve.abs.core.service.imp;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.improve.abs.api.dto.client.PostClientResponse;
 import ru.improve.abs.api.dto.client.PostClientRequest;
+import ru.improve.abs.api.dto.client.PostClientResponse;
 import ru.improve.abs.api.exception.ServiceException;
 import ru.improve.abs.api.mapper.ClientMapper;
-import ru.improve.abs.core.model.Client;
-import ru.improve.abs.core.model.User;
 import ru.improve.abs.core.repository.ClientRepository;
+import ru.improve.abs.core.security.service.RoleService;
 import ru.improve.abs.core.service.ClientService;
+import ru.improve.abs.model.Client;
+import ru.improve.abs.model.Role;
+import ru.improve.abs.model.User;
 import ru.improve.abs.util.database.DatabaseUtil;
 
 import static ru.improve.abs.api.exception.ErrorCode.ALREADY_EXIST;
 import static ru.improve.abs.api.exception.ErrorCode.INTERNAL_SERVER_ERROR;
+import static ru.improve.abs.core.security.SecurityUtil.CLIENT_ROLE;
+import static ru.improve.abs.core.security.SecurityUtil.getUserFromAuthentication;
 
 @RequiredArgsConstructor
 @Service
@@ -25,24 +27,31 @@ public class ClientServiceImp implements ClientService {
 
     private final ClientRepository clientRepository;
 
-    private final ClientMapper clientMapper;
+    private final RoleService roleService;
 
-    private final SecurityContext securityContext = SecurityContextHolder.getContext();
+    private final ClientMapper clientMapper;
 
     @Transactional
     @Override
     public PostClientResponse createNewClient(PostClientRequest postClientRequest) {
-        User user = (User) securityContext.getAuthentication();
+        User user = getUserFromAuthentication();
+
+        Client existClient = user.getClient();
+        if (existClient != null) {
+            return clientMapper.toPostClientResponse(existClient);
+        }
+
+        Role clientRole = roleService.findRoleByName(CLIENT_ROLE);
+        user.getRoles().add(clientRole);
 
         Client client = clientMapper.toClient(postClientRequest);
-        client.setId(user.getId());
-        client.setUser(user);
+        client.setUserId(user.getId());
 
         try {
-            clientRepository.save(client);
+            client = clientRepository.save(client);
         } catch (DataIntegrityViolationException ex) {
             if (DatabaseUtil.isUniqueConstraintException(ex)) {
-                throw new ServiceException(ALREADY_EXIST, "client", "email");
+                throw new ServiceException(ALREADY_EXIST, "client", "id");
             }
             throw new ServiceException(INTERNAL_SERVER_ERROR, ex);
         }

@@ -9,5 +9,5 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class PostClientResponse {
 
-    private int id;
+    private int userId;
 }

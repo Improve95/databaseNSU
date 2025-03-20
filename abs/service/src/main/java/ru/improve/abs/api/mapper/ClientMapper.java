@@ -5,7 +5,7 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import ru.improve.abs.api.dto.client.PostClientRequest;
 import ru.improve.abs.api.dto.client.PostClientResponse;
-import ru.improve.abs.core.model.Client;
+import ru.improve.abs.model.Client;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,

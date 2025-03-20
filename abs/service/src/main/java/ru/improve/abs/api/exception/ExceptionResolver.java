@@ -83,7 +83,7 @@ public class ExceptionResolver {
             message.append(": " + resolveMessage(ex.getMessage(), ex.getParams()));
         }
 
-        if (ex.getCause() != null) {
+        if (ex.getCause() != null && ex.getCause().getMessage() != null) {
             message.append(", cause " + ex.getCause().getMessage());
         }
         return ErrorCodeMessagePair.of(code, message.toString());

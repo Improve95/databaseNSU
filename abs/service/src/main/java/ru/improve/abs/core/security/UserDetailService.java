@@ -4,19 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import ru.improve.abs.api.exception.ErrorCode;
-import ru.improve.abs.api.exception.ServiceException;
-import ru.improve.abs.core.repository.UserRepository;
+import ru.improve.abs.core.service.UserService;
 
 @RequiredArgsConstructor
 @Service
 public class UserDetailService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String login) {
-        return userRepository.findByEmail(login)
-                .orElseThrow(() -> new ServiceException(ErrorCode.NOT_FOUND, "user", "login"));
+        return userService.findUserByEmail(login);
     }
 }

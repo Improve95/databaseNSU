@@ -25,14 +25,14 @@ import ru.improve.abs.api.dto.auth.SignInResponse;
 import ru.improve.abs.api.exception.ServiceException;
 import ru.improve.abs.api.mapper.AuthMapper;
 import ru.improve.abs.api.mapper.UserMapper;
-import ru.improve.abs.core.model.Session;
-import ru.improve.abs.core.model.User;
 import ru.improve.abs.core.repository.SessionRepository;
 import ru.improve.abs.core.repository.UserRepository;
 import ru.improve.abs.core.security.UserDetailService;
 import ru.improve.abs.core.security.service.AuthService;
 import ru.improve.abs.core.security.service.TokenService;
 import ru.improve.abs.core.service.SessionService;
+import ru.improve.abs.model.Session;
+import ru.improve.abs.model.User;
 import ru.improve.abs.util.database.DatabaseUtil;
 
 import static ru.improve.abs.api.exception.ErrorCode.ALREADY_EXIST;
@@ -124,12 +124,15 @@ public class AuthServiceImp implements AuthService {
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         Authentication authentication;
+        if (!userRepository.existsByEmail(loginRequest.getLogin())) {
+            throw new ServiceException(NOT_FOUND, "user", "login");
+        }
         try {
             authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getLogin(), loginRequest.getPassword())
             );
         } catch (AuthenticationException ex) {
-            throw new ServiceException(UNAUTHORIZED);
+            throw new ServiceException(UNAUTHORIZED, ex);
         }
 
         User user = (User) authentication.getPrincipal();

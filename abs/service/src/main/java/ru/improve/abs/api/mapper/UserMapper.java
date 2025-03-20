@@ -6,7 +6,7 @@ import org.mapstruct.ReportingPolicy;
 import ru.improve.abs.api.dto.user.GetUserResponse;
 import ru.improve.abs.api.dto.auth.SignInRequest;
 import ru.improve.abs.api.dto.auth.SignInResponse;
-import ru.improve.abs.core.model.User;
+import ru.improve.abs.model.User;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,

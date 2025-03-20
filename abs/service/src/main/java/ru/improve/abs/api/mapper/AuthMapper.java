@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import ru.improve.abs.api.dto.auth.LoginResponse;
-import ru.improve.abs.core.model.Session;
+import ru.improve.abs.model.Session;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,

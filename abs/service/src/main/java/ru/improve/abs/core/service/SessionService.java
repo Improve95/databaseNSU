@@ -1,7 +1,7 @@
 package ru.improve.abs.core.service;
 
-import ru.improve.abs.core.model.Session;
-import ru.improve.abs.core.model.User;
+import ru.improve.abs.model.Session;
+import ru.improve.abs.model.User;
 
 public interface SessionService {
 

@@ -1,4 +1,4 @@
-package ru.improve.abs.core.model;
+package ru.improve.abs.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

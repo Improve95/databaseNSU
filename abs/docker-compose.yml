@@ -8,8 +8,8 @@ services:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DATABASE}
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
+#    volumes:
+#      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "${PG_PORT}:5432"
 #    healthcheck:
@@ -31,7 +31,7 @@ services:
       - migrate
     volumes:
       - ./database/migrations:/flyway/sql
-    image: 'flyway/flyway:11.3.4'
+    image: 'flyway/flyway'
     depends_on:
       postgres:
         condition: service_started

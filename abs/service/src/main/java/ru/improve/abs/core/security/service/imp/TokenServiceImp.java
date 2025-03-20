@@ -12,12 +12,12 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 import ru.improve.abs.api.exception.ServiceException;
-import ru.improve.abs.core.model.Session;
+import ru.improve.abs.model.Session;
 import ru.improve.abs.core.security.service.TokenService;
 import ru.improve.abs.util.message.MessageKeys;
 
 import static ru.improve.abs.api.exception.ErrorCode.ILLEGAL_VALUE;
-import static ru.improve.abs.configuration.security.SecurityConstants.SESSION_ID_CLAIM;
+import static ru.improve.abs.core.security.SecurityUtil.SESSION_ID_CLAIM;
 
 @RequiredArgsConstructor
 @Service

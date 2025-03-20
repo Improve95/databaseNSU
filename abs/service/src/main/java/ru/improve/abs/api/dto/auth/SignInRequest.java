@@ -13,6 +13,9 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class SignInRequest {
 
+    @Schema(
+            example = "name1"
+    )
     @NotNull
     @NotBlank
     @Size(min = 5, max = 50)

@@ -12,12 +12,12 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 import ru.improve.abs.api.exception.ServiceException;
-import ru.improve.abs.model.Session;
 import ru.improve.abs.core.security.service.TokenService;
-import ru.improve.abs.util.message.MessageKeys;
+import ru.improve.abs.model.Session;
 
 import static ru.improve.abs.api.exception.ErrorCode.ILLEGAL_VALUE;
 import static ru.improve.abs.core.security.SecurityUtil.SESSION_ID_CLAIM;
+import static ru.improve.abs.util.message.MessageKeys.SESSION_TOKEN_INVALID;
 
 @RequiredArgsConstructor
 @Service
@@ -49,7 +49,7 @@ public class TokenServiceImp implements TokenService {
         try {
             return jwtDecoder.decode(jwt);
         } catch (JwtException ex) {
-            throw new ServiceException(ILLEGAL_VALUE, MessageKeys.SESSION_TOKEN_INVALID, ex.getCause());
+            throw new ServiceException(ILLEGAL_VALUE, SESSION_TOKEN_INVALID, ex.getCause());
         }
     }
 }

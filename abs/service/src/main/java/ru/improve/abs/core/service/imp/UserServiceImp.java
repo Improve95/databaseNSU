@@ -9,7 +9,7 @@ import ru.improve.abs.api.exception.ServiceException;
 import ru.improve.abs.core.repository.UserRepository;
 import ru.improve.abs.core.service.RoleService;
 import ru.improve.abs.core.service.UserService;
-import ru.improve.abs.mapper.UserMapper;
+import ru.improve.abs.core.mapper.UserMapper;
 import ru.improve.abs.model.Role;
 import ru.improve.abs.model.User;
 

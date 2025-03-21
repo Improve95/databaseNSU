@@ -7,7 +7,7 @@ import ru.improve.abs.api.dto.role.RoleResponse;
 import ru.improve.abs.api.exception.ServiceException;
 import ru.improve.abs.core.repository.RoleRepository;
 import ru.improve.abs.core.service.RoleService;
-import ru.improve.abs.mapper.RoleMapper;
+import ru.improve.abs.core.mapper.RoleMapper;
 import ru.improve.abs.model.Role;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class RoleServiceImp implements RoleService {
 
     @Transactional
     @Override
-    public List<RoleResponse> getResponseList() {
+    public List<RoleResponse> getAllRoles() {
         return roleRepository.findAll().stream()
                 .map(roleMapper::toRoleResponse)
                 .toList();

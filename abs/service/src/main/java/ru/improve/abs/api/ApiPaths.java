@@ -19,7 +19,13 @@ public class ApiPaths {
 
     public static final String BECOME = "/become";
 
-    public static final String CLIENT = "/client";
+    public static final String CLIENT = "/clients";
+
+    public static final String CREDIT = "/credits";
+
+    public static final String REQUEST = "/requests";
+
+    public static final String TARIFF = "/tariffs";
 
     public static final String ID = "/{id}";
 }

@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -31,6 +32,12 @@ public class CreditRequest {
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
     private CreditTariff creditTariff;
+
+    @Column(name = "credit_amount")
+    private BigDecimal creditAmount;
+
+//    @Column(name = "credit_duration")
+//    private Duration creditDuration;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")

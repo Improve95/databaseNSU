@@ -1,4 +1,4 @@
-package ru.improve.abs.mapper;
+package ru.improve.abs.core.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -12,6 +12,7 @@ import ru.improve.abs.model.Role;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface RoleMapper {
+
 
     RoleResponse toRoleResponse(Role role);
 }

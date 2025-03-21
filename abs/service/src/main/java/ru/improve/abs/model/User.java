@@ -48,7 +48,7 @@ public class User implements UserDetails {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Session> sessions = null;
+    private List<Session> sessions;
 
     @ToString.Exclude
     @ManyToMany(
@@ -60,7 +60,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles = null;
+    private Set<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -16,11 +16,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.List;
 
 @Entity
-@Table(name = "credit_tariff")
+@Table(name = "credit_tariffs")
 @Builder
 @Data
 @AllArgsConstructor
@@ -33,14 +32,11 @@ public class CreditTariff {
 
     private String type;
 
-    @Column(name = "initial_amount")
-    private BigDecimal initialAmount;
+    @Column(name = "up_to_amount")
+    private BigDecimal upToAmount;
 
-    @Column(name = "final_amount")
-    private BigDecimal finalAmount;
-
-    @Column(name = "payment_period")
-    private Duration paymentPeriod;
+//    @Column(name = "up_to_credit_period")
+//    private Duration upToCreditPeriod;
 
     @Column(name = "credit_percent")
     private int creditPercent;

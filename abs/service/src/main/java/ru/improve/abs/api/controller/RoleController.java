@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.improve.abs.api.controller.spec.RoleControllerSpec;
 import ru.improve.abs.api.dto.role.RoleResponse;
+import ru.improve.abs.core.service.RoleService;
 
 import java.util.List;
 
@@ -17,8 +18,11 @@ import static ru.improve.abs.api.ApiPaths.ROLES;
 @RequestMapping(ROLES)
 public class RoleController implements RoleControllerSpec {
 
+    private final RoleService roleService;
+
     @GetMapping
     public ResponseEntity<List<RoleResponse>> getRoleList() {
-        return ResponseEntity.ok(null);
+        List<RoleResponse> roleResponses = roleService.getAllRoles();
+        return ResponseEntity.ok(roleResponses);
     }
 }

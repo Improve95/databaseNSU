@@ -17,6 +17,11 @@ public class ServiceException extends RuntimeException {
         this.code = errorCode;
     }
 
+    public ServiceException(ErrorCode errorCode, String message) {
+        this.code = errorCode;
+        this.message = message;
+    }
+
     public ServiceException(ErrorCode errorCode, String... params) {
         this.code = errorCode;
         this.params = params;

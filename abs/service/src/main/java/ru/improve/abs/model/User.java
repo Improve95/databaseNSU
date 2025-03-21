@@ -43,6 +43,9 @@ public class User implements UserDetails {
 
     private String employment;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<CreditRequest> creditRequests;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Session> sessions = null;

@@ -7,7 +7,7 @@ import ru.improve.abs.api.dto.user.GetUserResponse;
 import ru.improve.abs.api.dto.user.UserResponse;
 import ru.improve.abs.api.exception.ServiceException;
 import ru.improve.abs.core.repository.UserRepository;
-import ru.improve.abs.core.security.service.RoleService;
+import ru.improve.abs.core.service.RoleService;
 import ru.improve.abs.core.service.UserService;
 import ru.improve.abs.mapper.UserMapper;
 import ru.improve.abs.model.Role;

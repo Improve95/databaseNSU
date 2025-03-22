@@ -1,9 +1,7 @@
 package ru.improve.abs.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,9 +9,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,7 +19,8 @@ import java.util.List;
 @Entity
 @Table(name = "credit_tariffs")
 @Builder
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreditTariff {
@@ -35,14 +34,13 @@ public class CreditTariff {
     @Column(name = "up_to_amount")
     private BigDecimal upToAmount;
 
-//    @Column(name = "up_to_credit_period")
-//    private Duration upToCreditPeriod;
+    @Column(name = "up_to_credit_period")
+    private int upToCreditPeriod;
 
     @Column(name = "credit_percent")
     private int creditPercent;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "creditTariff", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "creditTariff")
     private List<CreditRequest> creditRequests;
 }
 

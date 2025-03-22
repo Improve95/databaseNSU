@@ -10,6 +10,9 @@ import ru.improve.abs.api.dto.user.SignInResponse;
 import ru.improve.abs.api.dto.user.UserResponse;
 import ru.improve.abs.model.User;
 
+import static ru.improve.abs.core.mapper.MapperUtil.GET_ROLES_ID_FUNC_NAME;
+import static ru.improve.abs.core.mapper.MapperUtil.MAPPER_UTIL_NAME;
+
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
@@ -26,7 +29,7 @@ public interface UserMapper {
 
     @Mapping(
             target = "rolesId",
-            qualifiedByName = {"MapperUtil", "getRolesId"},
+            qualifiedByName = { MAPPER_UTIL_NAME, GET_ROLES_ID_FUNC_NAME },
             source = "user"
     )
     UserResponse toUserResponse(User user);

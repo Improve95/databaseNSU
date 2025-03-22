@@ -51,6 +51,7 @@ dependencies {
 	implementation 'org.hibernate.validator:hibernate-validator-annotation-processor:8.0.1.Final'
 
 	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.9.5'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

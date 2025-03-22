@@ -13,7 +13,8 @@ import ru.improve.abs.model.CreditTariff;
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = MapperUtil.class
 )
 public interface CreditMapper {
 
@@ -21,7 +22,13 @@ public interface CreditMapper {
 
     CreditTariffResponse toCreditTariffResponse(CreditTariff creditTariff);
 
-    @Mapping(target = "creditTariffId", expression = "java(creditRequest.getCreditTariff().getId())")
-    @Mapping(target = "userId", expression = "java(creditRequest.getUser().getId())")
+    @Mapping(
+            target = "creditTariffId",
+            expression = "java(creditRequest.getCreditTariff().getId())"
+    )
+    @Mapping(
+            target = "userId",
+            expression = "java(creditRequest.getUser().getId())"
+    )
     CreditRequestResponse toCreditRequestResponse(CreditRequest creditRequest);
 }

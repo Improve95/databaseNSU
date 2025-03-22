@@ -17,6 +17,7 @@ public class PostCreditRequestRequest {
     @Min(0)
     private BigDecimal creditAmount;
 
-//    @NotNull
-//    private Duration creditDuration;
+    @NotNull
+    @Min(0)
+    private long creditDuration;
 }

@@ -2,20 +2,20 @@ package ru.improve.abs.core.service.imp;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.improve.abs.api.dto.user.GetUserResponse;
 import ru.improve.abs.api.dto.user.UserResponse;
 import ru.improve.abs.api.exception.ServiceException;
+import ru.improve.abs.core.mapper.UserMapper;
 import ru.improve.abs.core.repository.UserRepository;
 import ru.improve.abs.core.service.RoleService;
 import ru.improve.abs.core.service.UserService;
-import ru.improve.abs.core.mapper.UserMapper;
 import ru.improve.abs.model.Role;
 import ru.improve.abs.model.User;
 
 import static ru.improve.abs.api.exception.ErrorCode.NOT_FOUND;
 import static ru.improve.abs.core.security.SecurityUtil.CLIENT_ROLE;
-import static ru.improve.abs.core.security.SecurityUtil.getUserFromAuthentication;
 
 @RequiredArgsConstructor
 @Service
@@ -66,5 +66,13 @@ public class UserServiceImp implements UserService {
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ServiceException(NOT_FOUND, "user", "email"));
+    }
+
+    @Transactional
+    @Override
+    public User getUserFromAuthentication() {
+        User detachUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int userId = detachUser.getId();
+        return findUserById(userId);
     }
 }

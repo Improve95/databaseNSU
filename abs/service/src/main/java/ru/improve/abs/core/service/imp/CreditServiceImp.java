@@ -10,8 +10,8 @@ import ru.improve.abs.api.exception.ServiceException;
 import ru.improve.abs.core.mapper.CreditMapper;
 import ru.improve.abs.core.repository.CreditRequestRepository;
 import ru.improve.abs.core.repository.CreditTariffRepository;
-import ru.improve.abs.core.security.SecurityUtil;
 import ru.improve.abs.core.service.CreditService;
+import ru.improve.abs.core.service.UserService;
 import ru.improve.abs.model.CreditRequest;
 import ru.improve.abs.model.CreditTariff;
 import ru.improve.abs.model.User;
@@ -23,6 +23,8 @@ import static ru.improve.abs.api.exception.ErrorCode.NOT_FOUND;
 @RequiredArgsConstructor
 @Service
 public class CreditServiceImp implements CreditService {
+
+    private final UserService userService;
 
     private final CreditRequestRepository creditRequestRepository;
 
@@ -41,7 +43,7 @@ public class CreditServiceImp implements CreditService {
     @Transactional
     @Override
     public CreditRequestResponse createCreditRequest(PostCreditRequestRequest postCreditRequest) {
-        User user = SecurityUtil.getUserFromAuthentication();
+        User user = userService.getUserFromAuthentication();
         CreditTariff creditTariff = creditTariffRepository.findById(postCreditRequest.getCreditTariffId())
                 .orElseThrow(() -> new ServiceException(NOT_FOUND, "creditTariff", "id"));
 

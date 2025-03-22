@@ -19,6 +19,14 @@ public class ApiPaths {
 
     public static final String BECOME = "/become";
 
+    public static final String ADD = "/add";
+
+    public static final String REMOVE = "/remove";
+
+    public static final String ROLE_ID = "role-id";
+
+    public static final String USER_ID = "user-id";
+
     public static final String CLIENT = "/clients";
 
     public static final String CREDIT = "/credits";
@@ -26,6 +34,8 @@ public class ApiPaths {
     public static final String REQUEST = "/requests";
 
     public static final String TARIFF = "/tariffs";
+
+    public static final String ADMIN = "/admin";
 
     public static final String ID = "/{id}";
 }

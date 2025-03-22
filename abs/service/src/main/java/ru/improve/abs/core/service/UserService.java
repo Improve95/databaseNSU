@@ -1,20 +1,23 @@
 package ru.improve.abs.core.service;
 
-import ru.improve.abs.api.dto.user.GetUserResponse;
 import ru.improve.abs.api.dto.user.UserResponse;
 import ru.improve.abs.model.User;
 
 public interface UserService {
 
+    User getUserFromAuthentication();
+
     UserResponse becomeUserClient();
+
+    UserResponse addRole(int userId, int roleId);
+
+    UserResponse removeRole(int userId, int roleId);
 
     User findUserById(int id);
 
     User findUserByEmail(String email);
 
-    GetUserResponse getUserById(int id);
+    UserResponse getUserById(int id);
 
-    GetUserResponse getUserByAuth();
-
-    User getUserFromAuthentication();
+    UserResponse getUserByAuth();
 }

@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.improve.abs.api.dto.role.RoleResponse;
 import ru.improve.abs.api.exception.ServiceException;
+import ru.improve.abs.core.mapper.RoleMapper;
 import ru.improve.abs.core.repository.RoleRepository;
 import ru.improve.abs.core.service.RoleService;
-import ru.improve.abs.core.mapper.RoleMapper;
 import ru.improve.abs.model.Role;
 
 import java.util.List;

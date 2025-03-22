@@ -20,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import ru.improve.abs.core.security.AuthTokenFilter;
 import ru.improve.abs.core.security.service.AuthService;
 
+import static ru.improve.abs.api.ApiPaths.ADMIN;
 import static ru.improve.abs.api.ApiPaths.AUTH;
 import static ru.improve.abs.api.ApiPaths.LOGIN;
 import static ru.improve.abs.api.ApiPaths.SIGN_IN;
@@ -45,6 +46,18 @@ public class AuthConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
+    /*@Bean
+    public RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.fromHierarchy(ADMIN_ROLE + ">" + OPERATOR_ROLE);
+    }
+
+    @Bean
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy);
+        return expressionHandler;
+    }*/
 
     @Bean
     public SecurityFilterChain securityFilterChain(

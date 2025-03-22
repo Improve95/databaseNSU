@@ -103,11 +103,8 @@ public class AuthServiceImp implements AuthService {
     @Transactional
     @Override
     public SignInResponse signIn(SignInRequest signInRequest) {
-        User user = User.builder()
-                .email(signInRequest.getEmail())
-                .name(signInRequest.getName())
-                .password(passwordEncoder.encode(signInRequest.getPassword()))
-                .build();
+        User user = userMapper.toUser(signInRequest);
+        user.setPassword(passwordEncoder.encode(signInRequest.getPassword()));
 
         try {
             userRepository.save(user);

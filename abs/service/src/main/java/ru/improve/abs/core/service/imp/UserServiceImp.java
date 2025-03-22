@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.improve.abs.api.dto.user.GetUserResponse;
 import ru.improve.abs.api.dto.user.UserResponse;
 import ru.improve.abs.api.exception.ServiceException;
 import ru.improve.abs.core.mapper.UserMapper;
@@ -21,36 +20,53 @@ import static ru.improve.abs.core.security.SecurityUtil.CLIENT_ROLE;
 @Service
 public class UserServiceImp implements UserService {
 
-    private final RoleService roleService;
-
     private final UserRepository userRepository;
+
+    private final RoleService roleService;
 
     private final UserMapper userMapper;
 
     @Transactional
     @Override
-    public GetUserResponse getUserById(int id) {
+    public UserResponse getUserById(int id) {
         User user = findUserById(id);
-        return userMapper.toGetUserResponse(user);
+        return userMapper.toUserResponse(user);
     }
 
     @Transactional
     @Override
-    public GetUserResponse getUserByAuth() {
-        return null;
+    public UserResponse getUserByAuth() {
+        User user = getUserFromAuthentication();
+        return userMapper.toUserResponse(user);
     }
 
     @Transactional
     @Override
     public UserResponse becomeUserClient() {
         User user = getUserFromAuthentication();
-
         Role clientRole = roleService.findRoleByName(CLIENT_ROLE);
         if (user.getRoles().contains(clientRole)) {
             return userMapper.toUserResponse(user);
         }
         user.getRoles().add(clientRole);
 
+        return userMapper.toUserResponse(user);
+    }
+
+    @Transactional
+    @Override
+    public UserResponse addRole(int userId, int roleId) {
+        User user = findUserById(userId);
+        Role role = roleService.findRoleById(roleId);
+        user.getRoles().add(role);
+        return userMapper.toUserResponse(user);
+    }
+
+    @Transactional
+    @Override
+    public UserResponse removeRole(int userId, int roleId) {
+        User user = findUserById(userId);
+        user.getRoles().removeIf(role -> role.getId() == roleId);
         return userMapper.toUserResponse(user);
     }
 

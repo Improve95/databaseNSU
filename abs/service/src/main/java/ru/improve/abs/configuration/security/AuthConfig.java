@@ -55,16 +55,13 @@ public class AuthConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         auth -> auth
-
-                                .requestMatchers(HttpMethod.GET, "/swagger.html").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/stat/api-docs/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
 
                                 .requestMatchers(HttpMethod.POST, AUTH + SIGN_IN).permitAll()
                                 .requestMatchers(HttpMethod.POST, AUTH + LOGIN).permitAll()
 
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(conf -> conf.jwt(Customizer.withDefaults()))
                 .addFilterAfter(new AuthTokenFilter(authService), BearerTokenAuthenticationFilter.class);

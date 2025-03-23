@@ -4,6 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,6 +30,8 @@ import ru.improve.abs.core.security.service.AuthService;
 import static ru.improve.abs.api.ApiPaths.AUTH;
 import static ru.improve.abs.api.ApiPaths.LOGIN;
 import static ru.improve.abs.api.ApiPaths.SIGN_IN;
+import static ru.improve.abs.core.security.SecurityUtil.ADMIN_ROLE;
+import static ru.improve.abs.core.security.SecurityUtil.OPERATOR_ROLE;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -51,7 +57,7 @@ public class AuthConfig {
         return authProvider;
     }
 
-    /*@Bean
+    @Bean
     public RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.fromHierarchy(ADMIN_ROLE + ">" + OPERATOR_ROLE);
     }
@@ -61,7 +67,7 @@ public class AuthConfig {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy);
         return expressionHandler;
-    }*/
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(

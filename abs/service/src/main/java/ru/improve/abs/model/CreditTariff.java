@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.improve.abs.model.credit.Credit;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,12 +36,15 @@ public class CreditTariff {
     private BigDecimal upToAmount;
 
     @Column(name = "up_to_credit_period")
-    private int upToCreditPeriod;
+    private int upToCreditDuration;
 
     @Column(name = "credit_percent")
     private int creditPercent;
 
     @OneToMany(mappedBy = "creditTariff")
     private List<CreditRequest> creditRequests;
+
+    @OneToMany(mappedBy = "creditTariff")
+    private List<Credit> credits;
 }
 

@@ -32,8 +32,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class User implements UserDetails {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private int id;
 
     private String email;
@@ -53,10 +53,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Session> sessions;
 
-    @ManyToMany(
-            fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}
-    )
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

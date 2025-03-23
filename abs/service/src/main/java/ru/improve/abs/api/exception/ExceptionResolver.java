@@ -7,6 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -67,6 +68,8 @@ public class ExceptionResolver {
         } else if (ex instanceof MethodArgumentNotValidException ||
                    ex instanceof HandlerMethodValidationException) {
             return resolveDtoException(ex);
+        } else if (ex instanceof AuthorizationDeniedException authDeniedException) {
+            return resolveAccessDeniedException(authDeniedException);
         }
         return ErrorCodeMessagePair.of(
                 INTERNAL_SERVER_ERROR,
@@ -91,6 +94,14 @@ public class ExceptionResolver {
 
     private ErrorCodeMessagePair resolveDtoException(Exception ex) {
         return null;
+    }
+
+    private ErrorCodeMessagePair resolveAccessDeniedException(AuthorizationDeniedException ex) {
+        String message = resolveMessage(messageKeyMap.get(UNAUTHORIZED), null) + ": " + ex.getMessage();
+        return ErrorCodeMessagePair.of(
+                UNAUTHORIZED,
+                message
+        );
     }
 
     private String resolveMessage(String key, String[] params) {

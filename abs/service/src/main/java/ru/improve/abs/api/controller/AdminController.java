@@ -15,12 +15,12 @@ import ru.improve.abs.api.controller.spec.AdminControllerSpec;
 import ru.improve.abs.api.dto.user.UserResponse;
 import ru.improve.abs.core.service.UserService;
 
+import static ru.improve.abs.api.ApiPaths.ADD;
 import static ru.improve.abs.api.ApiPaths.ADMIN;
 import static ru.improve.abs.api.ApiPaths.ID;
 import static ru.improve.abs.api.ApiPaths.REMOVE;
 import static ru.improve.abs.api.ApiPaths.ROLES;
 import static ru.improve.abs.api.ApiPaths.ROLE_ID;
-import static ru.improve.abs.api.ApiPaths.ADD;
 import static ru.improve.abs.api.ApiPaths.USER_ID;
 import static ru.improve.abs.core.security.SecurityUtil.ADMIN_ROLE;
 

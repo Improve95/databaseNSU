@@ -22,8 +22,10 @@ import ru.improve.abs.model.CreditTariff;
 import ru.improve.abs.model.User;
 import ru.improve.abs.model.credit.CreditStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import static ru.improve.abs.api.exception.ErrorCode.ACCESS_DENIED;
 import static ru.improve.abs.api.exception.ErrorCode.ILLEGAL_DTO_VALUE;
 import static ru.improve.abs.api.exception.ErrorCode.NOT_FOUND;
 import static ru.improve.abs.util.message.MessageKeys.ILLEGAL_CREDIT_REQUEST_DTO;
@@ -78,6 +80,14 @@ public class CreditServiceImp implements CreditService {
                 .toList();
     }
 
+    @Transactional
+    @Override
+    public CreditResponse getCreditById(long creditId) {
+        return creditMapper.toCreditResponse(findCreditById(creditId));
+    }
+
+    @Transactional
+    @Override
     public List<CreditResponse> getAllCreditsByUserId(int userId, int pageNumber, int pageSize) {
         User user = userService.findUserById(userId);
         return creditRepository.findAllByUser(user, PageRequest.of(pageNumber, pageSize)).stream()
@@ -99,9 +109,14 @@ public class CreditServiceImp implements CreditService {
         return creditMapper.toCreditResponse(credit);
     }
 
-    public CreditResponse getCreatedCredit(long creditId) {
-        /* проверить что кредит принадлежит именно этому пользователю */
+    @Transactional
+    @Override
+    public CreditResponse takeCreatedCredit(long creditId) {
         Credit credit = findCreditById(creditId);
+        if (credit.getUser().getId() != userService.getUserFromAuthentication().getId()) {
+            throw new ServiceException(ACCESS_DENIED, "credit");
+        }
+        credit.setTakingDate(LocalDate.now());
         credit.setCreditStatus(CreditStatus.OPEN);
         return creditMapper.toCreditResponse(credit);
     }
@@ -113,9 +128,10 @@ public class CreditServiceImp implements CreditService {
                 .orElseThrow(() -> new ServiceException(NOT_FOUND, "creditTariff", "id"));
     }
 
-    @Transactional
-    private Credit findCreditById(long creditId) {
+    @Transactional()
+    @Override
+    public Credit findCreditById(long creditId) {
         return creditRepository.findById(creditId)
-                .orElseThrow(() -> new ServiceException(NOT_FOUND, "credit","id"));
+                .orElseThrow(() -> new ServiceException(NOT_FOUND, "credit", "id"));
     }
 }

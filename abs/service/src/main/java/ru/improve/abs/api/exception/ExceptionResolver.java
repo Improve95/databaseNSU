@@ -19,6 +19,8 @@ import static ru.improve.abs.api.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 import static ru.improve.abs.api.exception.ErrorCode.NOT_FOUND;
 import static ru.improve.abs.api.exception.ErrorCode.SESSION_IS_OVER;
 import static ru.improve.abs.api.exception.ErrorCode.UNAUTHORIZED;
+import static ru.improve.abs.api.exception.ErrorCode.ACCESS_DENIED;
+import static ru.improve.abs.util.message.MessageKeys.TITLE_ACCESS_DENIED;
 import static ru.improve.abs.util.message.MessageKeys.TITLE_ALREADY_EXIST;
 import static ru.improve.abs.util.message.MessageKeys.TITLE_ILLEGAL_DTO_VALUE;
 import static ru.improve.abs.util.message.MessageKeys.TITLE_INTERNAL_SERVER_ERROR;
@@ -37,7 +39,8 @@ public class ExceptionResolver {
             ILLEGAL_DTO_VALUE,  TITLE_ILLEGAL_DTO_VALUE,
             NOT_FOUND, TITLE_NOT_FOUND,
             UNAUTHORIZED, TITLE_UNAUTHORIZED,
-            SESSION_IS_OVER, TITLE_SESSION_IS_OVER
+            SESSION_IS_OVER, TITLE_SESSION_IS_OVER,
+            ACCESS_DENIED, TITLE_ACCESS_DENIED
     );
 
     private static ImmutableMap<ErrorCode, HttpStatus> httpStatusMap = ImmutableMap.of(
@@ -46,7 +49,8 @@ public class ExceptionResolver {
             ILLEGAL_DTO_VALUE, HttpStatus.BAD_REQUEST,
             NOT_FOUND, HttpStatus.NOT_FOUND,
             UNAUTHORIZED, HttpStatus.UNAUTHORIZED,
-            SESSION_IS_OVER, HttpStatus.UNAUTHORIZED
+            SESSION_IS_OVER, HttpStatus.UNAUTHORIZED,
+            ACCESS_DENIED, HttpStatus.UNAUTHORIZED
     );
 
     private final MessageSource messageSource;

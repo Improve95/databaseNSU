@@ -29,5 +29,5 @@ public class CreditResponse {
 
     private int userId;
 
-    private int tariffId;
+    private int creditTariffId;
 }

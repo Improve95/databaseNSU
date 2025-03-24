@@ -1,24 +1,34 @@
 package ru.improve.abs.api.dto.credit;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Data
 public class PostCreditRequest {
 
+    @NotNull
+    @Positive
     private BigDecimal initialAmount;
 
-    private LocalDate takingDate;
-
+    @NotNull
+    @Positive
     private int percent;
 
+    @NotNull
     private int creditPeriod;
 
+    @NotNull
+    @Positive
     private BigDecimal monthAmount;
 
+    @NotNull
+    @Positive
     private int userId;
 
+    @NotNull
+    @Positive
     private int tariffId;
 }

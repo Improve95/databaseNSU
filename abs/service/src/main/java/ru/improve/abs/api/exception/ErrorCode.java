@@ -20,7 +20,9 @@ public enum ErrorCode {
 
     UNAUTHORIZED(5),
 
-    SESSION_IS_OVER(6);
+    SESSION_IS_OVER(6),
+
+    ACCESS_DENIED(7);
 
     private final int code;
 }

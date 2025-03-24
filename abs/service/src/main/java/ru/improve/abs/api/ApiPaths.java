@@ -25,11 +25,11 @@ public class ApiPaths {
 
     public static final String CLIENT = "/clients";
 
-    public static final String CREDIT = "/credits";
+    public static final String CREDITS = "/credits";
 
     public static final String REQUEST = "/requests";
 
-    public static final String TARIFF = "/tariffs";
+    public static final String TARIFFS = "/tariffs";
 
     public static final String ADMIN = "/admin";
 
@@ -37,11 +37,11 @@ public class ApiPaths {
 
     public static final String ID = "/{id}";
 
-    public static final String ROLE_ID = "role-id";
+    public static final String ROLE_ID = "role_id";
 
-    public static final String USER_ID = "user-id";
+    public static final String USER_ID = "user_id";
 
-    public static final String PAGE = "page";
+    public static final String PAGE_NUMBER = "page_number";
 
-    public static final String ITEMS_PER_PAGE = "items-per-page";
+    public static final String PAGE_SIZE = "page_size";
 }

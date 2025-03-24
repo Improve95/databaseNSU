@@ -51,7 +51,7 @@ public class Credit {
     @Builder.Default
     @Enumerated(value = EnumType.STRING)
     @Column(name = "credit_status")
-    private CreditStatus creditStatus;
+    private CreditStatus creditStatus = CreditStatus.CREATE;
 
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")

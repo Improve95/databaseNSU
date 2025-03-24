@@ -72,6 +72,15 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
+    public User getUserFromAuthentication() {
+        User detachUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return detachUser;
+//        int userId = detachUser.getId();
+//        return findUserById(userId);
+    }
+
+    @Transactional
+    @Override
     public User findUserById(int id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ServiceException(NOT_FOUND, "user", "id"));
@@ -82,13 +91,5 @@ public class UserServiceImp implements UserService {
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ServiceException(NOT_FOUND, "user", "email"));
-    }
-
-    @Transactional
-    @Override
-    public User getUserFromAuthentication() {
-        User detachUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        int userId = detachUser.getId();
-        return findUserById(userId);
     }
 }

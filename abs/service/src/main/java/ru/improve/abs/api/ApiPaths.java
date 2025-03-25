@@ -31,6 +31,8 @@ public class ApiPaths {
 
     public static final String TARIFFS = "/tariffs";
 
+    public static final String PAYMENTS = "/payments";
+
     public static final String ADMIN = "/admin";
 
     public static final String ALL = "/all";

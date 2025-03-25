@@ -22,6 +22,7 @@ import ru.improve.abs.model.CreditTariff;
 import ru.improve.abs.model.User;
 import ru.improve.abs.model.credit.CreditStatus;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -102,6 +103,7 @@ public class CreditServiceImp implements CreditService {
         CreditTariff creditTariff = findCreditTariffById(creditRequest.getTariffId());
 
         Credit credit = creditMapper.toCredit(creditRequest);
+//        credit.setMonthAmount();
         credit.setUser(user);
         credit.setCreditTariff(creditTariff);
         credit = creditRepository.save(credit);
@@ -128,10 +130,25 @@ public class CreditServiceImp implements CreditService {
                 .orElseThrow(() -> new ServiceException(NOT_FOUND, "creditTariff", "id"));
     }
 
-    @Transactional()
+    @Transactional
     @Override
     public Credit findCreditById(long creditId) {
         return creditRepository.findById(creditId)
                 .orElseThrow(() -> new ServiceException(NOT_FOUND, "credit", "id"));
+    }
+
+    private BigDecimal calculateCreditMonthAmount(BigDecimal amount, int percent, int duration) {
+        double doublePercent = percent / 100d;
+        double monthPart = Math.pow((1 + doublePercent), duration);
+        return amount.multiply(
+                BigDecimal.valueOf((doublePercent / 12) * monthPart / (monthPart - 1))
+        );
+    }
+
+    private BigDecimal calculateAccruedByPercentAmount(BigDecimal amount, int percent) {
+        double doublePercent = percent / 100d;
+        return amount.multiply(
+                BigDecimal.valueOf(doublePercent / (365 + (LocalDate.now().getYear() % 4 == 0 ? 1 : 0)))
+        );
     }
 }

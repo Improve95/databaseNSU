@@ -1,2 +1,3 @@
 rootProject.name = 'databaseNsu'
 include 'bank'
+include 'train'

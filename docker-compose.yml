@@ -1,0 +1,13 @@
+services:
+  postgres:
+    container_name: ${COMPOSE_PROJECT_NAME}
+    image: postgres:16.4
+    hostname: database
+    environment:
+        POSTGRES_USER: ${PG_USER}
+        POSTGRES_PASSWORD: ${PG_PASSWORD}
+        POSTGRES_DB: ${PG_DATABASE}
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "${PG_PORT}:5432"
